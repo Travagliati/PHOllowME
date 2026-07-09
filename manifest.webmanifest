@@ -1,0 +1,17 @@
+{
+  "name": "PHOllowME",
+  "short_name": "PHOllowME",
+  "description": "Trova e prenota fotografi di viaggio",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#dfe6e7",
+  "theme_color": "#1E90D6",
+  "lang": "it",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
