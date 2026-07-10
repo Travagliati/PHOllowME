@@ -124,7 +124,7 @@
   .hero p{opacity:.85;font-size:13px;margin-top:6px}
   .divider{height:1px;background:var(--line);margin:14px 0}
   /* login */
-  .loginbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px}
+  .loginbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;border-radius:15px;padding:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px}
   .loginbtn.google{background:#fff;color:#1f2937;box-shadow:0 2px 10px rgba(0,0,0,.22)}
   .loginbtn.email{background:var(--accent);color:#fff}
   .gicon{font-weight:800;font-size:16px;font-family:Arial,sans-serif;background:conic-gradient(from -45deg,#ea4335,#fbbc05,#34a853,#4285f4,#ea4335);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -171,6 +171,8 @@
   .optrow.on{background:var(--light)}
   .optrow .chk{margin-left:auto;color:var(--accent);opacity:0;font-weight:700}
   .optrow.on .chk{opacity:1}
+  .avatar .cambadge{position:absolute;right:-2px;bottom:-2px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .pfadd{display:flex;align-items:center;justify-content:center;height:70px;border-radius:8px;border:1.5px dashed var(--accent);color:var(--accent);font-size:26px;cursor:pointer;background:var(--screen)}
   /* full-screen su telefono / PWA installata: niente cornice del finto telefono */
   @media (display-mode:standalone),(max-width:520px) and (pointer:coarse){
     body{padding:0;margin:0;display:block;background:var(--page)}
@@ -208,8 +210,8 @@
         </div>
       </div>
       <div class="welcome-brand">PHOllowME</div>
-      <div class="hero" style="height:100%;justify-content:flex-end;padding-bottom:26px">
-        <p style="font-size:15px;margin-bottom:20px" data-i18n="login_sub">Accedi per trovare e prenotare fotografi ovunque tu vada.</p>
+      <div class="hero" style="height:100%;justify-content:center">
+        <p style="font-size:16px;margin-bottom:22px;text-align:center" data-i18n="login_sub">Accedi per trovare e prenotare fotografi ovunque tu vada.</p>
         <button class="loginbtn google" onclick="loginWith('google')"><span class="gicon">G</span><span data-i18n="login_google">Continua con Google</span></button>
         <button class="loginbtn email" onclick="showEmailField()" data-i18n="login_email">Continua con email</button>
         <div id="emailWrap" style="display:none">
@@ -244,7 +246,7 @@
 
     <!-- ============ SEARCH ============ -->
     <div class="view" id="search">
-      <div class="topbar"><span class="brand">PHOllowME</span></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
       <div class="scroll pad">
         <h2 style="font-size:20px;color:var(--accent-d);margin-bottom:4px" data-i18n="s_where">Dove ti fai fotografare?</h2>
         <p class="muted" style="margin-bottom:16px" data-i18n="s_sub">Cerca per città e date del tuo soggiorno</p>
@@ -282,7 +284,7 @@
 
     <!-- ============ RESULTS ============ -->
     <div class="view" id="results">
-      <div class="topbar"><span class="back" onclick="show('search')">‹</span><h2 id="resHead">Roma · 12–15 lug</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 id="resHead">Roma · 12–15 lug</h2></div>
       <div class="scroll pad">
         <div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px">
           <span class="chip" data-i18n="r_filters">⚙ Filtri</span><span class="chip" data-i18n="r_price">Prezzo</span><span class="chip" data-i18n="r_level">Livello</span><span class="chip" data-i18n="r_spec">Specializzazione</span>
@@ -320,7 +322,7 @@
 
     <!-- ============ PROFILE ============ -->
     <div class="view" id="profile">
-      <div class="topbar"><span class="back" onclick="show('results')">‹</span><h2>Marco Rossi</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2>Marco Rossi</h2></div>
       <div class="scroll">
         <div class="photo" style="height:150px;font-size:34px">📷</div>
         <div class="pad">
@@ -364,7 +366,7 @@
 
     <!-- ============ BOOKING ============ -->
     <div class="view" id="booking">
-      <div class="topbar"><span class="back" onclick="show('profile')">‹</span><h2 data-i18n="b_book_title">Prenota Marco Rossi</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="b_book_title">Prenota Marco Rossi</h2></div>
       <div class="scroll pad">
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:6px" data-i18n="b_choose_date">Scegli la data</h3>
         <div class="muted" style="text-align:center;margin-bottom:2px" data-i18n="b_month">Luglio 2026</div>
@@ -394,7 +396,7 @@
 
     <!-- ============ PAY ============ -->
     <div class="view" id="pay">
-      <div class="topbar"><span class="back" onclick="show('booking')">‹</span><h2 data-i18n="pay_title">Pagamento</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="pay_title">Pagamento</h2></div>
       <div class="scroll pad">
         <div class="field" style="cursor:default;background:var(--light);border-color:var(--accent)">
           <div class="k" data-i18n="pay_summary">Riepilogo</div>
@@ -428,7 +430,7 @@
 
     <!-- ============ BOOKINGS ============ -->
     <div class="view" id="bookings">
-      <div class="topbar"><span class="brand" data-i18n="bk_title">Le mie prenotazioni</span></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand" data-i18n="bk_title">Le mie prenotazioni</span></div>
       <div class="scroll pad">
         <div class="card" style="cursor:default">
           <div class="body">
@@ -452,10 +454,10 @@
 
     <!-- ============ PHOTOGRAPHER DASHBOARD ============ -->
     <div class="view" id="ph_dash">
-      <div class="topbar"><span class="brand">PHOllowME</span><span style="margin-left:auto;display:flex;gap:10px;align-items:center"><span class="chip lvl" data-i18n="lvl_expert">★ Esperto</span><span onclick="show('account')" style="cursor:pointer;font-size:18px" aria-label="Impostazioni">⚙️</span></span></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span><span style="margin-left:auto;display:flex;gap:10px;align-items:center"><span class="chip lvl" data-i18n="lvl_expert">★ Esperto</span><span onclick="show('account')" style="cursor:pointer;font-size:18px" aria-label="Impostazioni">⚙️</span></span></div>
       <div class="scroll pad">
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">
-          <div class="avatar">MR</div>
+          <div class="avatar myAvatar"><span class="ini">MR</span></div>
           <div><h2 style="font-size:17px;color:var(--accent-d)" data-i18n="d_hello">Ciao, Marco</h2><div class="muted" data-i18n="d_role">Fotografo · Roma</div></div>
         </div>
 
@@ -525,7 +527,7 @@
 
     <!-- ============ CHAT LIST ============ -->
     <div class="view" id="ph_chats">
-      <div class="topbar"><span class="brand" data-i18n="chats_title">Chat</span></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand" data-i18n="chats_title">Chat</span></div>
       <div class="scroll pad">
         <div class="clist">
           <div class="crow" onclick="show('ph_chat')">
@@ -563,7 +565,7 @@
     <!-- ============ CHAT CONVERSATION ============ -->
     <div class="view" id="ph_chat">
       <div class="topbar">
-        <span class="back" onclick="show('ph_chats')">‹</span>
+        <span class="back" onclick="goBack()">‹</span>
         <div class="avatar" style="width:34px;height:34px;font-size:13px">SD</div>
         <div><h2 style="font-size:15px">Sofia D.</h2><div class="muted" style="font-size:10px" data-i18n="chat_hdr_sub">Ritratto · 13 lug, 16:00</div></div>
       </div>
@@ -583,7 +585,7 @@
 
     <!-- ============ PHOTOGRAPHER PROFILE SETUP ============ -->
     <div class="view" id="ph_avail">
-      <div class="topbar"><span class="back" onclick="show('ph_dash')">‹</span><h2 data-i18n="av_title">Profilo & disponibilità</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="av_title">Profilo & disponibilità</h2></div>
       <div class="scroll pad">
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="av_where_when">Dove sarai e quando</h3>
         <div class="field" style="cursor:default"><div class="k" data-i18n="av_location">Località</div><div class="v">📍 Roma, Italia</div></div>
@@ -611,6 +613,15 @@
         <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 8px" data-i18n="spec_title">Specializzazioni</h3>
         <span class="chip" data-i18n="spec_portrait">Ritratto</span><span class="chip" data-i18n="spec_street">Street</span><span class="chip" data-i18n="spec_couples">Coppie</span><span class="chip add" data-i18n="add_chip">+ aggiungi</span>
 
+        <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 4px" data-i18n="pf_title">Portfolio</h3>
+        <p class="muted" style="margin-bottom:8px" data-i18n="pf_hint">Carica i tuoi lavori precedenti</p>
+        <div class="gallery" id="pfGrid">
+          <div class="g photo"></div>
+          <div class="g photo" style="background:linear-gradient(135deg,#3b7d5a,#123)"></div>
+          <div class="g photo" style="background:linear-gradient(135deg,#7d5a3b,#2a1a12)"></div>
+          <label class="g pfadd">+<input type="file" accept="image/*" onchange="addWork(this)" style="display:none"></label>
+        </div>
+
         <div class="divider"></div>
         <button class="btn" onclick="show('ph_dash')" data-i18n="av_save">Salva</button>
       </div>
@@ -618,10 +629,10 @@
 
     <!-- ============ ACCOUNT (profilo utente) ============ -->
     <div class="view" id="account">
-      <div class="topbar"><span class="back" onclick="goHome()">‹</span><h2 data-i18n="acc_title">Il mio profilo</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="acc_title">Il mio profilo</h2></div>
       <div class="scroll pad">
         <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
-          <div class="avatar">MR</div>
+          <label class="avatar myAvatar" style="position:relative;cursor:pointer"><span class="ini">MR</span><span class="cambadge">📷</span><input type="file" accept="image/*" onchange="uploadPhoto(this)" style="display:none"></label>
           <div><h2 style="font-size:18px;color:var(--accent-d)">Marco Rossi</h2><div class="muted acctEmail">ltravagliati@libero.it</div></div>
         </div>
         <div class="sect" data-i18n="acc_role">Ruolo</div>
@@ -637,7 +648,7 @@
 
     <!-- ============ SETTINGS ============ -->
     <div class="view" id="settings">
-      <div class="topbar"><span class="back" onclick="show('account')">‹</span><h2 data-i18n="set_title">Impostazioni</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="set_title">Impostazioni</h2></div>
       <div class="scroll pad">
         <div class="sect" data-i18n="set_account">Account</div>
         <div class="srow"><span class="si">✉️</span><div class="st"><b data-i18n="set_email">Email di accesso</b><span class="acctEmail">ltravagliati@libero.it</span></div></div>
@@ -679,15 +690,46 @@
 <script>
   var curLang='it', currentRole='traveler', accountEmail='ltravagliati@libero.it', themePref='auto';
 
-  function show(id){
+  var navStack=[];
+  function show(id, isBack){
     if(id==='search'){ document.body.classList.remove('nearby'); }
+    var cur=document.querySelector('.view.active');
+    if(cur && cur.id!==id && !isBack){ navStack.push(cur.id); if(navStack.length>60) navStack.shift(); }
     var target=document.getElementById(id);
     var screen=target.closest('.screen');
     screen.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
     target.classList.add('active');
     var sc=target.querySelector('.scroll'); if(sc) sc.scrollTop=0;
   }
+  function goBack(){
+    var prev=navStack.pop();
+    show(prev || (currentRole==='photographer'?'ph_dash':'search'), true);
+  }
   function goHome(){ show(currentRole==='photographer'?'ph_dash':'search'); }
+  function uploadPhoto(input){
+    var f=input.files&&input.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(ev){
+      document.querySelectorAll('.myAvatar').forEach(function(a){
+        a.style.backgroundImage='url('+ev.target.result+')';
+        a.style.backgroundSize='cover'; a.style.backgroundPosition='center';
+        var ini=a.querySelector('.ini'); if(ini) ini.style.display='none';
+      });
+    };
+    r.readAsDataURL(f);
+  }
+  function addWork(input){
+    var f=input.files&&input.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(ev){
+      var lab=input.parentNode, grid=lab.parentNode;
+      var cell=document.createElement('div');
+      cell.className='g';
+      cell.style.cssText='height:70px;border-radius:8px;background-image:url('+ev.target.result+');background-size:cover;background-position:center';
+      grid.insertBefore(cell, lab);
+    };
+    r.readAsDataURL(f); input.value='';
+  }
   function pick(el){
     el.parentNode.querySelectorAll('.d').forEach(function(d){ if(d.classList.contains('on')) d.classList.replace('on','avail'); });
     el.classList.remove('avail'); el.classList.add('on');
@@ -875,7 +917,7 @@
       acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci",
       set_title:"Impostazioni", set_account:"Account", set_email:"Email di accesso", set_appearance:"Aspetto",
       set_theme:"Tema", theme_light:"Chiaro", theme_dark:"Scuro", theme_auto:"Automatico", set_language:"Lingua",
-      set_notifs:"Notifiche", notif_bookings:"Prenotazioni e richieste", notif_messages:"Messaggi", notif_promos:"Offerte e promozioni", notif_reminders:"Promemoria"
+      set_notifs:"Notifiche", notif_bookings:"Prenotazioni e richieste", notif_messages:"Messaggi", notif_promos:"Offerte e promozioni", notif_reminders:"Promemoria", pf_title:"Portfolio", pf_hint:"Carica i tuoi lavori precedenti"
     },
     en:{
       sub_proto:"Clickable prototype · tap the highlighted elements to navigate",
@@ -939,7 +981,7 @@
       acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out",
       set_title:"Settings", set_account:"Account", set_email:"Login email", set_appearance:"Appearance",
       set_theme:"Theme", theme_light:"Light", theme_dark:"Dark", theme_auto:"Automatic", set_language:"Language",
-      set_notifs:"Notifications", notif_bookings:"Bookings and requests", notif_messages:"Messages", notif_promos:"Offers and promotions", notif_reminders:"Reminders"
+      set_notifs:"Notifications", notif_bookings:"Bookings and requests", notif_messages:"Messages", notif_promos:"Offers and promotions", notif_reminders:"Reminders", pf_title:"Portfolio", pf_hint:"Upload your previous work"
     },
     es:{
       sub_proto:"Prototipo clicable · toca los elementos resaltados para navegar",
@@ -1003,7 +1045,7 @@
       acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión",
       set_title:"Ajustes", set_account:"Cuenta", set_email:"Email de acceso", set_appearance:"Apariencia",
       set_theme:"Tema", theme_light:"Claro", theme_dark:"Oscuro", theme_auto:"Automático", set_language:"Idioma",
-      set_notifs:"Notificaciones", notif_bookings:"Reservas y solicitudes", notif_messages:"Mensajes", notif_promos:"Ofertas y promociones", notif_reminders:"Recordatorios"
+      set_notifs:"Notificaciones", notif_bookings:"Reservas y solicitudes", notif_messages:"Mensajes", notif_promos:"Ofertas y promociones", notif_reminders:"Recordatorios", pf_title:"Portfolio", pf_hint:"Sube tus trabajos anteriores"
     },
     fr:{
       sub_proto:"Prototype cliquable · touchez les éléments en surbrillance pour naviguer",
@@ -1067,7 +1109,7 @@
       acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter",
       set_title:"Paramètres", set_account:"Compte", set_email:"Email de connexion", set_appearance:"Apparence",
       set_theme:"Thème", theme_light:"Clair", theme_dark:"Sombre", theme_auto:"Automatique", set_language:"Langue",
-      set_notifs:"Notifications", notif_bookings:"Réservations et demandes", notif_messages:"Messages", notif_promos:"Offres et promotions", notif_reminders:"Rappels"
+      set_notifs:"Notifications", notif_bookings:"Réservations et demandes", notif_messages:"Messages", notif_promos:"Offres et promotions", notif_reminders:"Rappels", pf_title:"Portfolio", pf_hint:"Ajoutez vos travaux précédents"
     },
     de:{
       sub_proto:"Klickbarer Prototyp · tippe die hervorgehobenen Elemente an, um zu navigieren",
@@ -1131,7 +1173,7 @@
       acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden",
       set_title:"Einstellungen", set_account:"Konto", set_email:"Anmelde-E-Mail", set_appearance:"Darstellung",
       set_theme:"Thema", theme_light:"Hell", theme_dark:"Dunkel", theme_auto:"Automatisch", set_language:"Sprache",
-      set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen"
+      set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen", pf_title:"Portfolio", pf_hint:"Lade deine bisherigen Arbeiten hoch"
     }
   };
 
