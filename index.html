@@ -173,6 +173,18 @@
   .optrow.on .chk{opacity:1}
   .avatar .cambadge{position:absolute;right:-2px;bottom:-2px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.35)}
   .pfadd{display:flex;align-items:center;justify-content:center;height:70px;border-radius:8px;border:1.5px dashed var(--accent);color:var(--accent);font-size:26px;cursor:pointer;background:var(--screen)}
+  .txtin{width:100%;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--text);font-size:14px;padding:10px 12px;outline:none}
+  .svc{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;background:var(--screen)}
+  .svc-in{width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--text);font-size:14px;padding:6px 2px;margin-bottom:8px;outline:none}
+  .svc-in.nm{font-weight:700;font-size:15px;color:var(--accent-d)}
+  .svc .rates{display:flex;gap:8px}
+  .svc .rate{flex:1;display:flex;flex-direction:column;gap:3px}
+  .svc .rate label{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.3px}
+  .svc .rate input{border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);font-size:13px;padding:8px 6px;outline:none;width:100%;text-align:center}
+  .svc-del{display:inline-block;margin-top:10px;font-size:12px;color:#e0574f;cursor:pointer}
+  .gacct{display:flex;align-items:center;gap:12px;padding:13px 10px;border-radius:12px;cursor:pointer;border:1px solid var(--line);margin-bottom:10px}
+  .gacct:hover{background:var(--light)}
+  .gacct .gav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#3aa8e6,#0B5A87);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
   /* full-screen su telefono / PWA installata: niente cornice del finto telefono */
   @media (display-mode:standalone),(max-width:520px) and (pointer:coarse){
     body{padding:0;margin:0;display:block;background:var(--page)}
@@ -212,11 +224,26 @@
       <div class="welcome-brand">PHOllowME</div>
       <div class="hero" style="height:100%;justify-content:center">
         <p style="font-size:16px;margin-bottom:22px;text-align:center" data-i18n="login_sub">Accedi per trovare e prenotare fotografi ovunque tu vada.</p>
-        <button class="loginbtn google" onclick="loginWith('google')"><span class="gicon">G</span><span data-i18n="login_google">Continua con Google</span></button>
+        <button class="loginbtn google" onclick="show('gpick')"><span class="gicon">G</span><span data-i18n="login_google">Continua con Google</span></button>
         <button class="loginbtn email" onclick="showEmailField()" data-i18n="login_email">Continua con email</button>
         <div id="emailWrap" style="display:none">
           <input id="loginEmail" class="login-input" type="email" placeholder="nome@email.com" data-i18n-ph="login_email_ph">
           <button class="loginbtn email" style="margin-bottom:0" onclick="loginWith('email')" data-i18n="login_enter">Accedi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ GOOGLE ACCOUNT PICKER (mock) ============ -->
+    <div class="view" id="gpick">
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="g_title">Scegli un account</h2></div>
+      <div class="scroll pad">
+        <p class="muted" style="margin-bottom:14px"><span class="gicon" style="font-size:18px">G</span> · <span data-i18n="g_sub">per continuare su PHOllowME</span></p>
+        <div class="gacct" onclick="pickGoogle()"><span class="gav" id="gInit">L</span><div style="flex:1;min-width:0"><b style="font-size:14px;color:var(--text);display:block" class="acctName">Luigi Travagliati</b><span class="muted acctEmail">ltravagliati@libero.it</span></div></div>
+        <div class="gacct" onclick="showGOther()"><span class="gav" style="background:var(--bg);color:var(--accent)">+</span><div><b style="font-size:14px;color:var(--text)" data-i18n="g_other">Usa un altro account</b></div></div>
+        <div id="gOther" style="display:none;margin-top:6px">
+          <input id="gName" class="txtin" style="margin-bottom:8px" placeholder="Nome" data-i18n-ph="g_name_ph">
+          <input id="gEmail" class="txtin" style="margin-bottom:10px" type="email" placeholder="nome@gmail.com" data-i18n-ph="g_email_ph">
+          <button class="btn" onclick="pickGoogleOther()" data-i18n="login_enter">Accedi</button>
         </div>
       </div>
     </div>
@@ -458,7 +485,7 @@
       <div class="scroll pad">
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">
           <div class="avatar myAvatar"><span class="ini">MR</span></div>
-          <div><h2 style="font-size:17px;color:var(--accent-d)" data-i18n="d_hello">Ciao, Marco</h2><div class="muted" data-i18n="d_role">Fotografo · Roma</div></div>
+          <div><h2 style="font-size:17px;color:var(--accent-d)"><span data-i18n="d_hello">Ciao</span>, <span class="acctName">Luigi Travagliati</span></h2><div class="muted" data-i18n="d_role">Fotografo · Roma</div></div>
         </div>
 
         <div class="field" style="cursor:default;margin-bottom:14px">
@@ -468,6 +495,15 @@
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_describe">Descriviti</h3>
         <div class="field" style="cursor:text;margin-bottom:14px"><div class="v" style="font-weight:400;line-height:1.5;font-size:13px" data-i18n="p_bio">Fotografo di ritratto e street a Roma da 8 anni. Ti porto nei luoghi più belli e meno turistici della città per scatti autentici.</div></div>
+
+        <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 4px" data-i18n="pf_title">Portfolio</h3>
+        <p class="muted" style="margin-bottom:8px" data-i18n="pf_hint">Carica i tuoi lavori precedenti</p>
+        <div class="gallery" id="pfGrid">
+          <div class="g photo"></div>
+          <div class="g photo" style="background:linear-gradient(135deg,#3b7d5a,#123)"></div>
+          <div class="g photo" style="background:linear-gradient(135deg,#7d5a3b,#2a1a12)"></div>
+          <label class="g pfadd">+<input type="file" accept="image/*" onchange="addWork(this)" style="display:none"></label>
+        </div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_languages">Lingue parlate</h3>
         <div style="margin-bottom:14px">
@@ -602,25 +638,26 @@
           <button class="on" onclick="pickSeg(this)" style="font-size:12px" data-i18n="sm_both">Entrambi</button>
         </div>
 
-        <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="av_your_rates">Le tue tariffe</h3>
-        <div class="kv"><span data-i18n="av_hourly">Oraria</span><b>45 €</b></div>
-        <div class="kv"><span data-i18n="av_daily">Giornaliera</span><b>320 €</b></div>
-        <div class="kv"><span data-i18n="av_weekly">Settimanale</span><b>1.500 €</b></div>
+        <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="svc_title">I tuoi servizi</h3>
+        <div id="svcList">
+          <div class="svc">
+            <input class="svc-in nm" value="Ritratto in esterni" data-i18n-ph="svc_name_ph">
+            <input class="svc-in" value="Servizio ritratto nei luoghi più belli della città" data-i18n-ph="svc_desc_ph">
+            <div class="rates">
+              <div class="rate"><label data-i18n="av_hourly">Oraria</label><input value="45 €"></div>
+              <div class="rate"><label data-i18n="av_daily">Giornaliera</label><input value="320 €"></div>
+              <div class="rate"><label data-i18n="av_weekly">Settimanale</label><input value="1.500 €"></div>
+            </div>
+            <span class="svc-del" onclick="delSvc(this)" data-i18n="svc_remove">🗑 Rimuovi</span>
+          </div>
+        </div>
+        <button class="btn ghost sm" style="margin-bottom:16px" onclick="addService()" data-i18n="svc_add">+ Aggiungi servizio</button>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 8px" data-i18n="equip_title">Attrezzatura</h3>
         <span class="chip">Sony A7 IV</span><span class="chip">85mm f/1.4</span><span class="chip">Flash</span><span class="chip add" data-i18n="add_chip">+ aggiungi</span>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 8px" data-i18n="spec_title">Specializzazioni</h3>
         <span class="chip" data-i18n="spec_portrait">Ritratto</span><span class="chip" data-i18n="spec_street">Street</span><span class="chip" data-i18n="spec_couples">Coppie</span><span class="chip add" data-i18n="add_chip">+ aggiungi</span>
-
-        <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 4px" data-i18n="pf_title">Portfolio</h3>
-        <p class="muted" style="margin-bottom:8px" data-i18n="pf_hint">Carica i tuoi lavori precedenti</p>
-        <div class="gallery" id="pfGrid">
-          <div class="g photo"></div>
-          <div class="g photo" style="background:linear-gradient(135deg,#3b7d5a,#123)"></div>
-          <div class="g photo" style="background:linear-gradient(135deg,#7d5a3b,#2a1a12)"></div>
-          <label class="g pfadd">+<input type="file" accept="image/*" onchange="addWork(this)" style="display:none"></label>
-        </div>
 
         <div class="divider"></div>
         <button class="btn" onclick="show('ph_dash')" data-i18n="av_save">Salva</button>
@@ -631,10 +668,11 @@
     <div class="view" id="account">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="acc_title">Il mio profilo</h2></div>
       <div class="scroll pad">
-        <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
+        <div style="display:flex;gap:14px;align-items:center;margin-bottom:12px">
           <label class="avatar myAvatar" style="position:relative;cursor:pointer"><span class="ini">MR</span><span class="cambadge">📷</span><input type="file" accept="image/*" onchange="uploadPhoto(this)" style="display:none"></label>
-          <div><h2 style="font-size:18px;color:var(--accent-d)">Marco Rossi</h2><div class="muted acctEmail">ltravagliati@libero.it</div></div>
+          <div><h2 style="font-size:18px;color:var(--accent-d)"><span class="acctName">Luigi Travagliati</span></h2><div class="muted acctEmail">ltravagliati@libero.it</div></div>
         </div>
+        <label class="btn ghost sm" style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:6px"><span data-i18n="acc_take_photo">📷 Scatta una foto</span><input type="file" accept="image/*" capture="user" onchange="uploadPhoto(this)" style="display:none"></label>
         <div class="sect" data-i18n="acc_role">Ruolo</div>
         <div class="seg" style="margin-bottom:6px">
           <button class="roleopt" data-role="traveler" onclick="switchRole('traveler')" data-i18n="role_traveler">Viaggiatore</button>
@@ -652,6 +690,7 @@
       <div class="scroll pad">
         <div class="sect" data-i18n="set_account">Account</div>
         <div class="srow"><span class="si">✉️</span><div class="st"><b data-i18n="set_email">Email di accesso</b><span class="acctEmail">ltravagliati@libero.it</span></div></div>
+        <div class="srow" style="display:block"><b style="font-size:14px;color:var(--text);display:block;margin-bottom:6px" data-i18n="set_name">Nome</b><input class="txtin acctNameIn" onchange="setName(this.value)" data-i18n-ph="set_name"></div>
         <div class="srow"><span class="si">👤</span><div class="st"><b data-i18n="acc_role">Ruolo</b></div>
           <div class="seg" style="width:200px;margin:0"><button class="roleopt" data-role="traveler" onclick="switchRole('traveler')" style="font-size:12px" data-i18n="role_traveler">Viaggiatore</button><button class="roleopt" data-role="photographer" onclick="switchRole('photographer')" style="font-size:12px" data-i18n="role_photographer">Fotografo</button></div>
         </div>
@@ -688,24 +727,30 @@
   <div class="credit">Sfondo: “Route 66, Amboy (CA)” — foto di Dietmar Rabich · <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a></div>
 
 <script>
-  var curLang='it', currentRole='traveler', accountEmail='ltravagliati@libero.it', themePref='auto';
+  var curLang='it', currentRole='traveler', accountEmail='ltravagliati@libero.it', accountName='Luigi Travagliati', themePref='auto';
 
   var navStack=[];
-  function show(id, isBack){
+  function _activate(id){
     if(id==='search'){ document.body.classList.remove('nearby'); }
-    var cur=document.querySelector('.view.active');
-    if(cur && cur.id!==id && !isBack){ navStack.push(cur.id); if(navStack.length>60) navStack.shift(); }
-    var target=document.getElementById(id);
+    var target=document.getElementById(id); if(!target) return;
     var screen=target.closest('.screen');
     screen.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
     target.classList.add('active');
     var sc=target.querySelector('.scroll'); if(sc) sc.scrollTop=0;
   }
+  function show(id){
+    var cur=document.querySelector('.view.active');
+    if(cur && cur.id!==id){ navStack.push(cur.id); if(navStack.length>80) navStack.shift(); try{ history.pushState({id:id},''); }catch(e){} }
+    _activate(id);
+  }
   function goBack(){
-    var prev=navStack.pop();
-    show(prev || (currentRole==='photographer'?'ph_dash':'search'), true);
+    if(navStack.length){ try{ history.back(); return; }catch(e){} _activate(navStack.pop()); }
   }
   function goHome(){ show(currentRole==='photographer'?'ph_dash':'search'); }
+  window.addEventListener('popstate', function(){
+    var prev=navStack.pop();
+    if(prev){ _activate(prev); } else { try{ history.pushState({trap:1},''); }catch(e){} }
+  });
   function uploadPhoto(input){
     var f=input.files&&input.files[0]; if(!f) return;
     var r=new FileReader();
@@ -790,11 +835,41 @@
   function showEmailField(){ document.getElementById('emailWrap').style.display='block'; }
   function loginWith(m){
     if(m==='email'){ var v=(document.getElementById('loginEmail').value||'').trim(); if(v) accountEmail=v; }
-    updateEmailUI(); show('welcome');
+    finishLogin();
   }
-  function updateEmailUI(){ document.querySelectorAll('.acctEmail').forEach(function(el){ el.textContent=accountEmail; }); }
+  function pickGoogle(){ finishLogin(); }
+  function showGOther(){ document.getElementById('gOther').style.display='block'; }
+  function pickGoogleOther(){
+    var n=(document.getElementById('gName').value||'').trim(), e=(document.getElementById('gEmail').value||'').trim();
+    if(n) accountName=n; if(e) accountEmail=e;
+    finishLogin();
+  }
+  function finishLogin(){ updateAccountUI(); show('welcome'); }
+  function setName(v){ v=(v||'').trim(); if(v){ accountName=v; updateAccountUI(); } }
+  function updateAccountUI(){
+    document.querySelectorAll('.acctEmail').forEach(function(el){ el.textContent=accountEmail; });
+    document.querySelectorAll('.acctName').forEach(function(el){ el.textContent=accountName; });
+    document.querySelectorAll('.acctNameIn').forEach(function(el){ el.value=accountName; });
+    var gi=document.getElementById('gInit'); if(gi) gi.textContent=(accountName||'?').charAt(0).toUpperCase();
+    var p=accountName.split(/\s+/), ini=((p[0]||'').charAt(0)+((p[1]||'').charAt(0))).toUpperCase();
+    document.querySelectorAll('.myAvatar .ini').forEach(function(el){ el.textContent=ini||'?'; });
+  }
+  function addService(){
+    var list=document.getElementById('svcList'); if(!list) return;
+    var d=I18N[curLang];
+    var div=document.createElement('div'); div.className='svc';
+    div.innerHTML='<input class="svc-in nm" placeholder="'+d.svc_name_ph+'">'+
+      '<input class="svc-in" placeholder="'+d.svc_desc_ph+'">'+
+      '<div class="rates"><div class="rate"><label>'+d.av_hourly+'</label><input placeholder="€/h"></div>'+
+      '<div class="rate"><label>'+d.av_daily+'</label><input placeholder="€"></div>'+
+      '<div class="rate"><label>'+d.av_weekly+'</label><input placeholder="€"></div></div>'+
+      '<span class="svc-del" onclick="delSvc(this)">'+d.svc_remove+'</span>';
+    list.appendChild(div);
+  }
+  function delSvc(el){ var c=el.closest('.svc'); if(c) c.remove(); }
   function logout(){
     document.getElementById('emailWrap').style.display='none';
+    var go=document.getElementById('gOther'); if(go) go.style.display='none';
     show('login');
   }
 
@@ -894,7 +969,7 @@
       bk_title:"Le mie prenotazioni", bk_confirmed:"Confermata", bk_meeting:"📍 Punto d'incontro",
       bk_after:"Dopo il servizio potrai scaricare la galleria e lasciare una recensione ⭐",
       label_traveler:"Lato viaggiatore", label_photographer:"Lato fotografo",
-      d_hello:"Ciao, Marco", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ita:"Italiana", d_describe:"Descriviti", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
+      d_hello:"Ciao", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ita:"Italiana", d_describe:"Descriviti", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
       d_next_level:"Prossimo livello: Top ★",
       d_next_msg:"Ancora 22 servizi e la valutazione ≥4,8 per sbloccare visibilità massima e commissioni ridotte.",
       d_pending:"Richieste in attesa", d_req1:"Sofia D. · Ritratto", d_accept:"Accetta", d_reject:"Rifiuta", d_live_title:"Posizione in tempo reale", d_live_on:"● In diretta", d_live_off:"Disattivata",
@@ -917,7 +992,7 @@
       acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci",
       set_title:"Impostazioni", set_account:"Account", set_email:"Email di accesso", set_appearance:"Aspetto",
       set_theme:"Tema", theme_light:"Chiaro", theme_dark:"Scuro", theme_auto:"Automatico", set_language:"Lingua",
-      set_notifs:"Notifiche", notif_bookings:"Prenotazioni e richieste", notif_messages:"Messaggi", notif_promos:"Offerte e promozioni", notif_reminders:"Promemoria", pf_title:"Portfolio", pf_hint:"Carica i tuoi lavori precedenti"
+      set_notifs:"Notifiche", notif_bookings:"Prenotazioni e richieste", notif_messages:"Messaggi", notif_promos:"Offerte e promozioni", notif_reminders:"Promemoria", pf_title:"Portfolio", pf_hint:"Carica i tuoi lavori precedenti", g_title:"Scegli un account", g_sub:"per continuare su PHOllowME", g_other:"Usa un altro account", g_name_ph:"Nome", g_email_ph:"nome@gmail.com", set_name:"Nome", acc_take_photo:"📷 Scatta una foto", svc_title:"I tuoi servizi", svc_add:"+ Aggiungi servizio", svc_name_ph:"Nome del servizio", svc_desc_ph:"Descrizione", svc_remove:"🗑 Rimuovi"
     },
     en:{
       sub_proto:"Clickable prototype · tap the highlighted elements to navigate",
@@ -958,7 +1033,7 @@
       bk_title:"My bookings", bk_confirmed:"Confirmed", bk_meeting:"📍 Meeting point",
       bk_after:"After the session you'll be able to download the gallery and leave a review ⭐",
       label_traveler:"Traveler side", label_photographer:"Photographer side",
-      d_hello:"Hi, Marco", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ita:"Italian", d_describe:"Describe yourself", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
+      d_hello:"Hi", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ita:"Italian", d_describe:"Describe yourself", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
       d_next_level:"Next level: Top ★",
       d_next_msg:"22 more services and a rating ≥4.8 to unlock maximum visibility and reduced commissions.",
       d_pending:"Pending requests", d_req1:"Sofia D. · Portrait", d_accept:"Accept", d_reject:"Decline", d_live_title:"Live location", d_live_on:"● Live", d_live_off:"Off",
@@ -981,7 +1056,7 @@
       acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out",
       set_title:"Settings", set_account:"Account", set_email:"Login email", set_appearance:"Appearance",
       set_theme:"Theme", theme_light:"Light", theme_dark:"Dark", theme_auto:"Automatic", set_language:"Language",
-      set_notifs:"Notifications", notif_bookings:"Bookings and requests", notif_messages:"Messages", notif_promos:"Offers and promotions", notif_reminders:"Reminders", pf_title:"Portfolio", pf_hint:"Upload your previous work"
+      set_notifs:"Notifications", notif_bookings:"Bookings and requests", notif_messages:"Messages", notif_promos:"Offers and promotions", notif_reminders:"Reminders", pf_title:"Portfolio", pf_hint:"Upload your previous work", g_title:"Choose an account", g_sub:"to continue to PHOllowME", g_other:"Use another account", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Take a photo", svc_title:"Your services", svc_add:"+ Add service", svc_name_ph:"Service name", svc_desc_ph:"Description", svc_remove:"🗑 Remove"
     },
     es:{
       sub_proto:"Prototipo clicable · toca los elementos resaltados para navegar",
@@ -1022,7 +1097,7 @@
       bk_title:"Mis reservas", bk_confirmed:"Confirmada", bk_meeting:"📍 Punto de encuentro",
       bk_after:"Tras el servicio podrás descargar la galería y dejar una reseña ⭐",
       label_traveler:"Lado viajero", label_photographer:"Lado fotógrafo",
-      d_hello:"Hola, Marco", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ita:"Italiana", d_describe:"Descríbete", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
+      d_hello:"Hola", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ita:"Italiana", d_describe:"Descríbete", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
       d_next_level:"Próximo nivel: Top ★",
       d_next_msg:"22 servicios más y una valoración ≥4,8 para desbloquear máxima visibilidad y comisiones reducidas.",
       d_pending:"Solicitudes pendientes", d_req1:"Sofia D. · Retrato", d_accept:"Aceptar", d_reject:"Rechazar", d_live_title:"Ubicación en tiempo real", d_live_on:"● En directo", d_live_off:"Desactivada",
@@ -1045,7 +1120,7 @@
       acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión",
       set_title:"Ajustes", set_account:"Cuenta", set_email:"Email de acceso", set_appearance:"Apariencia",
       set_theme:"Tema", theme_light:"Claro", theme_dark:"Oscuro", theme_auto:"Automático", set_language:"Idioma",
-      set_notifs:"Notificaciones", notif_bookings:"Reservas y solicitudes", notif_messages:"Mensajes", notif_promos:"Ofertas y promociones", notif_reminders:"Recordatorios", pf_title:"Portfolio", pf_hint:"Sube tus trabajos anteriores"
+      set_notifs:"Notificaciones", notif_bookings:"Reservas y solicitudes", notif_messages:"Mensajes", notif_promos:"Ofertas y promociones", notif_reminders:"Recordatorios", pf_title:"Portfolio", pf_hint:"Sube tus trabajos anteriores", g_title:"Elige una cuenta", g_sub:"para continuar en PHOllowME", g_other:"Usar otra cuenta", g_name_ph:"Nombre", g_email_ph:"nombre@gmail.com", set_name:"Nombre", acc_take_photo:"📷 Hacer una foto", svc_title:"Tus servicios", svc_add:"+ Añadir servicio", svc_name_ph:"Nombre del servicio", svc_desc_ph:"Descripción", svc_remove:"🗑 Eliminar"
     },
     fr:{
       sub_proto:"Prototype cliquable · touchez les éléments en surbrillance pour naviguer",
@@ -1086,7 +1161,7 @@
       bk_title:"Mes réservations", bk_confirmed:"Confirmée", bk_meeting:"📍 Point de rendez-vous",
       bk_after:"Après la séance, vous pourrez télécharger la galerie et laisser un avis ⭐",
       label_traveler:"Côté voyageur", label_photographer:"Côté photographe",
-      d_hello:"Bonjour, Marco", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ita:"Italienne", d_describe:"Décrivez-vous", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
+      d_hello:"Bonjour", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ita:"Italienne", d_describe:"Décrivez-vous", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
       d_next_level:"Niveau suivant : Top ★",
       d_next_msg:"Encore 22 services et une note ≥4,8 pour débloquer une visibilité maximale et des commissions réduites.",
       d_pending:"Demandes en attente", d_req1:"Sofia D. · Portrait", d_accept:"Accepter", d_reject:"Refuser", d_live_title:"Position en temps réel", d_live_on:"● En direct", d_live_off:"Désactivée",
@@ -1109,7 +1184,7 @@
       acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter",
       set_title:"Paramètres", set_account:"Compte", set_email:"Email de connexion", set_appearance:"Apparence",
       set_theme:"Thème", theme_light:"Clair", theme_dark:"Sombre", theme_auto:"Automatique", set_language:"Langue",
-      set_notifs:"Notifications", notif_bookings:"Réservations et demandes", notif_messages:"Messages", notif_promos:"Offres et promotions", notif_reminders:"Rappels", pf_title:"Portfolio", pf_hint:"Ajoutez vos travaux précédents"
+      set_notifs:"Notifications", notif_bookings:"Réservations et demandes", notif_messages:"Messages", notif_promos:"Offres et promotions", notif_reminders:"Rappels", pf_title:"Portfolio", pf_hint:"Ajoutez vos travaux précédents", g_title:"Choisir un compte", g_sub:"pour continuer sur PHOllowME", g_other:"Utiliser un autre compte", g_name_ph:"Nom", g_email_ph:"nom@gmail.com", set_name:"Nom", acc_take_photo:"📷 Prendre une photo", svc_title:"Vos services", svc_add:"+ Ajouter un service", svc_name_ph:"Nom du service", svc_desc_ph:"Description", svc_remove:"🗑 Supprimer"
     },
     de:{
       sub_proto:"Klickbarer Prototyp · tippe die hervorgehobenen Elemente an, um zu navigieren",
@@ -1150,7 +1225,7 @@
       bk_title:"Meine Buchungen", bk_confirmed:"Bestätigt", bk_meeting:"📍 Treffpunkt",
       bk_after:"Nach dem Termin kannst du die Galerie herunterladen und eine Bewertung abgeben ⭐",
       label_traveler:"Reisenden-Seite", label_photographer:"Fotografen-Seite",
-      d_hello:"Hallo, Marco", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ita:"Italienisch", d_describe:"Beschreibe dich", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
+      d_hello:"Hallo", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ita:"Italienisch", d_describe:"Beschreibe dich", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
       d_next_level:"Nächstes Level: Top ★",
       d_next_msg:"Noch 22 Aufträge und eine Bewertung ≥4,8, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
       d_pending:"Ausstehende Anfragen", d_req1:"Sofia D. · Porträt", d_accept:"Annehmen", d_reject:"Ablehnen", d_live_title:"Standort in Echtzeit", d_live_on:"● Live", d_live_off:"Deaktiviert",
@@ -1173,14 +1248,15 @@
       acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden",
       set_title:"Einstellungen", set_account:"Konto", set_email:"Anmelde-E-Mail", set_appearance:"Darstellung",
       set_theme:"Thema", theme_light:"Hell", theme_dark:"Dunkel", theme_auto:"Automatisch", set_language:"Sprache",
-      set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen", pf_title:"Portfolio", pf_hint:"Lade deine bisherigen Arbeiten hoch"
+      set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen", pf_title:"Portfolio", pf_hint:"Lade deine bisherigen Arbeiten hoch", g_title:"Konto auswählen", g_sub:"um bei PHOllowME fortzufahren", g_other:"Anderes Konto verwenden", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Ein Foto aufnehmen", svc_title:"Deine Leistungen", svc_add:"+ Leistung hinzufügen", svc_name_ph:"Name der Leistung", svc_desc_ph:"Beschreibung", svc_remove:"🗑 Entfernen"
     }
   };
 
   (function init(){
+    try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateEmailUI(); refreshLive();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); refreshLive();
   })();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
