@@ -65,6 +65,8 @@
   .field{background:var(--bg);border:1px solid var(--line);border-radius:13px;padding:12px 14px;margin-bottom:12px;cursor:pointer}
   .field .k{font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.5px}
   .field .v{font-size:15px;color:var(--text);margin-top:2px;font-weight:500}
+  .field .fieldin{width:100%;border:none;background:transparent;color:var(--text);font-size:15px;font-weight:500;margin-top:2px;padding:0;outline:none;font-family:inherit;color-scheme:light dark}
+  .field .fieldin::placeholder{color:var(--grey)}
 
   .photo{background:linear-gradient(135deg,#3aa8e6,#0B5A87);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.55);font-size:26px}
   .chip{display:inline-block;background:var(--light);color:var(--accent-d);font-size:11px;padding:4px 9px;border-radius:20px;margin:0 4px 4px 0;font-weight:500}
@@ -280,12 +282,13 @@
         <h2 style="font-size:20px;color:var(--accent-d);margin-bottom:4px" data-i18n="s_where">Dove ti fai fotografare?</h2>
         <p class="muted" style="margin-bottom:16px" data-i18n="s_sub">Cerca per città e date del tuo soggiorno</p>
         <button class="btn ghost" style="margin-bottom:14px" onclick="nearMe()" data-i18n="s_near">📍 Cerca intorno a te</button>
-        <div class="field" onclick="show('results')">
-          <div class="k" data-i18n="s_dest">Destinazione</div><div class="v" id="destVal">📍 Roma, Italia</div>
+        <div class="field">
+          <div class="k" data-i18n="s_dest">Destinazione</div>
+          <input id="destInput" class="fieldin" value="Roma, Italia" data-i18n-ph="s_dest_ph" placeholder="Città o luogo">
         </div>
         <div class="row2">
-          <div class="field" onclick="show('results')"><div class="k" data-i18n="s_checkin">Arrivo</div><div class="v">12 lug</div></div>
-          <div class="field" onclick="show('results')"><div class="k" data-i18n="s_checkout">Partenza</div><div class="v">15 lug</div></div>
+          <div class="field"><div class="k" data-i18n="s_checkin">Arrivo</div><input id="dIn" class="fieldin" type="date"></div>
+          <div class="field"><div class="k" data-i18n="s_checkout">Partenza</div><input id="dOut" class="fieldin" type="date"></div>
         </div>
         <div class="field" onclick="show('results')"><div class="k" data-i18n="s_service_type">Tipo di servizio</div><div class="v" data-i18n="s_service_val">Ritratto / Vacanza</div></div>
         <p class="muted" style="margin-bottom:6px" data-i18n="sm_mode">Modalità del servizio</p>
@@ -298,7 +301,7 @@
           <button class="on" onclick="pickSeg(this)" data-i18n="opt_yes">Sì</button>
           <button onclick="pickSeg(this)" data-i18n="opt_no">No</button>
         </div>
-        <button class="btn" onclick="show('results')" data-i18n="s_search_btn">Cerca fotografi</button>
+        <button class="btn" onclick="doSearch()" data-i18n="s_search_btn">Cerca fotografi</button>
         <div class="divider"></div>
         <p class="muted" style="margin-bottom:8px" data-i18n="s_popular">Destinazioni popolari</p>
         <div class="dests"><span class="chip" onclick="setDest('Roma')">Roma</span><span class="chip" onclick="setDest('Firenze')">Firenze</span><span class="chip" onclick="setDest('Venezia')">Venezia</span><span class="chip" onclick="setDest('Parigi')">Parigi</span><span class="chip" onclick="setDest('Barcellona')">Barcellona</span><span class="chip" onclick="setDest('Amalfi')">Amalfi</span><span class="chip" onclick="setDest('Ibiza')">Ibiza</span><span class="chip" onclick="setDest('Formentera')">Formentera</span><span class="chip" onclick="setDest('Tenerife')">Tenerife</span><span class="chip" onclick="setDest('Palma di Maiorca')">Palma di Maiorca</span><span class="chip" onclick="setDest('Fuerteventura')">Fuerteventura</span></div>
@@ -787,15 +790,34 @@
     btn.classList.add('on');
   }
   function setDest(city){
-    var d=document.getElementById('destVal'); if(d) d.textContent='📍 '+city;
-    var h=document.getElementById('resHead'); if(h) h.textContent=city+' · 12–15 lug';
+    var i=document.getElementById('destInput'); if(i) i.value=city;
+    document.body.classList.remove('nearby');
+  }
+  function fmtDate(v){
+    if(!v) return '';
+    var p=v.split('-'); if(p.length<3) return v;
+    var dt=new Date(+p[0], +p[1]-1, +p[2]);
+    try{ return dt.toLocaleDateString(curLang,{day:'numeric',month:'short'}); }catch(e){ return p[2]+'/'+p[1]; }
+  }
+  function searchRange(){
+    var a=document.getElementById('dIn'), b=document.getElementById('dOut');
+    if(a&&a.value&&b&&b.value) return fmtDate(a.value)+'–'+fmtDate(b.value);
+    return '';
+  }
+  function doSearch(){
+    var i=document.getElementById('destInput');
+    var dest=(i&&i.value?i.value:'').trim()||'Roma';
+    var r=searchRange();
+    var h=document.getElementById('resHead'); if(h) h.textContent=dest+(r?(' · '+r):'');
+    document.body.classList.remove('nearby');
     show('results');
   }
   function nearMe(){
     if(navigator.geolocation){ try{ navigator.geolocation.getCurrentPosition(function(){}, function(){}); }catch(e){} }
     var lbl=I18N[curLang].s_near_lbl;
-    var d=document.getElementById('destVal'); if(d) d.textContent='📍 '+lbl;
-    var h=document.getElementById('resHead'); if(h) h.textContent=lbl+' · 12–15 lug';
+    var i=document.getElementById('destInput'); if(i) i.value=lbl;
+    var r=searchRange();
+    var h=document.getElementById('resHead'); if(h) h.textContent=lbl+(r?(' · '+r):'');
     document.body.classList.add('nearby');
     show('results');
   }
@@ -965,7 +987,7 @@
       w_tag:"Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.",
       w_traveler:"Sono un viaggiatore", w_photographer:"Sono un fotografo",
       s_where:"Dove ti fai fotografare?", s_sub:"Cerca per città e date del tuo soggiorno",
-      s_dest:"Destinazione", s_checkin:"Arrivo", s_checkout:"Partenza",
+      s_dest:"Destinazione", s_dest_ph:"Città o luogo", s_checkin:"Arrivo", s_checkout:"Partenza",
       s_service_type:"Tipo di servizio", s_service_val:"Ritratto / Vacanza",
       sm_mode:"Modalità del servizio", sm_fixed:"📍 Luogo fisso", sm_roaming:"🚶 Itinerante", sm_both:"Entrambi", av_mode:"Modalità offerte",
       s_search_btn:"Cerca fotografi", s_popular:"Destinazioni popolari", s_near:"📍 Cerca intorno a te", s_near_lbl:"Intorno a te",
@@ -1029,7 +1051,7 @@
       w_tag:"Professional photos wherever you go. Find and book a photographer for your trip.",
       w_traveler:"I'm a traveler", w_photographer:"I'm a photographer",
       s_where:"Where do you want your photos taken?", s_sub:"Search by city and dates of your stay",
-      s_dest:"Destination", s_checkin:"Check-in", s_checkout:"Check-out",
+      s_dest:"Destination", s_dest_ph:"City or place", s_checkin:"Check-in", s_checkout:"Check-out",
       s_service_type:"Service type", s_service_val:"Portrait / Vacation",
       sm_mode:"Service mode", sm_fixed:"📍 Fixed location", sm_roaming:"🚶 Roaming", sm_both:"Both", av_mode:"Modes offered",
       s_search_btn:"Search photographers", s_popular:"Popular destinations", s_near:"📍 Search around you", s_near_lbl:"Around you",
@@ -1093,7 +1115,7 @@
       w_tag:"Fotos profesionales dondequiera que vayas. Encuentra y reserva un fotógrafo para tu viaje.",
       w_traveler:"Soy un viajero", w_photographer:"Soy un fotógrafo",
       s_where:"¿Dónde quieres tus fotos?", s_sub:"Busca por ciudad y fechas de tu estancia",
-      s_dest:"Destino", s_checkin:"Llegada", s_checkout:"Salida",
+      s_dest:"Destino", s_dest_ph:"Ciudad o lugar", s_checkin:"Llegada", s_checkout:"Salida",
       s_service_type:"Tipo de servicio", s_service_val:"Retrato / Vacaciones",
       sm_mode:"Modalidad del servicio", sm_fixed:"📍 Lugar fijo", sm_roaming:"🚶 Itinerante", sm_both:"Ambos", av_mode:"Modalidades ofrecidas",
       s_search_btn:"Buscar fotógrafos", s_popular:"Destinos populares", s_near:"📍 Buscar cerca de ti", s_near_lbl:"Cerca de ti",
@@ -1157,7 +1179,7 @@
       w_tag:"Des photos professionnelles où que vous alliez. Trouvez et réservez un photographe pour votre voyage.",
       w_traveler:"Je suis un voyageur", w_photographer:"Je suis un photographe",
       s_where:"Où voulez-vous être photographié ?", s_sub:"Recherchez par ville et dates de votre séjour",
-      s_dest:"Destination", s_checkin:"Arrivée", s_checkout:"Départ",
+      s_dest:"Destination", s_dest_ph:"Ville ou lieu", s_checkin:"Arrivée", s_checkout:"Départ",
       s_service_type:"Type de service", s_service_val:"Portrait / Vacances",
       sm_mode:"Mode du service", sm_fixed:"📍 Lieu fixe", sm_roaming:"🚶 Itinérant", sm_both:"Les deux", av_mode:"Modes proposés",
       s_search_btn:"Rechercher des photographes", s_popular:"Destinations populaires", s_near:"📍 Rechercher autour de vous", s_near_lbl:"Autour de vous",
@@ -1221,7 +1243,7 @@
       w_tag:"Professionelle Fotos, wohin du auch gehst. Finde und buche einen Fotografen für deine Reise.",
       w_traveler:"Ich bin ein Reisender", w_photographer:"Ich bin ein Fotograf",
       s_where:"Wo möchtest du fotografiert werden?", s_sub:"Suche nach Stadt und Daten deines Aufenthalts",
-      s_dest:"Reiseziel", s_checkin:"Anreise", s_checkout:"Abreise",
+      s_dest:"Reiseziel", s_dest_ph:"Stadt oder Ort", s_checkin:"Anreise", s_checkout:"Abreise",
       s_service_type:"Art des Service", s_service_val:"Porträt / Urlaub",
       sm_mode:"Service-Modus", sm_fixed:"📍 Fester Ort", sm_roaming:"🚶 Unterwegs", sm_both:"Beides", av_mode:"Angebotene Modi",
       s_search_btn:"Fotografen suchen", s_popular:"Beliebte Reiseziele", s_near:"📍 In deiner Nähe suchen", s_near_lbl:"In deiner Nähe",
@@ -1286,6 +1308,13 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
     applyTheme(); markTheme(); markRole(); updateAccountUI(); refreshLive(); initGoogle();
+    (function(){
+      function iso(d){var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;}
+      var t=new Date(), o=new Date(t.getFullYear(),t.getMonth(),t.getDate()+3);
+      var a=document.getElementById('dIn'), b=document.getElementById('dOut');
+      if(a&&!a.value) a.value=iso(t);
+      if(b&&!b.value) b.value=iso(o);
+    })();
   })();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
