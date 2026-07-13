@@ -196,6 +196,7 @@
     .notch{display:none}
   }
 </style>
+<script src="https://accounts.google.com/gsi/client" async defer onload="if(window.initGoogle)initGoogle()"></script>
 </head>
 <body>
   <div class="head">
@@ -224,7 +225,8 @@
       <div class="welcome-brand">PHOllowME</div>
       <div class="hero" style="height:100%;justify-content:center">
         <p style="font-size:16px;margin-bottom:22px;text-align:center" data-i18n="login_sub">Accedi per trovare e prenotare fotografi ovunque tu vada.</p>
-        <button class="loginbtn google" onclick="show('gpick')"><span class="gicon">G</span><span data-i18n="login_google">Continua con Google</span></button>
+        <div id="gsiBtn" style="display:flex;justify-content:center"></div>
+        <button id="customGoogle" class="loginbtn google" onclick="show('gpick')"><span class="gicon">G</span><span data-i18n="login_google">Continua con Google</span></button>
         <button class="loginbtn email" onclick="showEmailField()" data-i18n="login_email">Continua con email</button>
         <div id="emailWrap" style="display:none">
           <input id="loginEmail" class="login-input" type="email" placeholder="nome@email.com" data-i18n-ph="login_email_ph">
@@ -751,16 +753,17 @@
     var prev=navStack.pop();
     if(prev){ _activate(prev); } else { try{ history.pushState({trap:1},''); }catch(e){} }
   });
+  function setPhotoUrl(url){
+    document.querySelectorAll('.myAvatar').forEach(function(a){
+      a.style.backgroundImage='url('+url+')';
+      a.style.backgroundSize='cover'; a.style.backgroundPosition='center';
+      var ini=a.querySelector('.ini'); if(ini) ini.style.display='none';
+    });
+  }
   function uploadPhoto(input){
     var f=input.files&&input.files[0]; if(!f) return;
     var r=new FileReader();
-    r.onload=function(ev){
-      document.querySelectorAll('.myAvatar').forEach(function(a){
-        a.style.backgroundImage='url('+ev.target.result+')';
-        a.style.backgroundSize='cover'; a.style.backgroundPosition='center';
-        var ini=a.querySelector('.ini'); if(ini) ini.style.display='none';
-      });
-    };
+    r.onload=function(ev){ setPhotoUrl(ev.target.result); };
     r.readAsDataURL(f);
   }
   function addWork(input){
@@ -845,6 +848,32 @@
     finishLogin();
   }
   function finishLogin(){ updateAccountUI(); show('welcome'); }
+  /* ---- Google Sign-In (reale). Incolla qui il tuo OAuth Client ID: ---- */
+  var GOOGLE_CLIENT_ID='367035462997-oi28tdarvlkbeoer9ktmn3c7fiff53u1.apps.googleusercontent.com';
+  function initGoogle(){
+    if(GOOGLE_CLIENT_ID.indexOf('PASTE_CLIENT_ID')===0) return;
+    if(!(window.google && google.accounts && google.accounts.id)) return;
+    try{
+      google.accounts.id.initialize({ client_id:GOOGLE_CLIENT_ID, callback:onGoogleCredential });
+      var c=document.getElementById('gsiBtn');
+      if(c){ c.innerHTML=''; google.accounts.id.renderButton(c,{theme:'filled_blue',size:'large',width:260,text:'continue_with',shape:'pill'}); c.style.marginBottom='12px'; }
+      var cb=document.getElementById('customGoogle'); if(cb) cb.style.display='none';
+    }catch(e){}
+  }
+  window.initGoogle=initGoogle;
+  function onGoogleCredential(resp){
+    try{
+      var part=resp.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+      var pad=part.length%4; if(pad) part+='===='.slice(pad);
+      var bin=atob(part), bytes=new Uint8Array(bin.length);
+      for(var i=0;i<bin.length;i++){ bytes[i]=bin.charCodeAt(i); }
+      var payload=JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      if(payload.name) accountName=payload.name;
+      if(payload.email) accountEmail=payload.email;
+      if(payload.picture) setPhotoUrl(payload.picture);
+    }catch(e){}
+    finishLogin();
+  }
   function setName(v){ v=(v||'').trim(); if(v){ accountName=v; updateAccountUI(); } }
   function updateAccountUI(){
     document.querySelectorAll('.acctEmail').forEach(function(el){ el.textContent=accountEmail; });
@@ -1256,7 +1285,7 @@
     try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateAccountUI(); refreshLive();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); refreshLive(); initGoogle();
   })();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
