@@ -318,37 +318,46 @@
     <div class="view" id="results">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 id="resHead">Roma · 12–15 lug</h2></div>
       <div class="scroll pad">
-        <div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px">
-          <span class="chip" data-i18n="r_filters">⚙ Filtri</span><span class="chip" data-i18n="r_price">Prezzo</span><span class="chip" data-i18n="r_level">Livello</span><span class="chip" data-i18n="r_spec">Specializzazione</span>
-        </div>
-        <p class="muted" style="margin-bottom:10px" data-i18n="r_count">6 fotografi disponibili in queste date</p>
-
-        <div class="card" onclick="show('profile')">
-          <div class="ph photo">📷</div>
-          <div class="body">
-            <div class="row"><h3>Marco Rossi</h3><span class="chip lvl" data-i18n="lvl_expert">★ Esperto</span></div>
-            <div style="margin:5px 0"><span class="stars">★★★★★</span> <span class="muted">4.9 (128)</span><span class="dist"> · 📍 0,8 km</span></div>
-            <div class="row"><span class="muted" data-i18n="r1_spec">Ritratto · Street · Coppie</span><span class="price">45 €/h</span></div>
+        <button class="btn ghost" style="margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="toggleFilters()"><span data-i18n="r_filters">⚙ Filtri</span><span id="filtCount" class="chip" style="display:none"></span></button>
+        <div id="filterPanel" style="display:none;border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:12px;background:var(--bg)">
+          <div class="k" style="margin-bottom:5px" data-i18n="f_price">Prezzo (€/h)</div>
+          <div class="row2" style="margin-bottom:12px">
+            <input id="fPriceMin" class="txtin" type="number" min="0" inputmode="numeric" data-i18n-ph="f_min" placeholder="da">
+            <input id="fPriceMax" class="txtin" type="number" min="0" inputmode="numeric" data-i18n-ph="f_max" placeholder="a">
+          </div>
+          <div class="k" style="margin-bottom:5px" data-i18n="f_spec">Specializzazione</div>
+          <select id="fSpec" class="txtin" style="margin-bottom:12px">
+            <option value="" data-i18n="f_all">Tutte</option>
+            <option value="Ritratto">Ritratto</option>
+            <option value="Street">Street</option>
+            <option value="Matrimonio">Matrimonio</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Reportage">Reportage</option>
+            <option value="Vacanza">Vacanza</option>
+            <option value="Coppie">Coppie</option>
+            <option value="Eventi">Eventi</option>
+          </select>
+          <div class="k" style="margin-bottom:5px" data-i18n="f_mode">Modalità</div>
+          <div class="seg" style="margin-bottom:12px">
+            <button class="on" data-mode="" onclick="pickFilt(this,'mode')" data-i18n="f_all">Tutte</button>
+            <button data-mode="fixed" onclick="pickFilt(this,'mode')" data-i18n="sm_fixed">📍 Luogo fisso</button>
+            <button data-mode="roaming" onclick="pickFilt(this,'mode')" data-i18n="sm_roaming">🚶 Itinerante</button>
+          </div>
+          <div class="k" style="margin-bottom:5px" data-i18n="f_rating">Valutazione</div>
+          <div class="seg" style="margin-bottom:14px">
+            <button class="on" data-rating="0" onclick="pickFilt(this,'rating')" data-i18n="f_all">Tutte</button>
+            <button data-rating="3" onclick="pickFilt(this,'rating')">⭐3+</button>
+            <button data-rating="4" onclick="pickFilt(this,'rating')">⭐4+</button>
+            <button data-rating="4.5" onclick="pickFilt(this,'rating')">⭐4,5+</button>
+          </div>
+          <div class="row2">
+            <button class="btn ghost sm" onclick="resetFilters()" data-i18n="f_reset">Azzera</button>
+            <button class="btn sm" onclick="applyFilters()" data-i18n="f_apply">Applica</button>
           </div>
         </div>
-
-        <div class="card" onclick="show('profile')">
-          <div class="ph photo" style="background:linear-gradient(135deg,#3b7d5a,#112233)">📷</div>
-          <div class="body">
-            <div class="row"><h3>Giulia Bianchi</h3><span class="chip lvl" style="background:var(--gold)" data-i18n="lvl_top">★ Top</span></div>
-            <div style="margin:5px 0"><span class="stars">★★★★★</span> <span class="muted">5.0 (204)</span><span class="dist"> · 📍 1,5 km</span></div>
-            <div class="row"><span class="muted" data-i18n="r2_spec">Matrimonio · Fashion</span><span class="price">80 €/h</span></div>
-          </div>
-        </div>
-
-        <div class="card" onclick="show('profile')">
-          <div class="ph photo" style="background:linear-gradient(135deg,#7d5a3b,#2a1a12)">📷</div>
-          <div class="body">
-            <div class="row"><h3>Luca Verdi</h3><span class="chip" style="background:var(--silver);color:#fff" data-i18n="lvl_novice">★ Novello</span></div>
-            <div style="margin:5px 0"><span class="stars">★★★★☆</span> <span class="muted">4.4 (12)</span><span class="dist"> · 📍 2,3 km</span></div>
-            <div class="row"><span class="muted" data-i18n="r3_spec">Street · Reportage</span><span class="price">25 €/h</span></div>
-          </div>
-        </div>
+        <div id="activeFilters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+        <p class="muted" id="resCount" style="margin-bottom:10px" data-i18n="r_empty">Nessun fotografo disponibile per ora.</p>
+        <div id="resList"></div>
       </div>
     </div>
 
@@ -466,15 +475,28 @@
       <div class="scroll pad">
         <div class="card" style="cursor:default">
           <div class="body">
-            <div class="row"><h3>Marco Rossi</h3><span class="chip lvl" data-i18n="bk_confirmed">Confermata</span></div>
+            <div class="row"><h3>Marco Rossi</h3><span class="chip lvl" id="bkStatus" data-i18n="bk_confirmed">Confermata</span></div>
             <p class="muted" style="margin:5px 0">📍 Roma · 13 lug, 16:00–17:00</p>
             <div class="row2" style="margin-top:8px">
               <button class="btn sm ghost">💬 Chat</button>
               <button class="btn sm ghost" data-i18n="bk_meeting">📍 Punto d'incontro</button>
             </div>
+            <button id="bkSimBtn" class="btn sm ghost" style="margin-top:10px;width:100%;border-style:dashed" onclick="markPhotosSent()" data-i18n="bk_sim">📸 Simula: foto inviate</button>
+            <p id="bkWait" class="muted" style="margin:10px 0 0;font-size:12px" data-i18n="bk_wait">In attesa delle foto…</p>
+            <div id="reviewBox" style="display:none;border-top:1px solid var(--line);margin-top:12px;padding-top:12px">
+              <b style="font-size:14px;color:var(--text);display:block;margin-bottom:6px" data-i18n="rev_title">Lascia una recensione</b>
+              <div id="starPick" style="font-size:26px;letter-spacing:5px;cursor:pointer;margin-bottom:8px;color:var(--grey)">
+                <span onclick="setReviewStars(1)">☆</span><span onclick="setReviewStars(2)">☆</span><span onclick="setReviewStars(3)">☆</span><span onclick="setReviewStars(4)">☆</span><span onclick="setReviewStars(5)">☆</span>
+              </div>
+              <textarea id="reviewText" class="txtin" rows="3" data-i18n-ph="rev_ph" placeholder="Com'è andata? Scrivi la tua esperienza…" style="resize:none;margin-bottom:8px"></textarea>
+              <button class="btn sm" style="width:100%" onclick="submitReview()" data-i18n="rev_send">Invia recensione</button>
+            </div>
+            <div id="reviewDone" style="display:none;border-top:1px solid var(--line);margin-top:12px;padding-top:12px">
+              <b style="color:var(--accent-d)" data-i18n="rev_thanks">Grazie per la recensione!</b>
+              <div id="reviewDoneStars" style="font-size:20px;letter-spacing:3px;margin-top:4px"></div>
+            </div>
           </div>
         </div>
-        <p class="muted" style="text-align:center;margin-top:20px" data-i18n="bk_after">Dopo il servizio potrai scaricare la galleria e lasciare una recensione ⭐</p>
       </div>
       <div class="nav">
         <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
@@ -686,6 +708,7 @@
         <p class="muted" style="margin-bottom:16px" data-i18n="acc_switch_hint">Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.</p>
         <div class="srow" style="cursor:pointer" onclick="show('settings')"><span class="si">⚙️</span><div class="st"><b data-i18n="acc_settings">Impostazioni</b></div><span class="chev">›</span></div>
         <div class="srow" style="cursor:pointer" onclick="logout()"><span class="si">🚪</span><div class="st"><b data-i18n="acc_logout">Esci</b></div><span class="chev">›</span></div>
+        <div class="srow" style="cursor:pointer" onclick="deleteAccount()"><span class="si">🗑️</span><div class="st"><b style="color:#dc2626" data-i18n="acc_delete">Cancella account</b></div><span class="chev" style="color:#dc2626">›</span></div>
       </div>
     </div>
 
@@ -821,6 +844,68 @@
     document.body.classList.add('nearby');
     show('results');
   }
+  /* ---- Filtri risultati (lista data-driven, pronta per i fotografi veri) ---- */
+  var PHOTOGRAPHERS=[]; /* vuota: qui arriveranno i fotografi veri col backend */
+  var filterState={priceMin:null,priceMax:null,spec:'',mode:'',rating:0};
+  function toggleFilters(){ var p=document.getElementById('filterPanel'); if(p) p.style.display=(p.style.display==='none'?'block':'none'); }
+  function pickFilt(btn,type){
+    btn.parentNode.querySelectorAll('button').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    if(type==='mode') filterState.mode=btn.getAttribute('data-mode')||'';
+    if(type==='rating') filterState.rating=parseFloat(btn.getAttribute('data-rating'))||0;
+  }
+  function applyFilters(){
+    var mn=document.getElementById('fPriceMin'), mx=document.getElementById('fPriceMax'), sp=document.getElementById('fSpec');
+    filterState.priceMin=(mn&&mn.value!=='')?parseFloat(mn.value):null;
+    filterState.priceMax=(mx&&mx.value!=='')?parseFloat(mx.value):null;
+    filterState.spec=sp?sp.value:'';
+    renderResults();
+    var p=document.getElementById('filterPanel'); if(p) p.style.display='none';
+  }
+  function resetFilters(){
+    filterState={priceMin:null,priceMax:null,spec:'',mode:'',rating:0};
+    var mn=document.getElementById('fPriceMin'), mx=document.getElementById('fPriceMax'), sp=document.getElementById('fSpec');
+    if(mn) mn.value=''; if(mx) mx.value=''; if(sp) sp.value='';
+    var panel=document.getElementById('filterPanel');
+    if(panel){ panel.querySelectorAll('.seg').forEach(function(seg){ var bs=seg.querySelectorAll('button'); bs.forEach(function(b){ b.classList.remove('on'); }); if(bs[0]) bs[0].classList.add('on'); }); }
+    renderResults();
+  }
+  function hasActiveFilters(){ return filterState.priceMin!=null||filterState.priceMax!=null||!!filterState.spec||!!filterState.mode||filterState.rating>0; }
+  function photoMatches(ph){
+    if(filterState.priceMin!=null && ph.price<filterState.priceMin) return false;
+    if(filterState.priceMax!=null && ph.price>filterState.priceMax) return false;
+    if(filterState.spec && (ph.specs||[]).indexOf(filterState.spec)<0) return false;
+    if(filterState.mode && ph.mode!==filterState.mode && ph.mode!=='both') return false;
+    if(filterState.rating>0 && ph.rating<filterState.rating) return false;
+    return true;
+  }
+  function ratingStars(r){ var f=Math.round(r), s=''; for(var i=0;i<5;i++){ s+=(i<f?'★':'☆'); } return s; }
+  function renderResults(){
+    var list=document.getElementById('resList'); if(!list) return;
+    var arr=PHOTOGRAPHERS.filter(photoMatches), html='';
+    arr.forEach(function(ph){
+      html+='<div class="card" onclick="show(\'profile\')"><div class="ph photo">📷</div><div class="body">'
+        +'<div class="row"><h3>'+ph.name+'</h3></div>'
+        +'<div style="margin:5px 0"><span class="stars">'+ratingStars(ph.rating)+'</span> <span class="muted">'+String(ph.rating).replace('.',',')+'</span></div>'
+        +'<div class="row"><span class="muted">'+(ph.specs||[]).join(' · ')+'</span><span class="price">'+ph.price+' €/h</span></div>'
+        +'</div></div>';
+    });
+    list.innerHTML=html;
+    var cnt=document.getElementById('resCount');
+    if(cnt){ cnt.textContent = arr.length===0 ? (hasActiveFilters()?I18N[curLang].r_none_match:I18N[curLang].r_empty) : (arr.length+' '+I18N[curLang].r_available); }
+    renderActiveFilters();
+  }
+  function renderActiveFilters(){
+    var box=document.getElementById('activeFilters'); if(!box) return;
+    var chips=[];
+    if(filterState.priceMin!=null||filterState.priceMax!=null){ chips.push((filterState.priceMin!=null?filterState.priceMin:'0')+'–'+(filterState.priceMax!=null?filterState.priceMax:'∞')+' €/h'); }
+    if(filterState.spec) chips.push(filterState.spec);
+    if(filterState.mode) chips.push(filterState.mode==='fixed'?I18N[curLang].sm_fixed:I18N[curLang].sm_roaming);
+    if(filterState.rating>0) chips.push('⭐'+String(filterState.rating).replace('.',',')+'+');
+    box.innerHTML=chips.map(function(c){ return '<span class="chip">'+c+'</span>'; }).join('');
+    var fc=document.getElementById('filtCount');
+    if(fc){ if(chips.length){ fc.textContent=chips.length; fc.style.display=''; } else { fc.textContent=''; fc.style.display='none'; } }
+  }
   var liveWatch=null;
   function toggleLive(cb){
     if(cb.checked){
@@ -923,6 +1008,41 @@
     var go=document.getElementById('gOther'); if(go) go.style.display='none';
     show('login');
   }
+  function deleteAccount(){
+    if(confirm(I18N[curLang].acc_delete_confirm)){
+      alert(I18N[curLang].acc_delete_done);
+      logout();
+    }
+  }
+  /* ---- Recensioni (compaiono solo a servizio concluso) ---- */
+  var bookingDone=false, reviewSubmitted=false, reviewStars=0;
+  function markPhotosSent(){ bookingDone=true; updateBookingUI(); }
+  function updateBookingUI(){
+    var st=document.getElementById('bkStatus'), sim=document.getElementById('bkSimBtn'),
+        wait=document.getElementById('bkWait'), box=document.getElementById('reviewBox'), done=document.getElementById('reviewDone');
+    if(st){
+      var key=bookingDone?'bk_done':'bk_confirmed';
+      st.setAttribute('data-i18n',key); st.textContent=I18N[curLang][key];
+      st.style.background=bookingDone?'#16a34a':''; st.style.color=bookingDone?'#fff':'';
+    }
+    if(sim) sim.style.display=bookingDone?'none':'';
+    if(wait) wait.style.display=bookingDone?'none':'';
+    if(box) box.style.display=(bookingDone&&!reviewSubmitted)?'block':'none';
+    if(done) done.style.display=(bookingDone&&reviewSubmitted)?'block':'none';
+  }
+  function setReviewStars(n){
+    reviewStars=n;
+    var pick=document.getElementById('starPick'); if(!pick) return;
+    var spans=pick.querySelectorAll('span');
+    for(var i=0;i<spans.length;i++){ spans[i].textContent=(i<n?'★':'☆'); spans[i].style.color=(i<n?'var(--gold)':''); }
+  }
+  function submitReview(){
+    if(reviewStars<1){ alert(I18N[curLang].rev_need_stars); return; }
+    reviewSubmitted=true;
+    var s=''; for(var i=0;i<reviewStars;i++) s+='★';
+    var ds=document.getElementById('reviewDoneStars'); if(ds){ ds.textContent=s; ds.style.color='var(--gold)'; }
+    updateBookingUI();
+  }
 
   /* ---- role ---- */
   function setRole(r){ currentRole=r; markRole(); }
@@ -993,7 +1113,7 @@
       s_search_btn:"Cerca fotografi", s_popular:"Destinazioni popolari", s_near:"📍 Cerca intorno a te", s_near_lbl:"Intorno a te",
       nav_search:"Cerca", nav_bookings:"Prenotazioni", nav_chat:"Chat", nav_profile:"Profilo",
       nav_home:"Home", nav_agenda:"Agenda", nav_earnings:"Incassi",
-      r_filters:"⚙ Filtri", r_price:"Prezzo", r_level:"Livello", r_spec:"Specializzazione",
+      r_filters:"⚙ Filtri", r_price:"Prezzo", r_level:"Livello", r_spec:"Specializzazione", f_price:"Prezzo (€/h)", f_min:"da", f_max:"a", f_spec:"Specializzazione", f_all:"Tutte", f_mode:"Modalità", f_rating:"Valutazione", f_reset:"Azzera", f_apply:"Applica", r_empty:"Nessun fotografo disponibile per ora.", r_none_match:"Nessun fotografo corrisponde ai filtri.", r_available:"fotografi disponibili",
       r_count:"6 fotografi disponibili in queste date",
       lvl_expert:"★ Esperto", lvl_top:"★ Top", lvl_novice:"★ Novello",
       r1_spec:"Ritratto · Street · Coppie", r2_spec:"Matrimonio · Fashion", r3_spec:"Street · Reportage",
@@ -1018,7 +1138,7 @@
       done_msg:"Marco Rossi ti aspetta il 13 luglio alle 16:00 a Roma. Ti abbiamo inviato i dettagli e il punto d'incontro via chat.",
       done_view_booking:"Vedi la prenotazione", done_back_search:"Torna alla ricerca",
       bk_title:"Le mie prenotazioni", bk_confirmed:"Confermata", bk_meeting:"📍 Punto d'incontro",
-      bk_after:"Dopo il servizio potrai scaricare la galleria e lasciare una recensione ⭐",
+      bk_after:"Dopo il servizio potrai scaricare la galleria e lasciare una recensione ⭐", bk_sim:"📸 Simula: foto inviate", bk_wait:"In attesa delle foto…", bk_done:"Conclusa", rev_title:"Lascia una recensione", rev_ph:"Com'è andata? Scrivi la tua esperienza…", rev_send:"Invia recensione", rev_thanks:"Grazie per la recensione!", rev_need_stars:"Seleziona almeno una stella.",
       label_traveler:"Lato viaggiatore", label_photographer:"Lato fotografo",
       d_hello:"Ciao", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ita:"Italiana", d_describe:"Descriviti", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
       d_next_level:"Prossimo livello: Top ★",
@@ -1040,7 +1160,7 @@
       av_hourly:"Oraria", av_daily:"Giornaliera", av_weekly:"Settimanale",
       add_chip:"+ aggiungi", av_save:"Salva",
       acc_title:"Il mio profilo", acc_role:"Ruolo", role_traveler:"Viaggiatore", role_photographer:"Fotografo",
-      acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci",
+      acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci", acc_delete:"Cancella account", acc_delete_confirm:"Sei sicuro di voler cancellare il tuo account? L'operazione è irreversibile.", acc_delete_done:"Account cancellato.",
       set_title:"Impostazioni", set_account:"Account", set_email:"Email di accesso", set_appearance:"Aspetto",
       set_theme:"Tema", theme_light:"Chiaro", theme_dark:"Scuro", theme_auto:"Automatico", set_language:"Lingua",
       set_notifs:"Notifiche", notif_bookings:"Prenotazioni e richieste", notif_messages:"Messaggi", notif_promos:"Offerte e promozioni", notif_reminders:"Promemoria", pf_title:"Portfolio", pf_hint:"Carica i tuoi lavori precedenti", g_title:"Scegli un account", g_sub:"per continuare su PHOllowME", g_other:"Usa un altro account", g_name_ph:"Nome", g_email_ph:"nome@gmail.com", set_name:"Nome", acc_take_photo:"📷 Scatta una foto", svc_title:"I tuoi servizi", svc_add:"+ Aggiungi servizio", svc_name_ph:"Nome del servizio", svc_desc_ph:"Descrizione", svc_remove:"🗑 Rimuovi"
@@ -1057,7 +1177,7 @@
       s_search_btn:"Search photographers", s_popular:"Popular destinations", s_near:"📍 Search around you", s_near_lbl:"Around you",
       nav_search:"Search", nav_bookings:"Bookings", nav_chat:"Chat", nav_profile:"Profile",
       nav_home:"Home", nav_agenda:"Schedule", nav_earnings:"Earnings",
-      r_filters:"⚙ Filters", r_price:"Price", r_level:"Level", r_spec:"Specialization",
+      r_filters:"⚙ Filters", r_price:"Price", r_level:"Level", r_spec:"Specialization", f_price:"Price (€/h)", f_min:"from", f_max:"to", f_spec:"Specialization", f_all:"All", f_mode:"Mode", f_rating:"Rating", f_reset:"Reset", f_apply:"Apply", r_empty:"No photographers available yet.", r_none_match:"No photographers match the filters.", r_available:"photographers available",
       r_count:"6 photographers available on these dates",
       lvl_expert:"★ Expert", lvl_top:"★ Top", lvl_novice:"★ Novice",
       r1_spec:"Portrait · Street · Couples", r2_spec:"Wedding · Fashion", r3_spec:"Street · Reportage",
@@ -1082,7 +1202,7 @@
       done_msg:"Marco Rossi is expecting you on July 13 at 16:00 in Rome. We've sent you the details and the meeting point via chat.",
       done_view_booking:"View booking", done_back_search:"Back to search",
       bk_title:"My bookings", bk_confirmed:"Confirmed", bk_meeting:"📍 Meeting point",
-      bk_after:"After the session you'll be able to download the gallery and leave a review ⭐",
+      bk_after:"After the session you'll be able to download the gallery and leave a review ⭐", bk_sim:"📸 Test: photos sent", bk_wait:"Waiting for the photos…", bk_done:"Completed", rev_title:"Leave a review", rev_ph:"How did it go? Share your experience…", rev_send:"Send review", rev_thanks:"Thanks for your review!", rev_need_stars:"Please select at least one star.",
       label_traveler:"Traveler side", label_photographer:"Photographer side",
       d_hello:"Hi", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ita:"Italian", d_describe:"Describe yourself", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
       d_next_level:"Next level: Top ★",
@@ -1104,7 +1224,7 @@
       av_hourly:"Hourly", av_daily:"Daily", av_weekly:"Weekly",
       add_chip:"+ add", av_save:"Save",
       acc_title:"My profile", acc_role:"Role", role_traveler:"Traveler", role_photographer:"Photographer",
-      acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out",
+      acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out", acc_delete:"Delete account", acc_delete_confirm:"Are you sure you want to delete your account? This action cannot be undone.", acc_delete_done:"Account deleted.",
       set_title:"Settings", set_account:"Account", set_email:"Login email", set_appearance:"Appearance",
       set_theme:"Theme", theme_light:"Light", theme_dark:"Dark", theme_auto:"Automatic", set_language:"Language",
       set_notifs:"Notifications", notif_bookings:"Bookings and requests", notif_messages:"Messages", notif_promos:"Offers and promotions", notif_reminders:"Reminders", pf_title:"Portfolio", pf_hint:"Upload your previous work", g_title:"Choose an account", g_sub:"to continue to PHOllowME", g_other:"Use another account", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Take a photo", svc_title:"Your services", svc_add:"+ Add service", svc_name_ph:"Service name", svc_desc_ph:"Description", svc_remove:"🗑 Remove"
@@ -1121,7 +1241,7 @@
       s_search_btn:"Buscar fotógrafos", s_popular:"Destinos populares", s_near:"📍 Buscar cerca de ti", s_near_lbl:"Cerca de ti",
       nav_search:"Buscar", nav_bookings:"Reservas", nav_chat:"Chat", nav_profile:"Perfil",
       nav_home:"Inicio", nav_agenda:"Agenda", nav_earnings:"Ingresos",
-      r_filters:"⚙ Filtros", r_price:"Precio", r_level:"Nivel", r_spec:"Especialización",
+      r_filters:"⚙ Filtros", r_price:"Precio", r_level:"Nivel", r_spec:"Especialización", f_price:"Precio (€/h)", f_min:"desde", f_max:"hasta", f_spec:"Especialización", f_all:"Todas", f_mode:"Modalidad", f_rating:"Valoración", f_reset:"Borrar", f_apply:"Aplicar", r_empty:"Ningún fotógrafo disponible por ahora.", r_none_match:"Ningún fotógrafo coincide con los filtros.", r_available:"fotógrafos disponibles",
       r_count:"6 fotógrafos disponibles en estas fechas",
       lvl_expert:"★ Experto", lvl_top:"★ Top", lvl_novice:"★ Novato",
       r1_spec:"Retrato · Calle · Parejas", r2_spec:"Boda · Moda", r3_spec:"Calle · Reportaje",
@@ -1146,7 +1266,7 @@
       done_msg:"Marco Rossi te espera el 13 de julio a las 16:00 en Roma. Te hemos enviado los detalles y el punto de encuentro por chat.",
       done_view_booking:"Ver la reserva", done_back_search:"Volver a la búsqueda",
       bk_title:"Mis reservas", bk_confirmed:"Confirmada", bk_meeting:"📍 Punto de encuentro",
-      bk_after:"Tras el servicio podrás descargar la galería y dejar una reseña ⭐",
+      bk_after:"Tras el servicio podrás descargar la galería y dejar una reseña ⭐", bk_sim:"📸 Prueba: fotos enviadas", bk_wait:"Esperando las fotos…", bk_done:"Finalizada", rev_title:"Deja una reseña", rev_ph:"¿Qué tal fue? Cuenta tu experiencia…", rev_send:"Enviar reseña", rev_thanks:"¡Gracias por tu reseña!", rev_need_stars:"Selecciona al menos una estrella.",
       label_traveler:"Lado viajero", label_photographer:"Lado fotógrafo",
       d_hello:"Hola", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ita:"Italiana", d_describe:"Descríbete", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
       d_next_level:"Próximo nivel: Top ★",
@@ -1168,7 +1288,7 @@
       av_hourly:"Por hora", av_daily:"Por día", av_weekly:"Por semana",
       add_chip:"+ añadir", av_save:"Guardar",
       acc_title:"Mi perfil", acc_role:"Rol", role_traveler:"Viajero", role_photographer:"Fotógrafo",
-      acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión",
+      acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión", acc_delete:"Eliminar cuenta", acc_delete_confirm:"¿Seguro que quieres eliminar tu cuenta? Esta acción es irreversible.", acc_delete_done:"Cuenta eliminada.",
       set_title:"Ajustes", set_account:"Cuenta", set_email:"Email de acceso", set_appearance:"Apariencia",
       set_theme:"Tema", theme_light:"Claro", theme_dark:"Oscuro", theme_auto:"Automático", set_language:"Idioma",
       set_notifs:"Notificaciones", notif_bookings:"Reservas y solicitudes", notif_messages:"Mensajes", notif_promos:"Ofertas y promociones", notif_reminders:"Recordatorios", pf_title:"Portfolio", pf_hint:"Sube tus trabajos anteriores", g_title:"Elige una cuenta", g_sub:"para continuar en PHOllowME", g_other:"Usar otra cuenta", g_name_ph:"Nombre", g_email_ph:"nombre@gmail.com", set_name:"Nombre", acc_take_photo:"📷 Hacer una foto", svc_title:"Tus servicios", svc_add:"+ Añadir servicio", svc_name_ph:"Nombre del servicio", svc_desc_ph:"Descripción", svc_remove:"🗑 Eliminar"
@@ -1185,7 +1305,7 @@
       s_search_btn:"Rechercher des photographes", s_popular:"Destinations populaires", s_near:"📍 Rechercher autour de vous", s_near_lbl:"Autour de vous",
       nav_search:"Recherche", nav_bookings:"Réservations", nav_chat:"Messages", nav_profile:"Profil",
       nav_home:"Accueil", nav_agenda:"Agenda", nav_earnings:"Revenus",
-      r_filters:"⚙ Filtres", r_price:"Prix", r_level:"Niveau", r_spec:"Spécialisation",
+      r_filters:"⚙ Filtres", r_price:"Prix", r_level:"Niveau", r_spec:"Spécialisation", f_price:"Prix (€/h)", f_min:"de", f_max:"à", f_spec:"Spécialisation", f_all:"Toutes", f_mode:"Mode", f_rating:"Note", f_reset:"Effacer", f_apply:"Appliquer", r_empty:"Aucun photographe disponible pour le moment.", r_none_match:"Aucun photographe ne correspond aux filtres.", r_available:"photographes disponibles",
       r_count:"6 photographes disponibles à ces dates",
       lvl_expert:"★ Expert", lvl_top:"★ Top", lvl_novice:"★ Débutant",
       r1_spec:"Portrait · Rue · Couples", r2_spec:"Mariage · Mode", r3_spec:"Rue · Reportage",
@@ -1210,7 +1330,7 @@
       done_msg:"Marco Rossi vous attend le 13 juillet à 16h00 à Rome. Nous vous avons envoyé les détails et le point de rendez-vous par chat.",
       done_view_booking:"Voir la réservation", done_back_search:"Retour à la recherche",
       bk_title:"Mes réservations", bk_confirmed:"Confirmée", bk_meeting:"📍 Point de rendez-vous",
-      bk_after:"Après la séance, vous pourrez télécharger la galerie et laisser un avis ⭐",
+      bk_after:"Après la séance, vous pourrez télécharger la galerie et laisser un avis ⭐", bk_sim:"📸 Test : photos envoyées", bk_wait:"En attente des photos…", bk_done:"Terminée", rev_title:"Laisser un avis", rev_ph:"Comment ça s'est passé ? Partagez votre expérience…", rev_send:"Envoyer l'avis", rev_thanks:"Merci pour votre avis !", rev_need_stars:"Sélectionnez au moins une étoile.",
       label_traveler:"Côté voyageur", label_photographer:"Côté photographe",
       d_hello:"Bonjour", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ita:"Italienne", d_describe:"Décrivez-vous", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
       d_next_level:"Niveau suivant : Top ★",
@@ -1232,7 +1352,7 @@
       av_hourly:"Horaire", av_daily:"Journalier", av_weekly:"Hebdomadaire",
       add_chip:"+ ajouter", av_save:"Enregistrer",
       acc_title:"Mon profil", acc_role:"Rôle", role_traveler:"Voyageur", role_photographer:"Photographe",
-      acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter",
+      acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter", acc_delete:"Supprimer le compte", acc_delete_confirm:"Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.", acc_delete_done:"Compte supprimé.",
       set_title:"Paramètres", set_account:"Compte", set_email:"Email de connexion", set_appearance:"Apparence",
       set_theme:"Thème", theme_light:"Clair", theme_dark:"Sombre", theme_auto:"Automatique", set_language:"Langue",
       set_notifs:"Notifications", notif_bookings:"Réservations et demandes", notif_messages:"Messages", notif_promos:"Offres et promotions", notif_reminders:"Rappels", pf_title:"Portfolio", pf_hint:"Ajoutez vos travaux précédents", g_title:"Choisir un compte", g_sub:"pour continuer sur PHOllowME", g_other:"Utiliser un autre compte", g_name_ph:"Nom", g_email_ph:"nom@gmail.com", set_name:"Nom", acc_take_photo:"📷 Prendre une photo", svc_title:"Vos services", svc_add:"+ Ajouter un service", svc_name_ph:"Nom du service", svc_desc_ph:"Description", svc_remove:"🗑 Supprimer"
@@ -1249,7 +1369,7 @@
       s_search_btn:"Fotografen suchen", s_popular:"Beliebte Reiseziele", s_near:"📍 In deiner Nähe suchen", s_near_lbl:"In deiner Nähe",
       nav_search:"Suche", nav_bookings:"Buchungen", nav_chat:"Chat", nav_profile:"Profil",
       nav_home:"Start", nav_agenda:"Kalender", nav_earnings:"Einnahmen",
-      r_filters:"⚙ Filter", r_price:"Preis", r_level:"Level", r_spec:"Spezialisierung",
+      r_filters:"⚙ Filter", r_price:"Preis", r_level:"Level", r_spec:"Spezialisierung", f_price:"Preis (€/h)", f_min:"von", f_max:"bis", f_spec:"Spezialisierung", f_all:"Alle", f_mode:"Modus", f_rating:"Bewertung", f_reset:"Zurücksetzen", f_apply:"Anwenden", r_empty:"Noch keine Fotografen verfügbar.", r_none_match:"Keine Fotografen entsprechen den Filtern.", r_available:"Fotografen verfügbar",
       r_count:"6 Fotografen an diesen Daten verfügbar",
       lvl_expert:"★ Experte", lvl_top:"★ Top", lvl_novice:"★ Neuling",
       r1_spec:"Porträt · Street · Paare", r2_spec:"Hochzeit · Fashion", r3_spec:"Street · Reportage",
@@ -1274,7 +1394,7 @@
       done_msg:"Marco Rossi erwartet dich am 13. Juli um 16:00 Uhr in Rom. Wir haben dir die Details und den Treffpunkt per Chat gesendet.",
       done_view_booking:"Buchung ansehen", done_back_search:"Zurück zur Suche",
       bk_title:"Meine Buchungen", bk_confirmed:"Bestätigt", bk_meeting:"📍 Treffpunkt",
-      bk_after:"Nach dem Termin kannst du die Galerie herunterladen und eine Bewertung abgeben ⭐",
+      bk_after:"Nach dem Termin kannst du die Galerie herunterladen und eine Bewertung abgeben ⭐", bk_sim:"📸 Test: Fotos gesendet", bk_wait:"Warten auf die Fotos…", bk_done:"Abgeschlossen", rev_title:"Bewertung abgeben", rev_ph:"Wie war es? Teile deine Erfahrung…", rev_send:"Bewertung senden", rev_thanks:"Danke für deine Bewertung!", rev_need_stars:"Bitte wähle mindestens einen Stern.",
       label_traveler:"Reisenden-Seite", label_photographer:"Fotografen-Seite",
       d_hello:"Hallo", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ita:"Italienisch", d_describe:"Beschreibe dich", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
       d_next_level:"Nächstes Level: Top ★",
@@ -1296,7 +1416,7 @@
       av_hourly:"Stündlich", av_daily:"Täglich", av_weekly:"Wöchentlich",
       add_chip:"+ hinzufügen", av_save:"Speichern",
       acc_title:"Mein Profil", acc_role:"Rolle", role_traveler:"Reisender", role_photographer:"Fotograf",
-      acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden",
+      acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden", acc_delete:"Konto löschen", acc_delete_confirm:"Möchtest du dein Konto wirklich löschen? Dies kann nicht rückgängig gemacht werden.", acc_delete_done:"Konto gelöscht.",
       set_title:"Einstellungen", set_account:"Konto", set_email:"Anmelde-E-Mail", set_appearance:"Darstellung",
       set_theme:"Thema", theme_light:"Hell", theme_dark:"Dunkel", theme_auto:"Automatisch", set_language:"Sprache",
       set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen", pf_title:"Portfolio", pf_hint:"Lade deine bisherigen Arbeiten hoch", g_title:"Konto auswählen", g_sub:"um bei PHOllowME fortzufahren", g_other:"Anderes Konto verwenden", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Ein Foto aufnehmen", svc_title:"Deine Leistungen", svc_add:"+ Leistung hinzufügen", svc_name_ph:"Name der Leistung", svc_desc_ph:"Beschreibung", svc_remove:"🗑 Entfernen"
@@ -1307,7 +1427,7 @@
     try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateAccountUI(); refreshLive(); initGoogle();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); refreshLive(); initGoogle(); renderResults(); updateBookingUI();
     (function(){
       function iso(d){var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;}
       var t=new Date(), o=new Date(t.getFullYear(),t.getMonth(),t.getDate()+3);
