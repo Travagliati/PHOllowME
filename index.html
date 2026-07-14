@@ -267,8 +267,8 @@
         </div>
       </div>
       <div class="welcome-brand">PHOllowME</div>
-      <div class="hero" style="height:100%;justify-content:flex-end;padding-bottom:30px">
-        <p style="font-size:15px;margin-bottom:26px" data-i18n="w_tag">Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.</p>
+      <div class="hero" style="height:100%;justify-content:center">
+        <p style="font-size:15px;margin-bottom:26px;text-align:center" data-i18n="w_tag">Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.</p>
         <button class="btn" style="background:#fff;color:#0B5A87" onclick="switchRole('traveler')" data-i18n="w_traveler">Sono un viaggiatore</button>
         <div style="height:10px"></div>
         <button class="btn ghost" style="background:transparent;color:#fff;border-color:#fff" onclick="switchRole('photographer')" data-i18n="w_photographer">Sono un fotografo</button>
@@ -284,7 +284,7 @@
         <button class="btn ghost" style="margin-bottom:14px" onclick="nearMe()" data-i18n="s_near">📍 Cerca intorno a te</button>
         <div class="field">
           <div class="k" data-i18n="s_dest">Destinazione</div>
-          <input id="destInput" class="fieldin" value="Roma, Italia" data-i18n-ph="s_dest_ph" placeholder="Città o luogo">
+          <input id="destInput" class="fieldin" data-i18n-ph="s_dest_ph" placeholder="Città o luogo">
         </div>
         <div class="row2">
           <div class="field"><div class="k" data-i18n="s_checkin">Arrivo</div><input id="dIn" class="fieldin" type="date"></div>
@@ -363,51 +363,47 @@
 
     <!-- ============ PROFILE ============ -->
     <div class="view" id="profile">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2>Marco Rossi</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 class="phName"></h2></div>
       <div class="scroll">
         <div class="photo" style="height:150px;font-size:34px">📷</div>
         <div class="pad">
           <div style="display:flex;gap:14px;align-items:center;margin-bottom:12px">
-            <div class="avatar">MR</div>
+            <div class="avatar phInit"></div>
             <div>
-              <h2 style="font-size:19px;color:var(--accent-d)">Marco Rossi</h2>
-              <div><span class="stars">★★★★★</span> <span class="muted" data-i18n="p_reviews_count">4.9 · 128 recensioni</span></div>
-              <span class="chip lvl" style="margin-top:4px" data-i18n="p_photographer_expert">★ Fotografo Esperto</span>
+              <h2 style="font-size:19px;color:var(--accent-d)" class="phName"></h2>
+              <div class="muted phRating"></div>
             </div>
           </div>
-          <p style="font-size:13px;line-height:1.5;color:var(--text2)" data-i18n="p_bio">Fotografo di ritratto e street a Roma da 8 anni. Ti porto nei luoghi più belli e meno turistici della città per scatti autentici.</p>
+          <p style="font-size:13px;line-height:1.5;color:var(--text2)" class="phBio"></p>
 
           <div class="divider"></div>
-          <div class="kv"><span class="muted" data-i18n="p_hourly">Tariffa oraria</span><b>45 €</b></div>
-          <div class="kv"><span class="muted" data-i18n="p_daily">Giornaliera</span><b>320 €</b></div>
-          <div class="kv"><span class="muted" data-i18n="p_weekly">Settimanale</span><b>1.500 €</b></div>
+          <div class="kv"><span class="muted" data-i18n="p_hourly">Tariffa oraria</span><b class="phHourly">—</b></div>
+          <div class="kv"><span class="muted" data-i18n="p_daily">Giornaliera</span><b class="phDaily">—</b></div>
+          <div class="kv"><span class="muted" data-i18n="p_weekly">Settimanale</span><b class="phWeekly">—</b></div>
 
           <h3 style="color:var(--accent-d);font-size:15px;margin:16px 0 8px" data-i18n="spec_title">Specializzazioni</h3>
-          <span class="chip" data-i18n="spec_portrait">Ritratto</span><span class="chip" data-i18n="spec_street">Street</span><span class="chip" data-i18n="spec_couples">Coppie</span><span class="chip" data-i18n="spec_reportage">Reportage</span>
+          <div id="phSpecs"></div>
 
           <h3 style="color:var(--accent-d);font-size:15px;margin:16px 0 8px" data-i18n="equip_title">Attrezzatura</h3>
-          <span class="chip">Sony A7 IV</span><span class="chip">85mm f/1.4</span><span class="chip">35mm f/1.8</span><span class="chip">Flash</span>
+          <div id="phEquip"></div>
 
           <h3 style="color:var(--accent-d);font-size:15px;margin:16px 0 8px">Portfolio</h3>
-          <div class="gallery">
-            <div class="g photo"></div><div class="g photo" style="background:linear-gradient(135deg,#3b7d5a,#123)"></div><div class="g photo" style="background:linear-gradient(135deg,#7d5a3b,#2a1a12)"></div>
-            <div class="g photo" style="background:linear-gradient(135deg,#5a3b7d,#1a1230)"></div><div class="g photo"></div><div class="g photo" style="background:linear-gradient(135deg,#7d3b5a,#301222)"></div>
-          </div>
+          <div class="gallery" id="phGallery"></div>
 
           <h3 style="color:var(--accent-d);font-size:15px;margin:16px 0 4px" data-i18n="p_reviews_title">Recensioni</h3>
-          <div class="rev"><b style="font-size:13px">Sofia D.</b> <span class="stars">★★★★★</span><p style="font-size:12px;color:var(--text2);margin-top:3px" data-i18n="p_rev1">Esperienza fantastica, foto meravigliose! Marco conosce ogni angolo di Roma.</p></div>
-          <div class="rev"><b style="font-size:13px">James T.</b> <span class="stars">★★★★★</span><p style="font-size:12px;color:var(--text2);margin-top:3px" data-i18n="p_rev2">Professionale e simpatico. Consegna rapida della galleria.</p></div>
+          <div id="phReviews"></div>
+          <p class="muted" id="phNoReviews" data-i18n="p_no_reviews">Nessuna recensione.</p>
         </div>
       </div>
       <div class="pad" style="border-top:1px solid var(--line)">
-        <div class="row" style="margin-bottom:10px"><span class="price" style="font-size:18px">45 €/h</span><span class="muted" data-i18n="p_available">disponibile 12–15 lug</span></div>
+        <div class="row" style="margin-bottom:10px"><span class="price phPrice" style="font-size:18px"></span><span class="muted phAvail"></span></div>
         <button class="btn" onclick="show('booking')" data-i18n="p_book">Prenota</button>
       </div>
     </div>
 
     <!-- ============ BOOKING ============ -->
     <div class="view" id="booking">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="b_book_title">Prenota Marco Rossi</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="b_book_title">Prenota</h2></div>
       <div class="scroll pad">
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:6px" data-i18n="b_choose_date">Scegli la data</h3>
         <div class="muted" style="text-align:center;margin-bottom:2px" data-i18n="b_month">Luglio 2026</div>
@@ -441,11 +437,11 @@
       <div class="scroll pad">
         <div class="field" style="cursor:default;background:var(--light);border-color:var(--accent)">
           <div class="k" data-i18n="pay_summary">Riepilogo</div>
-          <div class="v" style="font-size:14px">Marco Rossi · 13 lug · 16:00–17:00</div>
+          <div class="v" style="font-size:14px" id="paySummary"></div>
         </div>
         <h3 style="color:var(--accent-d);font-size:14px;margin:6px 0 8px" data-i18n="pay_method">Metodo di pagamento</h3>
-        <div class="pm on" onclick="selPay(this,'card')"><span class="pmi">💳</span><div class="pmt"><b data-i18n="pay_card">Carta</b><span>•••• 4242</span></div><span class="pmr"></span></div>
-        <div class="pm" onclick="selPay(this,'paypal')"><span class="pmi" style="color:#003087;font-weight:800;font-style:italic">Pay<span style="color:#009cde">Pal</span></span><div class="pmt"><b>PayPal</b><span>ltravagliati@libero.it</span></div><span class="pmr"></span></div>
+        <div class="pm on" onclick="selPay(this,'card')"><span class="pmi">💳</span><div class="pmt"><b data-i18n="pay_card">Carta</b><span id="payCard"></span></div><span class="pmr"></span></div>
+        <div class="pm" onclick="selPay(this,'paypal')"><span class="pmi" style="color:#003087;font-weight:800;font-style:italic">Pay<span style="color:#009cde">Pal</span></span><div class="pmt"><b>PayPal</b><span class="acctEmail"></span></div><span class="pmr"></span></div>
         <div class="pm" onclick="selPay(this,'wallet')"><span class="pmi"></span><div class="pmt"><b>Apple Pay / Google Pay</b><span data-i18n="pay_wallet_sub">Paga con un tocco</span></div><span class="pmr"></span></div>
         <div style="background:var(--light);border-radius:12px;padding:12px;font-size:12px;color:var(--accent-d);margin:6px 0" data-i18n="pay_escrow">🔒 L'importo viene trattenuto in modo sicuro (escrow) e versato al fotografo solo dopo la consegna delle foto.</div>
         <div class="divider"></div>
@@ -461,7 +457,7 @@
       <div class="succ">
         <div class="check">✓</div>
         <h2 style="color:var(--accent-d);font-size:20px;margin-bottom:8px" data-i18n="done_title">Prenotazione confermata!</h2>
-        <p class="muted" style="font-size:13px;line-height:1.5" data-i18n="done_msg">Marco Rossi ti aspetta il 13 luglio alle 16:00 a Roma. Ti abbiamo inviato i dettagli e il punto d'incontro via chat.</p>
+        <p class="muted" style="font-size:13px;line-height:1.5" data-i18n="done_msg">Ti abbiamo inviato i dettagli e il punto d'incontro via chat.</p>
         <div style="height:22px"></div>
         <button class="btn" onclick="show('bookings')" data-i18n="done_view_booking">Vedi la prenotazione</button>
         <div style="height:10px"></div>
@@ -473,30 +469,8 @@
     <div class="view" id="bookings">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand" data-i18n="bk_title">Le mie prenotazioni</span></div>
       <div class="scroll pad">
-        <div class="card" style="cursor:default">
-          <div class="body">
-            <div class="row"><h3>Marco Rossi</h3><span class="chip lvl" id="bkStatus" data-i18n="bk_confirmed">Confermata</span></div>
-            <p class="muted" style="margin:5px 0">📍 Roma · 13 lug, 16:00–17:00</p>
-            <div class="row2" style="margin-top:8px">
-              <button class="btn sm ghost">💬 Chat</button>
-              <button class="btn sm ghost" data-i18n="bk_meeting">📍 Punto d'incontro</button>
-            </div>
-            <button id="bkSimBtn" class="btn sm ghost" style="margin-top:10px;width:100%;border-style:dashed" onclick="markPhotosSent()" data-i18n="bk_sim">📸 Simula: foto inviate</button>
-            <p id="bkWait" class="muted" style="margin:10px 0 0;font-size:12px" data-i18n="bk_wait">In attesa delle foto…</p>
-            <div id="reviewBox" style="display:none;border-top:1px solid var(--line);margin-top:12px;padding-top:12px">
-              <b style="font-size:14px;color:var(--text);display:block;margin-bottom:6px" data-i18n="rev_title">Lascia una recensione</b>
-              <div id="starPick" style="font-size:26px;letter-spacing:5px;cursor:pointer;margin-bottom:8px;color:var(--grey)">
-                <span onclick="setReviewStars(1)">☆</span><span onclick="setReviewStars(2)">☆</span><span onclick="setReviewStars(3)">☆</span><span onclick="setReviewStars(4)">☆</span><span onclick="setReviewStars(5)">☆</span>
-              </div>
-              <textarea id="reviewText" class="txtin" rows="3" data-i18n-ph="rev_ph" placeholder="Com'è andata? Scrivi la tua esperienza…" style="resize:none;margin-bottom:8px"></textarea>
-              <button class="btn sm" style="width:100%" onclick="submitReview()" data-i18n="rev_send">Invia recensione</button>
-            </div>
-            <div id="reviewDone" style="display:none;border-top:1px solid var(--line);margin-top:12px;padding-top:12px">
-              <b style="color:var(--accent-d)" data-i18n="rev_thanks">Grazie per la recensione!</b>
-              <div id="reviewDoneStars" style="font-size:20px;letter-spacing:3px;margin-top:4px"></div>
-            </div>
-          </div>
-        </div>
+        <div id="bkList"></div>
+        <p class="muted" id="bkEmpty" style="margin:24px 0;text-align:center" data-i18n="bk_empty">Non hai ancora prenotazioni.</p>
       </div>
       <div class="nav">
         <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
@@ -526,15 +500,12 @@
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 4px" data-i18n="pf_title">Portfolio</h3>
         <p class="muted" style="margin-bottom:8px" data-i18n="pf_hint">Carica i tuoi lavori precedenti</p>
         <div class="gallery" id="pfGrid">
-          <div class="g photo"></div>
-          <div class="g photo" style="background:linear-gradient(135deg,#3b7d5a,#123)"></div>
-          <div class="g photo" style="background:linear-gradient(135deg,#7d5a3b,#2a1a12)"></div>
           <label class="g pfadd">+<input type="file" accept="image/*" onchange="addWork(this)" style="display:none"></label>
         </div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_languages">Lingue parlate</h3>
         <div style="margin-bottom:14px">
-          <span class="chip" data-i18n="lang_ita">Italiano</span><span class="chip" data-i18n="lang_eng">Inglese</span><span class="chip" data-i18n="lang_fra">Francese</span><span class="chip add" data-i18n="add_chip">+ aggiungi</span>
+          <span class="chip add" data-i18n="add_chip">+ aggiungi</span>
         </div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_car">Automunito</h3>
@@ -555,25 +526,17 @@
         </div>
 
         <div class="row2" style="margin-bottom:14px">
-          <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">128</div><div class="muted" data-i18n="d_services">servizi</div></div>
-          <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">4.9★</div><div class="muted" data-i18n="d_rating">valutazione</div></div>
+          <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">0</div><div class="muted" data-i18n="d_services">servizi</div></div>
+          <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">—</div><div class="muted" data-i18n="d_rating">valutazione</div></div>
         </div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="d_next_level">Prossimo livello: Top ★</h3>
-        <div style="background:var(--bg);border-radius:20px;height:12px;overflow:hidden;margin-bottom:4px"><div style="width:64%;height:100%;background:var(--accent)"></div></div>
-        <p class="muted" style="margin-bottom:16px" data-i18n="d_next_msg">Ancora 22 servizi e la valutazione ≥4,8 per sbloccare visibilità massima e commissioni ridotte.</p>
+        <div style="background:var(--bg);border-radius:20px;height:12px;overflow:hidden;margin-bottom:4px"><div style="width:0%;height:100%;background:var(--accent)"></div></div>
+        <p class="muted" style="margin-bottom:16px" data-i18n="d_next_msg">Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.</p>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="d_pending">Richieste in attesa</h3>
-        <div class="card" style="cursor:default">
-          <div class="body">
-            <div class="row"><h3 style="font-size:14px" data-i18n="d_req1">Sofia D. · Ritratto</h3><span class="price">45 €</span></div>
-            <p class="muted" style="margin:5px 0">13 lug · 16:00–17:00 · Trastevere</p>
-            <div class="row2" style="margin-top:8px">
-              <button class="btn sm" onclick="show('ph_avail')" data-i18n="d_accept">Accetta</button>
-              <button class="btn sm ghost" data-i18n="d_reject">Rifiuta</button>
-            </div>
-          </div>
-        </div>
+        <div id="reqList"></div>
+        <p class="muted" id="reqEmpty" style="margin:8px 0 16px;text-align:center" data-i18n="d_no_requests">Nessuna richiesta al momento.</p>
 
         <div class="divider"></div>
         <button class="btn ghost" onclick="show('ph_avail')" data-i18n="d_manage">Gestisci profilo e disponibilità</button>
@@ -592,30 +555,8 @@
     <div class="view" id="ph_chats">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand" data-i18n="chats_title">Chat</span></div>
       <div class="scroll pad">
-        <div class="clist">
-          <div class="crow" onclick="show('ph_chat')">
-            <div class="avatar">SD</div>
-            <div class="txt">
-              <div class="n">Sofia D. <span>16:04</span></div>
-              <div class="p" data-i18n="chat_bye">Perfetto, ci vediamo a Trastevere!</div>
-            </div>
-            <span class="badge">2</span>
-          </div>
-          <div class="crow" onclick="show('ph_chat')">
-            <div class="avatar" style="background:linear-gradient(135deg,#3b7d5a,#123)">JT</div>
-            <div class="txt">
-              <div class="n">James T. <span data-i18n="time_yesterday">ieri</span></div>
-              <div class="p" data-i18n="chat_prev_james">Grazie mille per le foto 🙏</div>
-            </div>
-          </div>
-          <div class="crow" onclick="show('ph_chat')">
-            <div class="avatar" style="background:linear-gradient(135deg,#7d5a3b,#2a1a12)">EM</div>
-            <div class="txt">
-              <div class="n">Elena M. <span data-i18n="time_mon">lun</span></div>
-              <div class="p" data-i18n="chat_prev_elena">Sei disponibile anche il 20?</div>
-            </div>
-          </div>
-        </div>
+        <div class="clist" id="chatList"></div>
+        <p class="muted" id="chatsEmpty" style="margin:24px 0;text-align:center" data-i18n="chats_empty">Nessuna chat al momento.</p>
       </div>
       <div class="nav">
         <div onclick="show('ph_dash')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
@@ -629,17 +570,10 @@
     <div class="view" id="ph_chat">
       <div class="topbar">
         <span class="back" onclick="goBack()">‹</span>
-        <div class="avatar" style="width:34px;height:34px;font-size:13px">SD</div>
-        <div><h2 style="font-size:15px">Sofia D.</h2><div class="muted" style="font-size:10px" data-i18n="chat_hdr_sub">Ritratto · 13 lug, 16:00</div></div>
+        <div class="avatar" id="chatAvatar" style="width:34px;height:34px;font-size:13px"></div>
+        <div><h2 style="font-size:15px" id="chatName"></h2><div class="muted" style="font-size:10px" id="chatSub"></div></div>
       </div>
-      <div class="chatbg">
-        <div class="day" data-i18n="day_today">Oggi</div>
-        <div class="bub them"><span data-i18n="chat_b1">Ciao Marco! Ho appena prenotato il servizio per domani, non vedo l'ora 😊</span><span class="t">15:58</span></div>
-        <div class="bub me"><span data-i18n="chat_b2">Ciao Sofia! Confermo, benissimo. Ci troviamo davanti a Piazza Trilussa alle 16:00?</span><span class="t">16:00</span></div>
-        <div class="bub them"><span data-i18n="chat_b3">Perfetto! Che vestiti mi consigli per gli scatti al tramonto?</span><span class="t">16:02</span></div>
-        <div class="bub me"><span data-i18n="chat_b4">Colori tenui e tinta unita rendono molto bene con la luce dorata. Porta anche un cambio se vuoi!</span><span class="t">16:03</span></div>
-        <div class="bub them"><span data-i18n="chat_bye">Perfetto, ci vediamo a Trastevere!</span><span class="t">16:04</span></div>
-      </div>
+      <div class="chatbg" id="chatBody"></div>
       <div class="inbar">
         <div class="box" data-i18n="chat_input">Scrivi un messaggio…</div>
         <button class="send">➤</button>
@@ -651,10 +585,10 @@
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="av_title">Profilo & disponibilità</h2></div>
       <div class="scroll pad">
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="av_where_when">Dove sarai e quando</h3>
-        <div class="field" style="cursor:default"><div class="k" data-i18n="av_location">Località</div><div class="v">📍 Roma, Italia</div></div>
+        <div class="field"><div class="k" data-i18n="av_location">Località</div><input id="avLoc" class="fieldin" data-i18n-ph="s_dest_ph" placeholder="Città o luogo"></div>
         <div class="row2">
-          <div class="field" style="cursor:default"><div class="k" data-i18n="av_from">Dal</div><div class="v">10 lug</div></div>
-          <div class="field" style="cursor:default"><div class="k" data-i18n="av_to">Al</div><div class="v">31 lug</div></div>
+          <div class="field"><div class="k" data-i18n="av_from">Dal</div><input id="avFrom" class="fieldin" type="date"></div>
+          <div class="field"><div class="k" data-i18n="av_to">Al</div><input id="avTo" class="fieldin" type="date"></div>
         </div>
         <button class="btn ghost sm" style="margin-bottom:16px" data-i18n="av_add_location">+ Aggiungi un'altra località / periodo</button>
 
@@ -666,25 +600,14 @@
         </div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="svc_title">I tuoi servizi</h3>
-        <div id="svcList">
-          <div class="svc">
-            <input class="svc-in nm" value="Ritratto in esterni" data-i18n-ph="svc_name_ph">
-            <input class="svc-in" value="Servizio ritratto nei luoghi più belli della città" data-i18n-ph="svc_desc_ph">
-            <div class="rates">
-              <div class="rate"><label data-i18n="av_hourly">Oraria</label><input value="45 €"></div>
-              <div class="rate"><label data-i18n="av_daily">Giornaliera</label><input value="320 €"></div>
-              <div class="rate"><label data-i18n="av_weekly">Settimanale</label><input value="1.500 €"></div>
-            </div>
-            <span class="svc-del" onclick="delSvc(this)" data-i18n="svc_remove">🗑 Rimuovi</span>
-          </div>
-        </div>
+        <div id="svcList"></div>
         <button class="btn ghost sm" style="margin-bottom:16px" onclick="addService()" data-i18n="svc_add">+ Aggiungi servizio</button>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 8px" data-i18n="equip_title">Attrezzatura</h3>
-        <span class="chip">Sony A7 IV</span><span class="chip">85mm f/1.4</span><span class="chip">Flash</span><span class="chip add" data-i18n="add_chip">+ aggiungi</span>
+        <span class="chip add" data-i18n="add_chip">+ aggiungi</span>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 8px" data-i18n="spec_title">Specializzazioni</h3>
-        <span class="chip" data-i18n="spec_portrait">Ritratto</span><span class="chip" data-i18n="spec_street">Street</span><span class="chip" data-i18n="spec_couples">Coppie</span><span class="chip add" data-i18n="add_chip">+ aggiungi</span>
+        <span class="chip add" data-i18n="add_chip">+ aggiungi</span>
 
         <div class="divider"></div>
         <button class="btn" onclick="show('ph_dash')" data-i18n="av_save">Salva</button>
@@ -756,6 +679,13 @@
 
 <script>
   var curLang='it', currentRole='traveler', accountEmail='ltravagliati@libero.it', accountName='Luigi Travagliati', themePref='auto';
+  /* ---- Sessione: ricorda accesso e ruolo tra le aperture dell'app ---- */
+  var SESS_KEY='phollowme_session', roleChosen=false;
+  function saveSession(){
+    try{ localStorage.setItem(SESS_KEY, JSON.stringify({ name:accountName, email:accountEmail, role: roleChosen?currentRole:null })); }catch(e){}
+  }
+  function loadSession(){ try{ var r=localStorage.getItem(SESS_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
+  function clearSession(){ try{ localStorage.removeItem(SESS_KEY); }catch(e){} }
 
   var navStack=[];
   function _activate(id){
@@ -829,9 +759,11 @@
   }
   function doSearch(){
     var i=document.getElementById('destInput');
-    var dest=(i&&i.value?i.value:'').trim()||'Roma';
-    var r=searchRange();
-    var h=document.getElementById('resHead'); if(h) h.textContent=dest+(r?(' · '+r):'');
+    var dest=(i&&i.value?i.value:'').trim();
+    var r=searchRange(), parts=[];
+    if(dest) parts.push(dest);
+    if(r) parts.push(r);
+    var h=document.getElementById('resHead'); if(h) h.textContent=parts.join(' · ');
     document.body.classList.remove('nearby');
     show('results');
   }
@@ -954,7 +886,7 @@
     if(n) accountName=n; if(e) accountEmail=e;
     finishLogin();
   }
-  function finishLogin(){ updateAccountUI(); show('welcome'); }
+  function finishLogin(){ roleChosen=false; saveSession(); updateAccountUI(); show('welcome'); }
   /* ---- Google Sign-In (reale). Incolla qui il tuo OAuth Client ID: ---- */
   var GOOGLE_CLIENT_ID='367035462997-oi28tdarvlkbeoer9ktmn3c7fiff53u1.apps.googleusercontent.com';
   function initGoogle(){
@@ -963,7 +895,12 @@
     try{
       google.accounts.id.initialize({ client_id:GOOGLE_CLIENT_ID, callback:onGoogleCredential });
       var c=document.getElementById('gsiBtn');
-      if(c){ c.innerHTML=''; google.accounts.id.renderButton(c,{theme:'filled_blue',size:'large',width:260,text:'continue_with',shape:'pill'}); c.style.marginBottom='12px'; }
+      if(c){
+        c.innerHTML='';
+        var gw=Math.round(c.getBoundingClientRect().width); if(!gw||gw<200){ gw=300; } if(gw>400){ gw=400; }
+        google.accounts.id.renderButton(c,{theme:'outline',size:'large',width:gw,text:'continue_with',shape:'rectangular',logo_alignment:'center'});
+        c.style.marginBottom='12px';
+      }
       var cb=document.getElementById('customGoogle'); if(cb) cb.style.display='none';
     }catch(e){}
   }
@@ -981,7 +918,7 @@
     }catch(e){}
     finishLogin();
   }
-  function setName(v){ v=(v||'').trim(); if(v){ accountName=v; updateAccountUI(); } }
+  function setName(v){ v=(v||'').trim(); if(v){ accountName=v; updateAccountUI(); saveSession(); } }
   function updateAccountUI(){
     document.querySelectorAll('.acctEmail').forEach(function(el){ el.textContent=accountEmail; });
     document.querySelectorAll('.acctName').forEach(function(el){ el.textContent=accountName; });
@@ -1004,9 +941,11 @@
   }
   function delSvc(el){ var c=el.closest('.svc'); if(c) c.remove(); }
   function logout(){
+    clearSession(); roleChosen=false;
     document.getElementById('emailWrap').style.display='none';
     var go=document.getElementById('gOther'); if(go) go.style.display='none';
     show('login');
+    initGoogle();
   }
   function deleteAccount(){
     if(confirm(I18N[curLang].acc_delete_confirm)){
@@ -1046,7 +985,7 @@
 
   /* ---- role ---- */
   function setRole(r){ currentRole=r; markRole(); }
-  function switchRole(r){ setRole(r); show(r==='photographer'?'ph_dash':'search'); }
+  function switchRole(r){ setRole(r); roleChosen=true; saveSession(); show(r==='photographer'?'ph_dash':'search'); }
   function markRole(){ document.querySelectorAll('.roleopt').forEach(function(el){ el.classList.toggle('on', el.getAttribute('data-role')===currentRole); }); }
 
   /* ---- theme ---- */
@@ -1125,7 +1064,7 @@
       p_rev1:"Esperienza fantastica, foto meravigliose! Marco conosce ogni angolo di Roma.",
       p_rev2:"Professionale e simpatico. Consegna rapida della galleria.",
       p_available:"disponibile 12–15 lug", p_book:"Prenota",
-      b_book_title:"Prenota Marco Rossi", b_choose_date:"Scegli la data", b_month:"Luglio 2026",
+      b_book_title:"Prenota", p_no_reviews:"Nessuna recensione.", b_choose_date:"Scegli la data", b_month:"Luglio 2026",
       cal_l1:"L", cal_l2:"M", cal_l3:"M", cal_l4:"G", cal_l5:"V", cal_l6:"S", cal_l7:"D",
       b_duration:"Durata", b_1h:"1 ora", b_2h:"2 ore", b_day:"Giornata",
       b_time:"Orario", b_time_val:"🕓 16:00 — 17:00 (golden hour)",
@@ -1135,15 +1074,15 @@
       pay_escrow:"🔒 L'importo viene trattenuto in modo sicuro (escrow) e versato al fotografo solo dopo la consegna delle foto.",
       pay_btn_confirm:"Conferma e paga 51,75 €", pay_btn_paypal:"Paga con PayPal 51,75 €", pay_btn_wallet:" Paga 51,75 €",
       done_title:"Prenotazione confermata!",
-      done_msg:"Marco Rossi ti aspetta il 13 luglio alle 16:00 a Roma. Ti abbiamo inviato i dettagli e il punto d'incontro via chat.",
+      done_msg:"Ti abbiamo inviato i dettagli e il punto d'incontro via chat.",
       done_view_booking:"Vedi la prenotazione", done_back_search:"Torna alla ricerca",
-      bk_title:"Le mie prenotazioni", bk_confirmed:"Confermata", bk_meeting:"📍 Punto d'incontro",
+      bk_title:"Le mie prenotazioni", bk_confirmed:"Confermata", bk_meeting:"📍 Punto d'incontro", bk_empty:"Non hai ancora prenotazioni.",
       bk_after:"Dopo il servizio potrai scaricare la galleria e lasciare una recensione ⭐", bk_sim:"📸 Simula: foto inviate", bk_wait:"In attesa delle foto…", bk_done:"Conclusa", rev_title:"Lascia una recensione", rev_ph:"Com'è andata? Scrivi la tua esperienza…", rev_send:"Invia recensione", rev_thanks:"Grazie per la recensione!", rev_need_stars:"Seleziona almeno una stella.",
       label_traveler:"Lato viaggiatore", label_photographer:"Lato fotografo",
       d_hello:"Ciao", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ita:"Italiana", d_describe:"Descriviti", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
       d_next_level:"Prossimo livello: Top ★",
-      d_next_msg:"Ancora 22 servizi e la valutazione ≥4,8 per sbloccare visibilità massima e commissioni ridotte.",
-      d_pending:"Richieste in attesa", d_req1:"Sofia D. · Ritratto", d_accept:"Accetta", d_reject:"Rifiuta", d_live_title:"Posizione in tempo reale", d_live_on:"● In diretta", d_live_off:"Disattivata",
+      d_next_msg:"Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.",
+      d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta", d_live_title:"Posizione in tempo reale", d_live_on:"● In diretta", d_live_off:"Disattivata",
       d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
       chats_title:"Chat", chat_bye:"Perfetto, ci vediamo a Trastevere!",
       time_yesterday:"ieri", chat_prev_james:"Grazie mille per le foto 🙏",
@@ -1189,7 +1128,7 @@
       p_rev1:"Fantastic experience, wonderful photos! Marco knows every corner of Rome.",
       p_rev2:"Professional and friendly. Fast gallery delivery.",
       p_available:"available 12–15 Jul", p_book:"Book",
-      b_book_title:"Book Marco Rossi", b_choose_date:"Choose the date", b_month:"July 2026",
+      b_book_title:"Book", p_no_reviews:"No reviews yet.", b_choose_date:"Choose the date", b_month:"July 2026",
       cal_l1:"M", cal_l2:"T", cal_l3:"W", cal_l4:"T", cal_l5:"F", cal_l6:"S", cal_l7:"S",
       b_duration:"Duration", b_1h:"1 hour", b_2h:"2 hours", b_day:"Full day",
       b_time:"Time", b_time_val:"🕓 16:00 — 17:00 (golden hour)",
@@ -1199,15 +1138,15 @@
       pay_escrow:"🔒 The amount is held securely (escrow) and released to the photographer only after the photos are delivered.",
       pay_btn_confirm:"Confirm and pay €51.75", pay_btn_paypal:"Pay with PayPal €51.75", pay_btn_wallet:" Pay €51.75",
       done_title:"Booking confirmed!",
-      done_msg:"Marco Rossi is expecting you on July 13 at 16:00 in Rome. We've sent you the details and the meeting point via chat.",
+      done_msg:"We've sent you the details and the meeting point via chat.",
       done_view_booking:"View booking", done_back_search:"Back to search",
-      bk_title:"My bookings", bk_confirmed:"Confirmed", bk_meeting:"📍 Meeting point",
+      bk_title:"My bookings", bk_confirmed:"Confirmed", bk_meeting:"📍 Meeting point", bk_empty:"You have no bookings yet.",
       bk_after:"After the session you'll be able to download the gallery and leave a review ⭐", bk_sim:"📸 Test: photos sent", bk_wait:"Waiting for the photos…", bk_done:"Completed", rev_title:"Leave a review", rev_ph:"How did it go? Share your experience…", rev_send:"Send review", rev_thanks:"Thanks for your review!", rev_need_stars:"Please select at least one star.",
       label_traveler:"Traveler side", label_photographer:"Photographer side",
       d_hello:"Hi", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ita:"Italian", d_describe:"Describe yourself", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
       d_next_level:"Next level: Top ★",
-      d_next_msg:"22 more services and a rating ≥4.8 to unlock maximum visibility and reduced commissions.",
-      d_pending:"Pending requests", d_req1:"Sofia D. · Portrait", d_accept:"Accept", d_reject:"Decline", d_live_title:"Live location", d_live_on:"● Live", d_live_off:"Off",
+      d_next_msg:"Complete services and keep a high rating to unlock maximum visibility and reduced commissions.",
+      d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline", d_live_title:"Live location", d_live_on:"● Live", d_live_off:"Off",
       d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
       chats_title:"Chat", chat_bye:"Perfect, see you in Trastevere!",
       time_yesterday:"yesterday", chat_prev_james:"Thank you so much for the photos 🙏",
@@ -1253,7 +1192,7 @@
       p_rev1:"¡Experiencia fantástica, fotos maravillosas! Marco conoce cada rincón de Roma.",
       p_rev2:"Profesional y simpático. Entrega rápida de la galería.",
       p_available:"disponible 12–15 jul", p_book:"Reservar",
-      b_book_title:"Reservar a Marco Rossi", b_choose_date:"Elige la fecha", b_month:"Julio 2026",
+      b_book_title:"Reservar", p_no_reviews:"Sin reseñas.", b_choose_date:"Elige la fecha", b_month:"Julio 2026",
       cal_l1:"L", cal_l2:"M", cal_l3:"X", cal_l4:"J", cal_l5:"V", cal_l6:"S", cal_l7:"D",
       b_duration:"Duración", b_1h:"1 hora", b_2h:"2 horas", b_day:"Día completo",
       b_time:"Horario", b_time_val:"🕓 16:00 — 17:00 (golden hour)",
@@ -1263,15 +1202,15 @@
       pay_escrow:"🔒 El importe se retiene de forma segura (escrow) y se abona al fotógrafo solo tras la entrega de las fotos.",
       pay_btn_confirm:"Confirmar y pagar 51,75 €", pay_btn_paypal:"Pagar con PayPal 51,75 €", pay_btn_wallet:" Pagar 51,75 €",
       done_title:"¡Reserva confirmada!",
-      done_msg:"Marco Rossi te espera el 13 de julio a las 16:00 en Roma. Te hemos enviado los detalles y el punto de encuentro por chat.",
+      done_msg:"Te hemos enviado los detalles y el punto de encuentro por chat.",
       done_view_booking:"Ver la reserva", done_back_search:"Volver a la búsqueda",
-      bk_title:"Mis reservas", bk_confirmed:"Confirmada", bk_meeting:"📍 Punto de encuentro",
+      bk_title:"Mis reservas", bk_confirmed:"Confirmada", bk_meeting:"📍 Punto de encuentro", bk_empty:"Aún no tienes reservas.",
       bk_after:"Tras el servicio podrás descargar la galería y dejar una reseña ⭐", bk_sim:"📸 Prueba: fotos enviadas", bk_wait:"Esperando las fotos…", bk_done:"Finalizada", rev_title:"Deja una reseña", rev_ph:"¿Qué tal fue? Cuenta tu experiencia…", rev_send:"Enviar reseña", rev_thanks:"¡Gracias por tu reseña!", rev_need_stars:"Selecciona al menos una estrella.",
       label_traveler:"Lado viajero", label_photographer:"Lado fotógrafo",
       d_hello:"Hola", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ita:"Italiana", d_describe:"Descríbete", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
       d_next_level:"Próximo nivel: Top ★",
-      d_next_msg:"22 servicios más y una valoración ≥4,8 para desbloquear máxima visibilidad y comisiones reducidas.",
-      d_pending:"Solicitudes pendientes", d_req1:"Sofia D. · Retrato", d_accept:"Aceptar", d_reject:"Rechazar", d_live_title:"Ubicación en tiempo real", d_live_on:"● En directo", d_live_off:"Desactivada",
+      d_next_msg:"Completa servicios y mantén una valoración alta para desbloquear máxima visibilidad y comisiones reducidas.",
+      d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar", d_live_title:"Ubicación en tiempo real", d_live_on:"● En directo", d_live_off:"Desactivada",
       d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
       chats_title:"Chat", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
       time_yesterday:"ayer", chat_prev_james:"¡Muchas gracias por las fotos 🙏",
@@ -1317,7 +1256,7 @@
       p_rev1:"Expérience fantastique, des photos magnifiques ! Marco connaît chaque coin de Rome.",
       p_rev2:"Professionnel et sympathique. Livraison rapide de la galerie.",
       p_available:"disponible 12–15 juil.", p_book:"Réserver",
-      b_book_title:"Réserver Marco Rossi", b_choose_date:"Choisissez la date", b_month:"Juillet 2026",
+      b_book_title:"Réserver", p_no_reviews:"Aucun avis.", b_choose_date:"Choisissez la date", b_month:"Juillet 2026",
       cal_l1:"L", cal_l2:"M", cal_l3:"M", cal_l4:"J", cal_l5:"V", cal_l6:"S", cal_l7:"D",
       b_duration:"Durée", b_1h:"1 heure", b_2h:"2 heures", b_day:"Journée",
       b_time:"Horaire", b_time_val:"🕓 16:00 — 17:00 (golden hour)",
@@ -1327,15 +1266,15 @@
       pay_escrow:"🔒 Le montant est conservé en sécurité (escrow) et versé au photographe uniquement après la remise des photos.",
       pay_btn_confirm:"Confirmer et payer 51,75 €", pay_btn_paypal:"Payer avec PayPal 51,75 €", pay_btn_wallet:" Payer 51,75 €",
       done_title:"Réservation confirmée !",
-      done_msg:"Marco Rossi vous attend le 13 juillet à 16h00 à Rome. Nous vous avons envoyé les détails et le point de rendez-vous par chat.",
+      done_msg:"Nous vous avons envoyé les détails et le point de rendez-vous par chat.",
       done_view_booking:"Voir la réservation", done_back_search:"Retour à la recherche",
-      bk_title:"Mes réservations", bk_confirmed:"Confirmée", bk_meeting:"📍 Point de rendez-vous",
+      bk_title:"Mes réservations", bk_confirmed:"Confirmée", bk_meeting:"📍 Point de rendez-vous", bk_empty:"Vous n'avez pas encore de réservations.",
       bk_after:"Après la séance, vous pourrez télécharger la galerie et laisser un avis ⭐", bk_sim:"📸 Test : photos envoyées", bk_wait:"En attente des photos…", bk_done:"Terminée", rev_title:"Laisser un avis", rev_ph:"Comment ça s'est passé ? Partagez votre expérience…", rev_send:"Envoyer l'avis", rev_thanks:"Merci pour votre avis !", rev_need_stars:"Sélectionnez au moins une étoile.",
       label_traveler:"Côté voyageur", label_photographer:"Côté photographe",
       d_hello:"Bonjour", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ita:"Italienne", d_describe:"Décrivez-vous", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
       d_next_level:"Niveau suivant : Top ★",
-      d_next_msg:"Encore 22 services et une note ≥4,8 pour débloquer une visibilité maximale et des commissions réduites.",
-      d_pending:"Demandes en attente", d_req1:"Sofia D. · Portrait", d_accept:"Accepter", d_reject:"Refuser", d_live_title:"Position en temps réel", d_live_on:"● En direct", d_live_off:"Désactivée",
+      d_next_msg:"Réalisez des prestations et gardez une bonne note pour débloquer une visibilité maximale et des commissions réduites.",
+      d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser", d_live_title:"Position en temps réel", d_live_on:"● En direct", d_live_off:"Désactivée",
       d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
       chats_title:"Messages", chat_bye:"Parfait, on se voit à Trastevere !",
       time_yesterday:"hier", chat_prev_james:"Merci beaucoup pour les photos 🙏",
@@ -1381,7 +1320,7 @@
       p_rev1:"Fantastisches Erlebnis, wunderbare Fotos! Marco kennt jede Ecke Roms.",
       p_rev2:"Professionell und sympathisch. Schnelle Lieferung der Galerie.",
       p_available:"verfügbar 12.–15. Jul", p_book:"Buchen",
-      b_book_title:"Marco Rossi buchen", b_choose_date:"Datum wählen", b_month:"Juli 2026",
+      b_book_title:"Buchen", p_no_reviews:"Noch keine Bewertungen.", b_choose_date:"Datum wählen", b_month:"Juli 2026",
       cal_l1:"M", cal_l2:"D", cal_l3:"M", cal_l4:"D", cal_l5:"F", cal_l6:"S", cal_l7:"S",
       b_duration:"Dauer", b_1h:"1 Stunde", b_2h:"2 Stunden", b_day:"Ganzer Tag",
       b_time:"Uhrzeit", b_time_val:"🕓 16:00 — 17:00 Uhr (goldene Stunde)",
@@ -1391,15 +1330,15 @@
       pay_escrow:"🔒 Der Betrag wird sicher einbehalten (Treuhand) und erst nach Lieferung der Fotos an den Fotografen ausgezahlt.",
       pay_btn_confirm:"Bestätigen und 51,75 € zahlen", pay_btn_paypal:"Mit PayPal 51,75 € zahlen", pay_btn_wallet:" 51,75 € zahlen",
       done_title:"Buchung bestätigt!",
-      done_msg:"Marco Rossi erwartet dich am 13. Juli um 16:00 Uhr in Rom. Wir haben dir die Details und den Treffpunkt per Chat gesendet.",
+      done_msg:"Wir haben dir die Details und den Treffpunkt per Chat gesendet.",
       done_view_booking:"Buchung ansehen", done_back_search:"Zurück zur Suche",
-      bk_title:"Meine Buchungen", bk_confirmed:"Bestätigt", bk_meeting:"📍 Treffpunkt",
+      bk_title:"Meine Buchungen", bk_confirmed:"Bestätigt", bk_meeting:"📍 Treffpunkt", bk_empty:"Du hast noch keine Buchungen.",
       bk_after:"Nach dem Termin kannst du die Galerie herunterladen und eine Bewertung abgeben ⭐", bk_sim:"📸 Test: Fotos gesendet", bk_wait:"Warten auf die Fotos…", bk_done:"Abgeschlossen", rev_title:"Bewertung abgeben", rev_ph:"Wie war es? Teile deine Erfahrung…", rev_send:"Bewertung senden", rev_thanks:"Danke für deine Bewertung!", rev_need_stars:"Bitte wähle mindestens einen Stern.",
       label_traveler:"Reisenden-Seite", label_photographer:"Fotografen-Seite",
       d_hello:"Hallo", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ita:"Italienisch", d_describe:"Beschreibe dich", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
       d_next_level:"Nächstes Level: Top ★",
-      d_next_msg:"Noch 22 Aufträge und eine Bewertung ≥4,8, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
-      d_pending:"Ausstehende Anfragen", d_req1:"Sofia D. · Porträt", d_accept:"Annehmen", d_reject:"Ablehnen", d_live_title:"Standort in Echtzeit", d_live_on:"● Live", d_live_off:"Deaktiviert",
+      d_next_msg:"Erledige Aufträge und halte eine hohe Bewertung, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
+      d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen", d_live_title:"Standort in Echtzeit", d_live_on:"● Live", d_live_off:"Deaktiviert",
       d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
       chats_title:"Chat", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
       time_yesterday:"gestern", chat_prev_james:"Vielen Dank für die Fotos 🙏",
@@ -1435,6 +1374,14 @@
       if(a&&!a.value) a.value=iso(t);
       if(b&&!b.value) b.value=iso(o);
     })();
+    var _s=loadSession();
+    if(_s){
+      if(_s.name) accountName=_s.name;
+      if(_s.email) accountEmail=_s.email;
+      updateAccountUI();
+      if(_s.role){ roleChosen=true; setRole(_s.role); _activate(_s.role==='photographer'?'ph_dash':'search'); }
+      else { _activate('welcome'); }
+    }
   })();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
