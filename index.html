@@ -129,6 +129,9 @@
   .loginbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;border-radius:15px;padding:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px}
   .loginbtn.google{background:#fff;color:#1f2937;box-shadow:0 2px 10px rgba(0,0,0,.22)}
   .loginbtn.email{background:var(--accent);color:#fff}
+  /* bottone Google ufficiale (GSI): stessi angoli stondati di .loginbtn (15px) */
+  #gsiBtn > div{border-radius:15px !important;overflow:hidden !important}
+  #gsiBtn div[role="button"]{border-radius:15px !important}
   .gicon{font-weight:800;font-size:16px;font-family:Arial,sans-serif;background:conic-gradient(from -45deg,#ea4335,#fbbc05,#34a853,#4285f4,#ea4335);-webkit-background-clip:text;background-clip:text;color:transparent}
   .login-input{width:100%;border:none;border-radius:12px;padding:13px 14px;font-size:14px;margin-bottom:10px;background:rgba(255,255,255,.95);color:#1f2937}
   /* chat */
@@ -514,17 +517,6 @@
           <button onclick="pickSeg(this)" data-i18n="opt_no">No</button>
         </div>
 
-        <div class="card" style="cursor:default;margin-bottom:14px">
-          <div class="body" style="display:flex;align-items:center;gap:11px">
-            <div style="font-size:22px">📡</div>
-            <div style="flex:1;min-width:0">
-              <b style="font-size:14px;color:var(--accent-d)" data-i18n="d_live_title">Posizione in tempo reale</b>
-              <div class="muted" id="liveSub">Disattivata</div>
-            </div>
-            <label class="switch"><input type="checkbox" id="liveToggle" onclick="toggleLive(this)"><span class="track"></span></label>
-          </div>
-        </div>
-
         <div class="row2" style="margin-bottom:14px">
           <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">0</div><div class="muted" data-i18n="d_services">servizi</div></div>
           <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">—</div><div class="muted" data-i18n="d_rating">valutazione</div></div>
@@ -838,23 +830,6 @@
     var fc=document.getElementById('filtCount');
     if(fc){ if(chips.length){ fc.textContent=chips.length; fc.style.display=''; } else { fc.textContent=''; fc.style.display='none'; } }
   }
-  var liveWatch=null;
-  function toggleLive(cb){
-    if(cb.checked){
-      if(navigator.geolocation){ try{ liveWatch=navigator.geolocation.watchPosition(function(){}, function(){}); }catch(e){} }
-    } else if(liveWatch!=null && navigator.geolocation){
-      try{ navigator.geolocation.clearWatch(liveWatch); }catch(e){} liveWatch=null;
-    }
-    refreshLive();
-  }
-  function refreshLive(){
-    var cb=document.getElementById('liveToggle'), sub=document.getElementById('liveSub');
-    if(!cb||!sub) return;
-    var on=cb.checked;
-    sub.textContent = on ? I18N[curLang].d_live_on : I18N[curLang].d_live_off;
-    sub.style.color = on ? '#16a34a' : '';
-    sub.style.fontWeight = on ? '600' : '';
-  }
   var payMethod='card';
   function selPay(el,method){
     el.parentNode.querySelectorAll('.pm').forEach(function(p){ p.classList.remove('on'); });
@@ -1012,7 +987,7 @@
       if(dict[k]!==undefined) el.setAttribute('placeholder',dict[k]);
     });
     document.documentElement.setAttribute('lang',lang);
-    refreshPayBtn(); refreshLive();
+    refreshPayBtn();
   }
   function toggleLang(e){
     e.stopPropagation();
@@ -1082,8 +1057,7 @@
       d_hello:"Ciao", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ita:"Italiana", d_describe:"Descriviti", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
       d_next_level:"Prossimo livello: Top ★",
       d_next_msg:"Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.",
-      d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta", d_live_title:"Posizione in tempo reale", d_live_on:"● In diretta", d_live_off:"Disattivata",
-      d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
+      d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta",      d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
       chats_title:"Chat", chat_bye:"Perfetto, ci vediamo a Trastevere!",
       time_yesterday:"ieri", chat_prev_james:"Grazie mille per le foto 🙏",
       time_mon:"lun", chat_prev_elena:"Sei disponibile anche il 20?",
@@ -1146,8 +1120,7 @@
       d_hello:"Hi", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ita:"Italian", d_describe:"Describe yourself", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
       d_next_level:"Next level: Top ★",
       d_next_msg:"Complete services and keep a high rating to unlock maximum visibility and reduced commissions.",
-      d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline", d_live_title:"Live location", d_live_on:"● Live", d_live_off:"Off",
-      d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
+      d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline",      d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
       chats_title:"Chat", chat_bye:"Perfect, see you in Trastevere!",
       time_yesterday:"yesterday", chat_prev_james:"Thank you so much for the photos 🙏",
       time_mon:"Mon", chat_prev_elena:"Are you available on the 20th too?",
@@ -1210,8 +1183,7 @@
       d_hello:"Hola", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ita:"Italiana", d_describe:"Descríbete", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
       d_next_level:"Próximo nivel: Top ★",
       d_next_msg:"Completa servicios y mantén una valoración alta para desbloquear máxima visibilidad y comisiones reducidas.",
-      d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar", d_live_title:"Ubicación en tiempo real", d_live_on:"● En directo", d_live_off:"Desactivada",
-      d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
+      d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar",      d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
       chats_title:"Chat", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
       time_yesterday:"ayer", chat_prev_james:"¡Muchas gracias por las fotos 🙏",
       time_mon:"lun", chat_prev_elena:"¿Estás disponible también el 20?",
@@ -1274,8 +1246,7 @@
       d_hello:"Bonjour", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ita:"Italienne", d_describe:"Décrivez-vous", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
       d_next_level:"Niveau suivant : Top ★",
       d_next_msg:"Réalisez des prestations et gardez une bonne note pour débloquer une visibilité maximale et des commissions réduites.",
-      d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser", d_live_title:"Position en temps réel", d_live_on:"● En direct", d_live_off:"Désactivée",
-      d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
+      d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser",      d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
       chats_title:"Messages", chat_bye:"Parfait, on se voit à Trastevere !",
       time_yesterday:"hier", chat_prev_james:"Merci beaucoup pour les photos 🙏",
       time_mon:"lun", chat_prev_elena:"Êtes-vous aussi disponible le 20 ?",
@@ -1338,8 +1309,7 @@
       d_hello:"Hallo", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ita:"Italienisch", d_describe:"Beschreibe dich", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
       d_next_level:"Nächstes Level: Top ★",
       d_next_msg:"Erledige Aufträge und halte eine hohe Bewertung, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
-      d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen", d_live_title:"Standort in Echtzeit", d_live_on:"● Live", d_live_off:"Deaktiviert",
-      d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
+      d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen",      d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
       chats_title:"Chat", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
       time_yesterday:"gestern", chat_prev_james:"Vielen Dank für die Fotos 🙏",
       time_mon:"Mo", chat_prev_elena:"Bist du auch am 20. verfügbar?",
@@ -1366,7 +1336,7 @@
     try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateAccountUI(); refreshLive(); initGoogle(); renderResults(); updateBookingUI();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); initGoogle(); renderResults(); updateBookingUI();
     (function(){
       function iso(d){var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;}
       var t=new Date(), o=new Date(t.getFullYear(),t.getMonth(),t.getDate()+3);
