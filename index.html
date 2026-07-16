@@ -129,9 +129,6 @@
   .loginbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;border-radius:15px;padding:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px}
   .loginbtn.google{background:#fff;color:#1f2937;box-shadow:0 2px 10px rgba(0,0,0,.22)}
   .loginbtn.email{background:var(--accent);color:#fff}
-  /* bottone Google ufficiale (GSI): stessi angoli stondati di .loginbtn (15px) */
-  #gsiBtn > div{border-radius:15px !important;overflow:hidden !important}
-  #gsiBtn div[role="button"]{border-radius:15px !important}
   .gicon{font-weight:800;font-size:16px;font-family:Arial,sans-serif;background:conic-gradient(from -45deg,#ea4335,#fbbc05,#34a853,#4285f4,#ea4335);-webkit-background-clip:text;background-clip:text;color:transparent}
   .login-input{width:100%;border:none;border-radius:12px;padding:13px 14px;font-size:14px;margin-bottom:10px;background:rgba(255,255,255,.95);color:#1f2937}
   /* chat */
@@ -201,7 +198,8 @@
     .notch{display:none}
   }
 </style>
-<script src="https://accounts.google.com/gsi/client" async defer onload="if(window.initGoogle)initGoogle()"></script>
+<script src="https://www.gstatic.com/firebasejs/11.9.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.9.0/firebase-auth-compat.js"></script>
 </head>
 <body>
   <div class="head">
@@ -230,28 +228,31 @@
       <div class="welcome-brand">PHOllowME</div>
       <div class="hero" style="height:100%;justify-content:center">
         <p style="font-size:16px;margin-bottom:22px;text-align:center" data-i18n="login_sub">Accedi per trovare e prenotare fotografi ovunque tu vada.</p>
-        <div id="gsiBtn" style="display:flex;justify-content:center"></div>
-        <button id="customGoogle" class="loginbtn google" onclick="show('gpick')"><span class="gicon">G</span><span data-i18n="login_google">Continua con Google</span></button>
+        <button id="customGoogle" class="loginbtn google" onclick="fbGoogle()"><span class="gicon">G</span><span data-i18n="login_google">Continua con Google</span></button>
         <button class="loginbtn email" onclick="showEmailField()" data-i18n="login_email">Continua con email</button>
         <div id="emailWrap" style="display:none">
-          <input id="loginEmail" class="login-input" type="email" placeholder="nome@email.com" data-i18n-ph="login_email_ph">
-          <button class="loginbtn email" style="margin-bottom:0" onclick="loginWith('email')" data-i18n="login_enter">Accedi</button>
+          <input id="loginEmail" class="login-input" type="email" autocomplete="email" placeholder="nome@email.com" data-i18n-ph="login_email_ph">
+          <input id="loginPass" class="login-input" type="password" autocomplete="current-password" placeholder="Password" data-i18n-ph="login_pass_ph">
+          <button class="loginbtn email" style="margin-bottom:8px" onclick="fbSignIn()" data-i18n="login_enter">Accedi</button>
+          <button class="loginbtn google" style="margin-bottom:8px" onclick="fbSignUp()" data-i18n="login_register">Crea un account</button>
+          <div style="text-align:center"><span onclick="fbResetPass()" style="color:#fff;font-size:13px;text-decoration:underline;cursor:pointer" data-i18n="login_forgot">Password dimenticata?</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ============ GOOGLE ACCOUNT PICKER (mock) ============ -->
-    <div class="view" id="gpick">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="g_title">Scegli un account</h2></div>
-      <div class="scroll pad">
-        <p class="muted" style="margin-bottom:14px"><span class="gicon" style="font-size:18px">G</span> · <span data-i18n="g_sub">per continuare su PHOllowME</span></p>
-        <div class="gacct" onclick="pickGoogle()"><span class="gav" id="gInit">L</span><div style="flex:1;min-width:0"><b style="font-size:14px;color:var(--text);display:block" class="acctName">Luigi Travagliati</b><span class="muted acctEmail">ltravagliati@libero.it</span></div></div>
-        <div class="gacct" onclick="showGOther()"><span class="gav" style="background:var(--bg);color:var(--accent)">+</span><div><b style="font-size:14px;color:var(--text)" data-i18n="g_other">Usa un altro account</b></div></div>
-        <div id="gOther" style="display:none;margin-top:6px">
-          <input id="gName" class="txtin" style="margin-bottom:8px" placeholder="Nome" data-i18n-ph="g_name_ph">
-          <input id="gEmail" class="txtin" style="margin-bottom:10px" type="email" placeholder="nome@gmail.com" data-i18n-ph="g_email_ph">
-          <button class="btn" onclick="pickGoogleOther()" data-i18n="login_enter">Accedi</button>
-        </div>
+    <!-- ============ VERIFICA EMAIL ============ -->
+    <div class="view" id="verify">
+      <div class="succ">
+        <div style="font-size:44px;margin-bottom:6px">📧</div>
+        <h2 style="color:var(--accent-d);font-size:20px;margin-bottom:8px" data-i18n="vf_title">Conferma la tua email</h2>
+        <p class="muted" style="font-size:13px;line-height:1.5" data-i18n="vf_msg">Ti abbiamo inviato una mail con un link da cliccare. Aprila, conferma, poi torna qui.</p>
+        <p style="font-size:13px;font-weight:600;color:var(--accent-d);margin-top:6px" id="vfEmail"></p>
+        <div style="height:18px"></div>
+        <button class="btn" onclick="fbCheckVerified()" data-i18n="vf_done">Ho confermato, entra</button>
+        <div style="height:10px"></div>
+        <button class="btn ghost" onclick="fbResend()" data-i18n="vf_resend">Invia di nuovo la mail</button>
+        <div style="height:10px"></div>
+        <button class="btn ghost" onclick="logout()" data-i18n="acc_logout">Esci</button>
       </div>
     </div>
 
@@ -312,7 +313,7 @@
       <div class="nav">
         <div class="on"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
         <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
-        <div><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
         <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
       </div>
     </div>
@@ -478,7 +479,22 @@
       <div class="nav">
         <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
         <div class="on"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
-        <div><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
+      </div>
+    </div>
+
+    <!-- ============ TRAVELER CHAT LIST ============ -->
+    <div class="view" id="tr_chats">
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand" data-i18n="chats_title">Chat</span></div>
+      <div class="scroll pad">
+        <div class="clist" id="trChatList"></div>
+        <p class="muted" id="trChatsEmpty" style="margin:24px 0;text-align:center" data-i18n="chats_empty">Nessuna chat al momento.</p>
+      </div>
+      <div class="nav">
+        <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
+        <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
+        <div class="on"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
         <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
       </div>
     </div>
@@ -492,13 +508,16 @@
           <div><h2 style="font-size:17px;color:var(--accent-d)"><span data-i18n="d_hello">Ciao</span>, <span class="acctName">Luigi Travagliati</span></h2><div class="muted" data-i18n="d_role">Fotografo · Roma</div></div>
         </div>
 
-        <div class="field" style="cursor:default;margin-bottom:14px">
+        <div class="field" style="margin-bottom:14px">
           <div class="k" data-i18n="d_nationality">Nazionalità</div>
-          <div class="v" style="display:flex;align-items:center;gap:7px"><span class="flag" data-flag="it"></span><span data-i18n="d_nat_ita">Italiana</span></div>
+          <input id="natInput" class="fieldin" list="natList" autocomplete="off" oninput="saveProfile()" data-i18n-ph="d_nat_ph" placeholder="Inizia a scrivere…">
         </div>
+        <datalist id="natList">
+          <option value="Italiana"></option><option value="Francese"></option><option value="Spagnola"></option><option value="Tedesca"></option><option value="Inglese"></option><option value="Irlandese"></option><option value="Portoghese"></option><option value="Olandese"></option><option value="Belga"></option><option value="Svizzera"></option><option value="Austriaca"></option><option value="Greca"></option><option value="Polacca"></option><option value="Rumena"></option><option value="Svedese"></option><option value="Norvegese"></option><option value="Danese"></option><option value="Finlandese"></option><option value="Croata"></option><option value="Ceca"></option><option value="Ungherese"></option><option value="Russa"></option><option value="Ucraina"></option><option value="Turca"></option><option value="Statunitense"></option><option value="Canadese"></option><option value="Messicana"></option><option value="Brasiliana"></option><option value="Argentina"></option><option value="Cilena"></option><option value="Colombiana"></option><option value="Australiana"></option><option value="Neozelandese"></option><option value="Giapponese"></option><option value="Cinese"></option><option value="Coreana"></option><option value="Indiana"></option><option value="Marocchina"></option><option value="Egiziana"></option><option value="Sudafricana"></option>
+        </datalist>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_describe">Descriviti</h3>
-        <div class="field" style="cursor:text;margin-bottom:14px"><div class="v" style="font-weight:400;line-height:1.5;font-size:13px" data-i18n="p_bio">Fotografo di ritratto e street a Roma da 8 anni. Ti porto nei luoghi più belli e meno turistici della città per scatti autentici.</div></div>
+        <div class="field" style="margin-bottom:14px"><textarea id="bioInput" class="fieldin" rows="3" oninput="saveProfile()" data-i18n-ph="d_describe_ph" placeholder="Racconta chi sei e come lavori…" style="resize:none;font-weight:400;font-size:13px;line-height:1.5"></textarea></div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 4px" data-i18n="pf_title">Portfolio</h3>
         <p class="muted" style="margin-bottom:8px" data-i18n="pf_hint">Carica i tuoi lavori precedenti</p>
@@ -507,14 +526,12 @@
         </div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_languages">Lingue parlate</h3>
-        <div style="margin-bottom:14px">
-          <span class="chip add" data-i18n="add_chip">+ aggiungi</span>
-        </div>
+        <div id="langChips" style="margin-bottom:14px"></div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_car">Automunito</h3>
-        <div class="seg" style="margin-bottom:14px">
-          <button class="on" onclick="pickSeg(this)" data-i18n="opt_yes">Sì</button>
-          <button onclick="pickSeg(this)" data-i18n="opt_no">No</button>
+        <div class="seg" id="carSeg" style="margin-bottom:14px">
+          <button class="on" data-val="yes" onclick="pickSeg(this);saveProfile()" data-i18n="opt_yes">Sì</button>
+          <button data-val="no" onclick="pickSeg(this);saveProfile()" data-i18n="opt_no">No</button>
         </div>
 
         <div class="row2" style="margin-bottom:14px">
@@ -577,18 +594,18 @@
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="av_title">Profilo & disponibilità</h2></div>
       <div class="scroll pad">
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="av_where_when">Dove sarai e quando</h3>
-        <div class="field"><div class="k" data-i18n="av_location">Località</div><input id="avLoc" class="fieldin" data-i18n-ph="s_dest_ph" placeholder="Città o luogo"></div>
+        <div class="field"><div class="k" data-i18n="av_location">Località</div><input id="avLoc" class="fieldin" oninput="saveProfile()" data-i18n-ph="s_dest_ph" placeholder="Città o luogo"></div>
         <div class="row2">
-          <div class="field"><div class="k" data-i18n="av_from">Dal</div><input id="avFrom" class="fieldin" type="date"></div>
-          <div class="field"><div class="k" data-i18n="av_to">Al</div><input id="avTo" class="fieldin" type="date"></div>
+          <div class="field"><div class="k" data-i18n="av_from">Dal</div><input id="avFrom" class="fieldin" type="date" onchange="saveProfile()"></div>
+          <div class="field"><div class="k" data-i18n="av_to">Al</div><input id="avTo" class="fieldin" type="date" onchange="saveProfile()"></div>
         </div>
         <button class="btn ghost sm" style="margin-bottom:16px" data-i18n="av_add_location">+ Aggiungi un'altra località / periodo</button>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="av_mode">Modalità offerte</h3>
-        <div class="seg" style="margin-bottom:16px">
-          <button onclick="pickSeg(this)" style="font-size:12px" data-i18n="sm_fixed">📍 Luogo fisso</button>
-          <button onclick="pickSeg(this)" style="font-size:12px" data-i18n="sm_roaming">🚶 Itinerante</button>
-          <button class="on" onclick="pickSeg(this)" style="font-size:12px" data-i18n="sm_both">Entrambi</button>
+        <div class="seg" id="modeSeg" style="margin-bottom:16px">
+          <button data-val="fixed" onclick="pickSeg(this);saveProfile()" style="font-size:12px" data-i18n="sm_fixed">📍 Luogo fisso</button>
+          <button data-val="roaming" onclick="pickSeg(this);saveProfile()" style="font-size:12px" data-i18n="sm_roaming">🚶 Itinerante</button>
+          <button class="on" data-val="both" onclick="pickSeg(this);saveProfile()" style="font-size:12px" data-i18n="sm_both">Entrambi</button>
         </div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="svc_title">I tuoi servizi</h3>
@@ -596,10 +613,10 @@
         <button class="btn ghost sm" style="margin-bottom:16px" onclick="addService()" data-i18n="svc_add">+ Aggiungi servizio</button>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 8px" data-i18n="equip_title">Attrezzatura</h3>
-        <span class="chip add" data-i18n="add_chip">+ aggiungi</span>
+        <div id="equipChips"></div>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:16px 0 8px" data-i18n="spec_title">Specializzazioni</h3>
-        <span class="chip add" data-i18n="add_chip">+ aggiungi</span>
+        <div id="specChips"></div>
 
         <div class="divider"></div>
         <button class="btn" onclick="show('ph_dash')" data-i18n="av_save">Salva</button>
@@ -614,7 +631,6 @@
           <label class="avatar myAvatar" style="position:relative;cursor:pointer"><span class="ini">MR</span><span class="cambadge">📷</span><input type="file" accept="image/*" onchange="uploadPhoto(this)" style="display:none"></label>
           <div><h2 style="font-size:18px;color:var(--accent-d)"><span class="acctName">Luigi Travagliati</span></h2><div class="muted acctEmail">ltravagliati@libero.it</div></div>
         </div>
-        <label class="btn ghost sm" style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:6px"><span data-i18n="acc_take_photo">📷 Scatta una foto</span><input type="file" accept="image/*" capture="user" onchange="uploadPhoto(this)" style="display:none"></label>
         <div class="sect" data-i18n="acc_role">Ruolo</div>
         <div class="seg" style="margin-bottom:6px">
           <button class="roleopt" data-role="traveler" onclick="switchRole('traveler')" data-i18n="role_traveler">Viaggiatore</button>
@@ -670,14 +686,105 @@
   <div class="credit">Sfondo: “Route 66, Amboy (CA)” — foto di Dietmar Rabich · <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a></div>
 
 <script>
-  var curLang='it', currentRole='traveler', accountEmail='ltravagliati@libero.it', accountName='Luigi Travagliati', themePref='auto';
-  /* ---- Sessione: ricorda accesso e ruolo tra le aperture dell'app ---- */
-  var SESS_KEY='phollowme_session', roleChosen=false;
-  function saveSession(){
-    try{ localStorage.setItem(SESS_KEY, JSON.stringify({ name:accountName, email:accountEmail, role: roleChosen?currentRole:null })); }catch(e){}
+  var curLang='it', currentRole='traveler', accountEmail='', accountName='', themePref='auto';
+  var roleChosen=false;
+  /* ---- Profilo fotografo: tutto quello che compili resta salvato ---- */
+  var PROF_PREFIX='phollowme_profile:', restoringProfile=false;
+  /* il profilo e' legato all'email: uscendo e rientrando con la stessa mail lo ritrovi */
+  function profKey(){ return PROF_PREFIX + String(accountEmail||'').trim().toLowerCase(); }
+  var LANGS=['Italiano','Inglese','Francese','Spagnolo','Tedesco','Portoghese','Cinese','Giapponese','Russo','Arabo'];
+  var SPECS=['Ritratto','Street','Matrimonio','Fashion','Reportage','Vacanza','Coppie','Eventi'];
+  var profLangs=[], profSpecs=[], profEquip=[], accountPhoto='';
+  function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function segVal(id){ var s=document.getElementById(id); if(!s) return ''; var b=s.querySelector('button.on'); return b?(b.getAttribute('data-val')||''):''; }
+  function segSet(id,v){ var s=document.getElementById(id); if(!s||!v) return; s.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-val')===v); }); }
+  function renderPickChips(boxId, all, sel, fn){
+    var box=document.getElementById(boxId); if(!box) return;
+    box.innerHTML=all.map(function(n){
+      var on=sel.indexOf(n)>=0;
+      return '<span class="chip" style="cursor:pointer'+(on?';background:var(--accent);color:#fff':'')+'" onclick="'+fn+'(\''+n+'\')">'+(on?'✓ ':'')+n+'</span>';
+    }).join('');
   }
-  function loadSession(){ try{ var r=localStorage.getItem(SESS_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
-  function clearSession(){ try{ localStorage.removeItem(SESS_KEY); }catch(e){} }
+  function renderLangChips(){ renderPickChips('langChips', LANGS, profLangs, 'toggleLangSel'); }
+  function renderSpecChips(){ renderPickChips('specChips', SPECS, profSpecs, 'toggleSpecSel'); }
+  function toggleLangSel(n){ var i=profLangs.indexOf(n); if(i>=0){ profLangs.splice(i,1); } else { profLangs.push(n); } renderLangChips(); saveProfile(); }
+  function toggleSpecSel(n){ var i=profSpecs.indexOf(n); if(i>=0){ profSpecs.splice(i,1); } else { profSpecs.push(n); } renderSpecChips(); saveProfile(); }
+  function renderEquipChips(){
+    var box=document.getElementById('equipChips'); if(!box) return;
+    box.innerHTML=profEquip.map(function(n,i){ return '<span class="chip" style="cursor:pointer" onclick="delEquip('+i+')">'+escHtml(n)+' ✕</span>'; }).join('')
+      +'<span class="chip add" style="cursor:pointer" onclick="addEquip()">'+I18N[curLang].add_chip+'</span>';
+  }
+  function addEquip(){
+    var v=prompt(I18N[curLang].equip_prompt);
+    if(v && v.trim()){ profEquip.push(v.trim()); renderEquipChips(); saveProfile(); }
+  }
+  function delEquip(i){ profEquip.splice(i,1); renderEquipChips(); saveProfile(); }
+  function collectProfile(){
+    var g=function(id){ var e=document.getElementById(id); return e?e.value:''; };
+    var p={ nat:g('natInput'), bio:g('bioInput'), loc:g('avLoc'), from:g('avFrom'), to:g('avTo'),
+      langs:profLangs.slice(), specs:profSpecs.slice(), equip:profEquip.slice(),
+      car:segVal('carSeg'), mode:segVal('modeSeg'), services:[], works:[], photo:accountPhoto||'' };
+    document.querySelectorAll('#svcList .svc').forEach(function(s){
+      var t=s.querySelectorAll('.svc-in'), r=s.querySelectorAll('.rates input');
+      p.services.push({ n:(t[0]?t[0].value:''), d:(t[1]?t[1].value:''), h:(r[0]?r[0].value:''), gg:(r[1]?r[1].value:''), w:(r[2]?r[2].value:'') });
+    });
+    document.querySelectorAll('#pfGrid .g').forEach(function(c){
+      if(c.classList.contains('pfadd')) return;
+      var m=(c.style.backgroundImage||'').match(/url\(["']?([^"')]+)["']?\)/);
+      if(m) p.works.push(m[1]);
+    });
+    return p;
+  }
+  function saveProfile(){
+    if(restoringProfile) return;
+    if(!String(accountEmail||'').trim()) return;
+    var p=collectProfile();
+    try{ localStorage.setItem(profKey(), JSON.stringify(p)); }
+    catch(e){ try{ p.works=[]; p.photo=''; localStorage.setItem(profKey(), JSON.stringify(p)); }catch(e2){} }
+  }
+  function loadProfile(){ try{ var r=localStorage.getItem(profKey()); return r?JSON.parse(r):null; }catch(e){ return null; } }
+  /* cancella il profilo di QUESTA email (usato solo da "Cancella account") */
+  function clearProfile(){ try{ localStorage.removeItem(profKey()); }catch(e){} }
+  function clearPhotoUrl(){
+    document.querySelectorAll('.myAvatar').forEach(function(a){
+      a.style.backgroundImage=''; var ini=a.querySelector('.ini'); if(ini) ini.style.display='';
+    });
+  }
+  /* carica nel profilo i dati dell'email corrente; se non ce ne sono, svuota tutto */
+  function applyProfile(){
+    var p=loadProfile();
+    restoringProfile=true;
+    profLangs=(p&&p.langs)||[]; profSpecs=(p&&p.specs)||[]; profEquip=(p&&p.equip)||[];
+    accountPhoto=(p&&p.photo)||'';
+    renderLangChips(); renderSpecChips(); renderEquipChips();
+    var s=function(id,v){ var e=document.getElementById(id); if(e) e.value=v||''; };
+    s('natInput',p&&p.nat); s('bioInput',p&&p.bio); s('avLoc',p&&p.loc); s('avFrom',p&&p.from); s('avTo',p&&p.to);
+    segSet('carSeg',(p&&p.car)||'yes'); segSet('modeSeg',(p&&p.mode)||'both');
+    var list=document.getElementById('svcList');
+    if(list){
+      list.innerHTML='';
+      if(p&&p.services){ p.services.forEach(function(sv){
+        addService();
+        var el=list.lastChild, t=el.querySelectorAll('.svc-in'), r=el.querySelectorAll('.rates input');
+        if(t[0]) t[0].value=sv.n||''; if(t[1]) t[1].value=sv.d||'';
+        if(r[0]) r[0].value=sv.h||''; if(r[1]) r[1].value=sv.gg||''; if(r[2]) r[2].value=sv.w||'';
+      }); }
+    }
+    var grid=document.getElementById('pfGrid');
+    if(grid){
+      grid.querySelectorAll('.g').forEach(function(c){ if(!c.classList.contains('pfadd')) c.remove(); });
+      if(p&&p.works){
+        var lab=grid.querySelector('.pfadd');
+        p.works.forEach(function(u){
+          var cell=document.createElement('div'); cell.className='g';
+          cell.style.cssText='height:70px;border-radius:8px;background-image:url('+u+');background-size:cover;background-position:center';
+          grid.insertBefore(cell, lab);
+        });
+      }
+    }
+    if(p&&p.photo){ setPhotoUrl(p.photo); } else { clearPhotoUrl(); }
+    restoringProfile=false;
+  }
 
   var navStack=[];
   function _activate(id){
@@ -711,7 +818,7 @@
   function uploadPhoto(input){
     var f=input.files&&input.files[0]; if(!f) return;
     var r=new FileReader();
-    r.onload=function(ev){ setPhotoUrl(ev.target.result); };
+    r.onload=function(ev){ accountPhoto=ev.target.result; setPhotoUrl(ev.target.result); saveProfile(); };
     r.readAsDataURL(f);
   }
   function addWork(input){
@@ -723,6 +830,7 @@
       cell.className='g';
       cell.style.cssText='height:70px;border-radius:8px;background-image:url('+ev.target.result+');background-size:cover;background-position:center';
       grid.insertBefore(cell, lab);
+      saveProfile();
     };
     r.readAsDataURL(f); input.value='';
   }
@@ -848,52 +956,84 @@
     document.getElementById('tot').textContent=(total*1.15).toFixed(2).replace('.',',')+' €';
   }
 
-  /* ---- login ---- */
+  /* ---- Accessi VERI con Firebase: password + verifica email ---- */
   function showEmailField(){ document.getElementById('emailWrap').style.display='block'; }
-  function loginWith(m){
-    if(m==='email'){ var v=(document.getElementById('loginEmail').value||'').trim(); if(v) accountEmail=v; }
-    finishLogin();
-  }
-  function pickGoogle(){ finishLogin(); }
-  function showGOther(){ document.getElementById('gOther').style.display='block'; }
-  function pickGoogleOther(){
-    var n=(document.getElementById('gName').value||'').trim(), e=(document.getElementById('gEmail').value||'').trim();
-    if(n) accountName=n; if(e) accountEmail=e;
-    finishLogin();
-  }
-  function finishLogin(){ roleChosen=false; saveSession(); updateAccountUI(); show('welcome'); }
-  /* ---- Google Sign-In (reale). Incolla qui il tuo OAuth Client ID: ---- */
-  var GOOGLE_CLIENT_ID='367035462997-oi28tdarvlkbeoer9ktmn3c7fiff53u1.apps.googleusercontent.com';
-  function initGoogle(){
-    if(GOOGLE_CLIENT_ID.indexOf('PASTE_CLIENT_ID')===0) return;
-    if(!(window.google && google.accounts && google.accounts.id)) return;
+  var FB_CONFIG={
+    apiKey:"AIzaSyCJ4PtIFEi0ehX97tCLs_RBCvr1vJikB5E",
+    authDomain:"phollowme.firebaseapp.com",
+    projectId:"phollowme",
+    storageBucket:"phollowme.firebasestorage.app",
+    messagingSenderId:"367035462997",
+    appId:"1:367035462997:web:67301f49306c3578f8ebdc"
+  };
+  var fbAuth=null;
+  function initFirebase(){
     try{
-      google.accounts.id.initialize({ client_id:GOOGLE_CLIENT_ID, callback:onGoogleCredential });
-      var c=document.getElementById('gsiBtn');
-      if(c){
-        c.innerHTML='';
-        var gw=Math.round(c.getBoundingClientRect().width); if(!gw||gw<200){ gw=300; } if(gw>400){ gw=400; }
-        google.accounts.id.renderButton(c,{theme:'outline',size:'large',width:gw,text:'continue_with',shape:'rectangular',logo_alignment:'center'});
-        c.style.marginBottom='12px';
-      }
-      var cb=document.getElementById('customGoogle'); if(cb) cb.style.display='none';
+      if(!window.firebase || !firebase.initializeApp) return;
+      firebase.initializeApp(FB_CONFIG);
+      fbAuth=firebase.auth();
+      fbAuth.onAuthStateChanged(onAuthChanged);
     }catch(e){}
   }
-  window.initGoogle=initGoogle;
-  function onGoogleCredential(resp){
-    try{
-      var part=resp.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
-      var pad=part.length%4; if(pad) part+='===='.slice(pad);
-      var bin=atob(part), bytes=new Uint8Array(bin.length);
-      for(var i=0;i<bin.length;i++){ bytes[i]=bin.charCodeAt(i); }
-      var payload=JSON.parse(new TextDecoder('utf-8').decode(bytes));
-      if(payload.name) accountName=payload.name;
-      if(payload.email) accountEmail=payload.email;
-      if(payload.picture) setPhotoUrl(payload.picture);
-    }catch(e){}
-    finishLogin();
+  function fbErr(e){ alert((e&&e.message)?e.message:String(e)); }
+  function fbCreds(){
+    return { e:(document.getElementById('loginEmail').value||'').trim(), p:(document.getElementById('loginPass').value||'') };
   }
-  function setName(v){ v=(v||'').trim(); if(v){ accountName=v; updateAccountUI(); saveSession(); } }
+  function fbGoogle(){
+    if(!fbAuth){ alert(I18N[curLang].fb_offline); return; }
+    try{ fbAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(fbErr); }catch(e){ fbErr(e); }
+  }
+  function fbSignIn(){
+    if(!fbAuth){ alert(I18N[curLang].fb_offline); return; }
+    var c=fbCreds(); if(!c.e||!c.p){ alert(I18N[curLang].login_need_both); return; }
+    fbAuth.signInWithEmailAndPassword(c.e,c.p).catch(fbErr);
+  }
+  function fbSignUp(){
+    if(!fbAuth){ alert(I18N[curLang].fb_offline); return; }
+    var c=fbCreds(); if(!c.e||!c.p){ alert(I18N[curLang].login_need_both); return; }
+    /* creato l'account, Firebase manda la mail di verifica: senza conferma non si entra */
+    fbAuth.createUserWithEmailAndPassword(c.e,c.p).then(function(res){ return res.user.sendEmailVerification(); }).catch(fbErr);
+  }
+  function fbResetPass(){
+    if(!fbAuth){ alert(I18N[curLang].fb_offline); return; }
+    var c=fbCreds(); if(!c.e){ alert(I18N[curLang].login_need_email); return; }
+    fbAuth.sendPasswordResetEmail(c.e).then(function(){ alert(I18N[curLang].login_reset_sent); }).catch(fbErr);
+  }
+  function fbResend(){
+    if(!(fbAuth&&fbAuth.currentUser)) return;
+    fbAuth.currentUser.sendEmailVerification().then(function(){ alert(I18N[curLang].vf_sent); }).catch(fbErr);
+  }
+  function fbCheckVerified(){
+    if(!(fbAuth&&fbAuth.currentUser)) return;
+    fbAuth.currentUser.reload().then(function(){
+      var u=fbAuth.currentUser;
+      if(u&&u.emailVerified){ onAuthChanged(u); } else { alert(I18N[curLang].vf_not_yet); }
+    }).catch(fbErr);
+  }
+  function showVerify(){
+    var u=fbAuth&&fbAuth.currentUser, el=document.getElementById('vfEmail');
+    if(el) el.textContent=(u&&u.email)||'';
+    _activate('verify');
+  }
+  /* il ruolo, come il profilo, e' legato all'email */
+  function roleKey(){ return 'phollowme_role:'+String(accountEmail||'').trim().toLowerCase(); }
+  function saveRole(){ try{ if(accountEmail) localStorage.setItem(roleKey(), currentRole); }catch(e){} }
+  function loadRole(){ try{ return localStorage.getItem(roleKey())||''; }catch(e){ return ''; } }
+  function clearRole(){ try{ localStorage.removeItem(roleKey()); }catch(e){} }
+  /* unico punto di verita': e' Firebase a dire chi e' dentro */
+  function onAuthChanged(u){
+    if(!u){ accountEmail=''; accountName=''; accountPhoto=''; clearPhotoUrl(); roleChosen=false; _activate('login'); return; }
+    if(!u.emailVerified){ showVerify(); return; }
+    accountEmail=u.email||'';
+    accountName=u.displayName||(accountEmail.split('@')[0]||'');
+    updateAccountUI();
+    applyProfile();
+    if(u.photoURL && !accountPhoto){ setPhotoUrl(u.photoURL); }
+    var r=loadRole();
+    if(r){ roleChosen=true; setRole(r); _activate(r==='photographer'?'ph_dash':'search'); }
+    else { roleChosen=false; _activate('welcome'); }
+  }
+  function setName(v){ v=(v||'').trim(); if(!v) return; accountName=v; updateAccountUI(); try{ if(fbAuth&&fbAuth.currentUser) fbAuth.currentUser.updateProfile({displayName:v}); }catch(e){} }
   function updateAccountUI(){
     document.querySelectorAll('.acctEmail').forEach(function(el){ el.textContent=accountEmail; });
     document.querySelectorAll('.acctName').forEach(function(el){ el.textContent=accountName; });
@@ -906,27 +1046,30 @@
     var list=document.getElementById('svcList'); if(!list) return;
     var d=I18N[curLang];
     var div=document.createElement('div'); div.className='svc';
-    div.innerHTML='<input class="svc-in nm" placeholder="'+d.svc_name_ph+'">'+
-      '<input class="svc-in" placeholder="'+d.svc_desc_ph+'">'+
-      '<div class="rates"><div class="rate"><label>'+d.av_hourly+'</label><input placeholder="€/h"></div>'+
-      '<div class="rate"><label>'+d.av_daily+'</label><input placeholder="€"></div>'+
-      '<div class="rate"><label>'+d.av_weekly+'</label><input placeholder="€"></div></div>'+
+    div.innerHTML='<input class="svc-in nm" oninput="saveProfile()" placeholder="'+d.svc_name_ph+'">'+
+      '<input class="svc-in" oninput="saveProfile()" placeholder="'+d.svc_desc_ph+'">'+
+      '<div class="rates"><div class="rate"><label>'+d.av_hourly+'</label><input oninput="saveProfile()" placeholder="€/h"></div>'+
+      '<div class="rate"><label>'+d.av_daily+'</label><input oninput="saveProfile()" placeholder="€"></div>'+
+      '<div class="rate"><label>'+d.av_weekly+'</label><input oninput="saveProfile()" placeholder="€"></div></div>'+
       '<span class="svc-del" onclick="delSvc(this)">'+d.svc_remove+'</span>';
     list.appendChild(div);
+    saveProfile();
   }
-  function delSvc(el){ var c=el.closest('.svc'); if(c) c.remove(); }
+  function delSvc(el){ var c=el.closest('.svc'); if(c) c.remove(); saveProfile(); }
   function logout(){
-    clearSession(); roleChosen=false;
-    document.getElementById('emailWrap').style.display='none';
-    var go=document.getElementById('gOther'); if(go) go.style.display='none';
-    show('login');
-    initGoogle();
+    roleChosen=false;
+    var w=document.getElementById('emailWrap'); if(w) w.style.display='none';
+    var lp=document.getElementById('loginPass'); if(lp) lp.value='';
+    if(fbAuth){ fbAuth.signOut().catch(function(){}); } else { _activate('login'); }
   }
   function deleteAccount(){
-    if(confirm(I18N[curLang].acc_delete_confirm)){
-      alert(I18N[curLang].acc_delete_done);
-      logout();
-    }
+    if(!confirm(I18N[curLang].acc_delete_confirm)) return;
+    clearProfile(); clearRole();
+    var u=fbAuth&&fbAuth.currentUser;
+    if(!u){ alert(I18N[curLang].acc_delete_done); logout(); return; }
+    /* cancella davvero l'account da Firebase */
+    u.delete().then(function(){ alert(I18N[curLang].acc_delete_done); })
+     .catch(function(){ alert(I18N[curLang].acc_delete_relogin); logout(); });
   }
   /* ---- Recensioni (compaiono solo a servizio concluso) ---- */
   var bookingDone=false, reviewSubmitted=false, reviewStars=0;
@@ -960,7 +1103,7 @@
 
   /* ---- role ---- */
   function setRole(r){ currentRole=r; markRole(); }
-  function switchRole(r){ setRole(r); roleChosen=true; saveSession(); show(r==='photographer'?'ph_dash':'search'); }
+  function switchRole(r){ setRole(r); roleChosen=true; saveRole(); show(r==='photographer'?'ph_dash':'search'); }
   function markRole(){ document.querySelectorAll('.roleopt').forEach(function(el){ el.classList.toggle('on', el.getAttribute('data-role')===currentRole); }); }
 
   /* ---- theme ---- */
@@ -987,7 +1130,7 @@
       if(dict[k]!==undefined) el.setAttribute('placeholder',dict[k]);
     });
     document.documentElement.setAttribute('lang',lang);
-    refreshPayBtn();
+    refreshPayBtn(); renderEquipChips();
   }
   function toggleLang(e){
     e.stopPropagation();
@@ -1017,7 +1160,7 @@
   var I18N={
     it:{
       sub_proto:"Prototipo cliccabile · tocca gli elementi evidenziati per navigare",
-      login_sub:"Accedi per trovare e prenotare fotografi ovunque tu vada.", login_google:"Continua con Google", login_email:"Continua con email", login_email_ph:"nome@email.com", login_enter:"Accedi",
+      login_sub:"Accedi per trovare e prenotare fotografi ovunque tu vada.", login_google:"Continua con Google", login_email:"Continua con email", login_email_ph:"nome@email.com", login_enter:"Accedi", login_pass_ph:"Password", login_register:"Crea un account", login_forgot:"Password dimenticata?", login_need_both:"Inserisci email e password.", login_need_email:"Scrivi prima la tua email.", login_reset_sent:"Ti abbiamo inviato una mail per reimpostare la password.", fb_offline:"Servizio di accesso non raggiungibile. Controlla la connessione.", vf_title:"Conferma la tua email", vf_msg:"Ti abbiamo inviato una mail con un link da cliccare. Aprila, conferma, poi torna qui.", vf_done:"Ho confermato, entra", vf_resend:"Invia di nuovo la mail", vf_sent:"Mail inviata! Controlla la posta (anche lo spam).", vf_not_yet:"Non risulta ancora confermata. Clicca il link nella mail e riprova.", acc_delete_relogin:"Per sicurezza devi rientrare e riprovare subito dopo.",
       w_tag:"Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.",
       w_traveler:"Sono un viaggiatore", w_photographer:"Sono un fotografo",
       s_where:"Dove ti fai fotografare?", s_sub:"Cerca per città e date del tuo soggiorno",
@@ -1054,7 +1197,7 @@
       bk_title:"Le mie prenotazioni", bk_confirmed:"Confermata", bk_meeting:"📍 Punto d'incontro", bk_empty:"Non hai ancora prenotazioni.",
       bk_after:"Dopo il servizio potrai scaricare la galleria e lasciare una recensione ⭐", bk_sim:"📸 Simula: foto inviate", bk_wait:"In attesa delle foto…", bk_done:"Conclusa", rev_title:"Lascia una recensione", rev_ph:"Com'è andata? Scrivi la tua esperienza…", rev_send:"Invia recensione", rev_thanks:"Grazie per la recensione!", rev_need_stars:"Seleziona almeno una stella.",
       label_traveler:"Lato viaggiatore", label_photographer:"Lato fotografo",
-      d_hello:"Ciao", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ita:"Italiana", d_describe:"Descriviti", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
+      d_hello:"Ciao", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ph:"Inizia a scrivere…", d_describe:"Descriviti", d_describe_ph:"Racconta chi sei e come lavori…", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
       d_next_level:"Prossimo livello: Top ★",
       d_next_msg:"Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.",
       d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta",      d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
@@ -1071,7 +1214,7 @@
       av_location:"Località", av_from:"Dal", av_to:"Al",
       av_add_location:"+ Aggiungi un'altra località / periodo", av_your_rates:"Le tue tariffe",
       av_hourly:"Oraria", av_daily:"Giornaliera", av_weekly:"Settimanale",
-      add_chip:"+ aggiungi", av_save:"Salva",
+      add_chip:"+ aggiungi", equip_prompt:"Aggiungi attrezzatura (es. Sony A7 IV, 50mm f/1.8)", av_save:"Salva",
       acc_title:"Il mio profilo", acc_role:"Ruolo", role_traveler:"Viaggiatore", role_photographer:"Fotografo",
       acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci", acc_delete:"Cancella account", acc_delete_confirm:"Sei sicuro di voler cancellare il tuo account? L'operazione è irreversibile.", acc_delete_done:"Account cancellato.",
       set_title:"Impostazioni", set_account:"Account", set_email:"Email di accesso", set_appearance:"Aspetto",
@@ -1080,7 +1223,7 @@
     },
     en:{
       sub_proto:"Clickable prototype · tap the highlighted elements to navigate",
-      login_sub:"Sign in to find and book photographers wherever you go.", login_google:"Continue with Google", login_email:"Continue with email", login_email_ph:"name@email.com", login_enter:"Sign in",
+      login_sub:"Sign in to find and book photographers wherever you go.", login_google:"Continue with Google", login_email:"Continue with email", login_email_ph:"name@email.com", login_enter:"Sign in", login_pass_ph:"Password", login_register:"Create an account", login_forgot:"Forgot your password?", login_need_both:"Enter email and password.", login_need_email:"Enter your email first.", login_reset_sent:"We've sent you an email to reset your password.", fb_offline:"Sign-in service unreachable. Check your connection.", vf_title:"Confirm your email", vf_msg:"We've sent you an email with a link. Open it, confirm, then come back here.", vf_done:"I confirmed, let me in", vf_resend:"Send the email again", vf_sent:"Email sent! Check your inbox (and spam).", vf_not_yet:"Not confirmed yet. Click the link in the email and try again.", acc_delete_relogin:"For security, sign in again and retry right after.",
       w_tag:"Professional photos wherever you go. Find and book a photographer for your trip.",
       w_traveler:"I'm a traveler", w_photographer:"I'm a photographer",
       s_where:"Where do you want your photos taken?", s_sub:"Search by city and dates of your stay",
@@ -1117,7 +1260,7 @@
       bk_title:"My bookings", bk_confirmed:"Confirmed", bk_meeting:"📍 Meeting point", bk_empty:"You have no bookings yet.",
       bk_after:"After the session you'll be able to download the gallery and leave a review ⭐", bk_sim:"📸 Test: photos sent", bk_wait:"Waiting for the photos…", bk_done:"Completed", rev_title:"Leave a review", rev_ph:"How did it go? Share your experience…", rev_send:"Send review", rev_thanks:"Thanks for your review!", rev_need_stars:"Please select at least one star.",
       label_traveler:"Traveler side", label_photographer:"Photographer side",
-      d_hello:"Hi", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ita:"Italian", d_describe:"Describe yourself", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
+      d_hello:"Hi", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ph:"Start typing…", d_describe:"Describe yourself", d_describe_ph:"Tell us who you are and how you work…", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
       d_next_level:"Next level: Top ★",
       d_next_msg:"Complete services and keep a high rating to unlock maximum visibility and reduced commissions.",
       d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline",      d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
@@ -1134,7 +1277,7 @@
       av_location:"Location", av_from:"From", av_to:"To",
       av_add_location:"+ Add another location / period", av_your_rates:"Your rates",
       av_hourly:"Hourly", av_daily:"Daily", av_weekly:"Weekly",
-      add_chip:"+ add", av_save:"Save",
+      add_chip:"+ add", equip_prompt:"Add equipment (e.g. Sony A7 IV, 50mm f/1.8)", av_save:"Save",
       acc_title:"My profile", acc_role:"Role", role_traveler:"Traveler", role_photographer:"Photographer",
       acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out", acc_delete:"Delete account", acc_delete_confirm:"Are you sure you want to delete your account? This action cannot be undone.", acc_delete_done:"Account deleted.",
       set_title:"Settings", set_account:"Account", set_email:"Login email", set_appearance:"Appearance",
@@ -1143,7 +1286,7 @@
     },
     es:{
       sub_proto:"Prototipo clicable · toca los elementos resaltados para navegar",
-      login_sub:"Inicia sesión para encontrar y reservar fotógrafos dondequiera que vayas.", login_google:"Continuar con Google", login_email:"Continuar con email", login_email_ph:"nombre@email.com", login_enter:"Entrar",
+      login_sub:"Inicia sesión para encontrar y reservar fotógrafos dondequiera que vayas.", login_google:"Continuar con Google", login_email:"Continuar con email", login_email_ph:"nombre@email.com", login_enter:"Entrar", login_pass_ph:"Contraseña", login_register:"Crear una cuenta", login_forgot:"¿Olvidaste la contraseña?", login_need_both:"Introduce email y contraseña.", login_need_email:"Escribe primero tu email.", login_reset_sent:"Te hemos enviado un email para restablecer la contraseña.", fb_offline:"Servicio de acceso no disponible. Comprueba la conexión.", vf_title:"Confirma tu email", vf_msg:"Te hemos enviado un email con un enlace. Ábrelo, confirma y vuelve aquí.", vf_done:"Ya confirmé, entrar", vf_resend:"Enviar el email de nuevo", vf_sent:"¡Email enviado! Revisa tu correo (y el spam).", vf_not_yet:"Aún no está confirmado. Haz clic en el enlace del email e inténtalo de nuevo.", acc_delete_relogin:"Por seguridad, vuelve a entrar e inténtalo justo después.",
       w_tag:"Fotos profesionales dondequiera que vayas. Encuentra y reserva un fotógrafo para tu viaje.",
       w_traveler:"Soy un viajero", w_photographer:"Soy un fotógrafo",
       s_where:"¿Dónde quieres tus fotos?", s_sub:"Busca por ciudad y fechas de tu estancia",
@@ -1180,7 +1323,7 @@
       bk_title:"Mis reservas", bk_confirmed:"Confirmada", bk_meeting:"📍 Punto de encuentro", bk_empty:"Aún no tienes reservas.",
       bk_after:"Tras el servicio podrás descargar la galería y dejar una reseña ⭐", bk_sim:"📸 Prueba: fotos enviadas", bk_wait:"Esperando las fotos…", bk_done:"Finalizada", rev_title:"Deja una reseña", rev_ph:"¿Qué tal fue? Cuenta tu experiencia…", rev_send:"Enviar reseña", rev_thanks:"¡Gracias por tu reseña!", rev_need_stars:"Selecciona al menos una estrella.",
       label_traveler:"Lado viajero", label_photographer:"Lado fotógrafo",
-      d_hello:"Hola", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ita:"Italiana", d_describe:"Descríbete", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
+      d_hello:"Hola", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ph:"Empieza a escribir…", d_describe:"Descríbete", d_describe_ph:"Cuenta quién eres y cómo trabajas…", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
       d_next_level:"Próximo nivel: Top ★",
       d_next_msg:"Completa servicios y mantén una valoración alta para desbloquear máxima visibilidad y comisiones reducidas.",
       d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar",      d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
@@ -1197,7 +1340,7 @@
       av_location:"Ubicación", av_from:"Desde", av_to:"Hasta",
       av_add_location:"+ Añadir otra ubicación / periodo", av_your_rates:"Tus tarifas",
       av_hourly:"Por hora", av_daily:"Por día", av_weekly:"Por semana",
-      add_chip:"+ añadir", av_save:"Guardar",
+      add_chip:"+ añadir", equip_prompt:"Añadir equipo (p. ej. Sony A7 IV, 50mm f/1.8)", av_save:"Guardar",
       acc_title:"Mi perfil", acc_role:"Rol", role_traveler:"Viajero", role_photographer:"Fotógrafo",
       acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión", acc_delete:"Eliminar cuenta", acc_delete_confirm:"¿Seguro que quieres eliminar tu cuenta? Esta acción es irreversible.", acc_delete_done:"Cuenta eliminada.",
       set_title:"Ajustes", set_account:"Cuenta", set_email:"Email de acceso", set_appearance:"Apariencia",
@@ -1206,7 +1349,7 @@
     },
     fr:{
       sub_proto:"Prototype cliquable · touchez les éléments en surbrillance pour naviguer",
-      login_sub:"Connectez-vous pour trouver et réserver des photographes où que vous alliez.", login_google:"Continuer avec Google", login_email:"Continuer avec l'email", login_email_ph:"nom@email.com", login_enter:"Se connecter",
+      login_sub:"Connectez-vous pour trouver et réserver des photographes où que vous alliez.", login_google:"Continuer avec Google", login_email:"Continuer avec l'email", login_email_ph:"nom@email.com", login_enter:"Se connecter", login_pass_ph:"Mot de passe", login_register:"Créer un compte", login_forgot:"Mot de passe oublié ?", login_need_both:"Saisissez l'email et le mot de passe.", login_need_email:"Saisissez d'abord votre email.", login_reset_sent:"Nous vous avons envoyé un email pour réinitialiser le mot de passe.", fb_offline:"Service de connexion injoignable. Vérifiez votre connexion.", vf_title:"Confirmez votre email", vf_msg:"Nous vous avons envoyé un email avec un lien. Ouvrez-le, confirmez, puis revenez ici.", vf_done:"J'ai confirmé, entrer", vf_resend:"Renvoyer l'email", vf_sent:"Email envoyé ! Vérifiez votre boîte (et les spams).", vf_not_yet:"Pas encore confirmé. Cliquez sur le lien dans l'email et réessayez.", acc_delete_relogin:"Par sécurité, reconnectez-vous et réessayez juste après.",
       w_tag:"Des photos professionnelles où que vous alliez. Trouvez et réservez un photographe pour votre voyage.",
       w_traveler:"Je suis un voyageur", w_photographer:"Je suis un photographe",
       s_where:"Où voulez-vous être photographié ?", s_sub:"Recherchez par ville et dates de votre séjour",
@@ -1243,7 +1386,7 @@
       bk_title:"Mes réservations", bk_confirmed:"Confirmée", bk_meeting:"📍 Point de rendez-vous", bk_empty:"Vous n'avez pas encore de réservations.",
       bk_after:"Après la séance, vous pourrez télécharger la galerie et laisser un avis ⭐", bk_sim:"📸 Test : photos envoyées", bk_wait:"En attente des photos…", bk_done:"Terminée", rev_title:"Laisser un avis", rev_ph:"Comment ça s'est passé ? Partagez votre expérience…", rev_send:"Envoyer l'avis", rev_thanks:"Merci pour votre avis !", rev_need_stars:"Sélectionnez au moins une étoile.",
       label_traveler:"Côté voyageur", label_photographer:"Côté photographe",
-      d_hello:"Bonjour", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ita:"Italienne", d_describe:"Décrivez-vous", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
+      d_hello:"Bonjour", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ph:"Commencez à écrire…", d_describe:"Décrivez-vous", d_describe_ph:"Racontez qui vous êtes et comment vous travaillez…", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
       d_next_level:"Niveau suivant : Top ★",
       d_next_msg:"Réalisez des prestations et gardez une bonne note pour débloquer une visibilité maximale et des commissions réduites.",
       d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser",      d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
@@ -1260,7 +1403,7 @@
       av_location:"Lieu", av_from:"Du", av_to:"Au",
       av_add_location:"+ Ajouter un autre lieu / période", av_your_rates:"Vos tarifs",
       av_hourly:"Horaire", av_daily:"Journalier", av_weekly:"Hebdomadaire",
-      add_chip:"+ ajouter", av_save:"Enregistrer",
+      add_chip:"+ ajouter", equip_prompt:"Ajouter du matériel (ex. Sony A7 IV, 50mm f/1.8)", av_save:"Enregistrer",
       acc_title:"Mon profil", acc_role:"Rôle", role_traveler:"Voyageur", role_photographer:"Photographe",
       acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter", acc_delete:"Supprimer le compte", acc_delete_confirm:"Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.", acc_delete_done:"Compte supprimé.",
       set_title:"Paramètres", set_account:"Compte", set_email:"Email de connexion", set_appearance:"Apparence",
@@ -1269,7 +1412,7 @@
     },
     de:{
       sub_proto:"Klickbarer Prototyp · tippe die hervorgehobenen Elemente an, um zu navigieren",
-      login_sub:"Melde dich an, um Fotografen zu finden und zu buchen, wohin du auch gehst.", login_google:"Mit Google fortfahren", login_email:"Mit E-Mail fortfahren", login_email_ph:"name@email.com", login_enter:"Anmelden",
+      login_sub:"Melde dich an, um Fotografen zu finden und zu buchen, wohin du auch gehst.", login_google:"Mit Google fortfahren", login_email:"Mit E-Mail fortfahren", login_email_ph:"name@email.com", login_enter:"Anmelden", login_pass_ph:"Passwort", login_register:"Konto erstellen", login_forgot:"Passwort vergessen?", login_need_both:"Gib E-Mail und Passwort ein.", login_need_email:"Gib zuerst deine E-Mail ein.", login_reset_sent:"Wir haben dir eine E-Mail zum Zurücksetzen des Passworts geschickt.", fb_offline:"Anmeldedienst nicht erreichbar. Prüfe deine Verbindung.", vf_title:"Bestätige deine E-Mail", vf_msg:"Wir haben dir eine E-Mail mit einem Link geschickt. Öffne sie, bestätige und komm zurück.", vf_done:"Bestätigt, rein damit", vf_resend:"E-Mail erneut senden", vf_sent:"E-Mail gesendet! Prüfe dein Postfach (auch Spam).", vf_not_yet:"Noch nicht bestätigt. Klicke den Link in der E-Mail und versuche es erneut.", acc_delete_relogin:"Aus Sicherheitsgründen melde dich erneut an und versuche es gleich danach.",
       w_tag:"Professionelle Fotos, wohin du auch gehst. Finde und buche einen Fotografen für deine Reise.",
       w_traveler:"Ich bin ein Reisender", w_photographer:"Ich bin ein Fotograf",
       s_where:"Wo möchtest du fotografiert werden?", s_sub:"Suche nach Stadt und Daten deines Aufenthalts",
@@ -1306,7 +1449,7 @@
       bk_title:"Meine Buchungen", bk_confirmed:"Bestätigt", bk_meeting:"📍 Treffpunkt", bk_empty:"Du hast noch keine Buchungen.",
       bk_after:"Nach dem Termin kannst du die Galerie herunterladen und eine Bewertung abgeben ⭐", bk_sim:"📸 Test: Fotos gesendet", bk_wait:"Warten auf die Fotos…", bk_done:"Abgeschlossen", rev_title:"Bewertung abgeben", rev_ph:"Wie war es? Teile deine Erfahrung…", rev_send:"Bewertung senden", rev_thanks:"Danke für deine Bewertung!", rev_need_stars:"Bitte wähle mindestens einen Stern.",
       label_traveler:"Reisenden-Seite", label_photographer:"Fotografen-Seite",
-      d_hello:"Hallo", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ita:"Italienisch", d_describe:"Beschreibe dich", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
+      d_hello:"Hallo", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ph:"Beginne zu tippen…", d_describe:"Beschreibe dich", d_describe_ph:"Erzähle, wer du bist und wie du arbeitest…", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
       d_next_level:"Nächstes Level: Top ★",
       d_next_msg:"Erledige Aufträge und halte eine hohe Bewertung, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
       d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen",      d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
@@ -1323,7 +1466,7 @@
       av_location:"Ort", av_from:"Von", av_to:"Bis",
       av_add_location:"+ Weiteren Ort / Zeitraum hinzufügen", av_your_rates:"Deine Tarife",
       av_hourly:"Stündlich", av_daily:"Täglich", av_weekly:"Wöchentlich",
-      add_chip:"+ hinzufügen", av_save:"Speichern",
+      add_chip:"+ hinzufügen", equip_prompt:"Ausrüstung hinzufügen (z. B. Sony A7 IV, 50mm f/1.8)", av_save:"Speichern",
       acc_title:"Mein Profil", acc_role:"Rolle", role_traveler:"Reisender", role_photographer:"Fotograf",
       acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden", acc_delete:"Konto löschen", acc_delete_confirm:"Möchtest du dein Konto wirklich löschen? Dies kann nicht rückgängig gemacht werden.", acc_delete_done:"Konto gelöscht.",
       set_title:"Einstellungen", set_account:"Konto", set_email:"Anmelde-E-Mail", set_appearance:"Darstellung",
@@ -1336,7 +1479,7 @@
     try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateAccountUI(); initGoogle(); renderResults(); updateBookingUI();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); updateBookingUI(); initFirebase();
     (function(){
       function iso(d){var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;}
       var t=new Date(), o=new Date(t.getFullYear(),t.getMonth(),t.getDate()+3);
@@ -1344,14 +1487,6 @@
       if(a&&!a.value) a.value=iso(t);
       if(b&&!b.value) b.value=iso(o);
     })();
-    var _s=loadSession();
-    if(_s){
-      if(_s.name) accountName=_s.name;
-      if(_s.email) accountEmail=_s.email;
-      updateAccountUI();
-      if(_s.role){ roleChosen=true; setRole(_s.role); _activate(_s.role==='photographer'?'ph_dash':'search'); }
-      else { _activate('welcome'); }
-    }
   })();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
