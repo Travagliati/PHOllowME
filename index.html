@@ -36,6 +36,17 @@
   .flag svg{display:block;width:100%;height:100%}
   .langmenu{position:absolute;top:calc(100% + 6px);right:0;background:var(--screen);border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.22);padding:5px;display:none;min-width:140px}
   .langmenu.open{display:block}
+  .acmenu{position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--screen);border:1px solid var(--line);border-radius:11px;box-shadow:0 8px 22px rgba(0,0,0,.20);max-height:200px;overflow-y:auto;z-index:40;display:none}
+  .acmenu.open{display:block}
+  .acitem{padding:10px 13px;font-size:14px;cursor:pointer;color:var(--text);border-bottom:1px solid var(--line)}
+  .acitem:last-child{border-bottom:none}
+  .acitem:active{background:var(--light)}
+  .sheet{position:absolute;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:60}
+  .sheet.open{display:flex}
+  .sheet-inner{width:100%;background:var(--screen);border-radius:16px 16px 0 0;padding:8px}
+  .sheet-inner button{width:100%;border:none;background:transparent;color:var(--text);font-size:16px;padding:15px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .sheet-inner button:active{background:var(--light)}
+  .sheet-inner .cancel{color:var(--accent);font-weight:600;margin-top:2px;border-top:1px solid var(--line);border-radius:0}
   .langopt{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text)}
   .langopt:hover{background:var(--light)}
 
@@ -223,6 +234,8 @@
           <div class="langopt" role="option" onclick="chooseLang('es')"><span class="flag" data-flag="es"></span><span>Español</span></div>
           <div class="langopt" role="option" onclick="chooseLang('fr')"><span class="flag" data-flag="fr"></span><span>Français</span></div>
           <div class="langopt" role="option" onclick="chooseLang('de')"><span class="flag" data-flag="de"></span><span>Deutsch</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span>中文</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span>日本語</span></div>
         </div>
       </div>
       <div class="welcome-brand">PHOllowME</div>
@@ -268,6 +281,8 @@
           <div class="langopt" role="option" onclick="chooseLang('es')"><span class="flag" data-flag="es"></span><span>Español</span></div>
           <div class="langopt" role="option" onclick="chooseLang('fr')"><span class="flag" data-flag="fr"></span><span>Français</span></div>
           <div class="langopt" role="option" onclick="chooseLang('de')"><span class="flag" data-flag="de"></span><span>Deutsch</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span>中文</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span>日本語</span></div>
         </div>
       </div>
       <div class="welcome-brand">PHOllowME</div>
@@ -286,9 +301,10 @@
         <h2 style="font-size:20px;color:var(--accent-d);margin-bottom:4px" data-i18n="s_where">Dove ti fai fotografare?</h2>
         <p class="muted" style="margin-bottom:16px" data-i18n="s_sub">Cerca per città e date del tuo soggiorno</p>
         <button class="btn ghost" style="margin-bottom:14px" onclick="nearMe()" data-i18n="s_near">📍 Cerca intorno a te</button>
-        <div class="field">
+        <div class="field" style="position:relative">
           <div class="k" data-i18n="s_dest">Destinazione</div>
-          <input id="destInput" class="fieldin" data-i18n-ph="s_dest_ph" placeholder="Città o luogo">
+          <input id="destInput" class="fieldin" autocomplete="off" data-i18n-ph="s_dest_ph" placeholder="Città o luogo">
+          <div class="acmenu" id="destMenu"></div>
         </div>
         <div class="row2">
           <div class="field"><div class="k" data-i18n="s_checkin">Arrivo</div><input id="dIn" class="fieldin" type="date"></div>
@@ -508,13 +524,11 @@
           <div><h2 style="font-size:17px;color:var(--accent-d)"><span data-i18n="d_hello">Ciao</span>, <span class="acctName">Luigi Travagliati</span></h2><div class="muted" data-i18n="d_role">Fotografo · Roma</div></div>
         </div>
 
-        <div class="field" style="margin-bottom:14px">
+        <div class="field" style="margin-bottom:14px;position:relative">
           <div class="k" data-i18n="d_nationality">Nazionalità</div>
-          <input id="natInput" class="fieldin" list="natList" autocomplete="off" oninput="saveProfile()" data-i18n-ph="d_nat_ph" placeholder="Inizia a scrivere…">
+          <input id="natInput" class="fieldin" autocomplete="off" oninput="saveProfile()" data-i18n-ph="d_nat_ph" placeholder="Inizia a scrivere…">
+          <div class="acmenu" id="natMenu"></div>
         </div>
-        <datalist id="natList">
-          <option value="Italiana"></option><option value="Francese"></option><option value="Spagnola"></option><option value="Tedesca"></option><option value="Inglese"></option><option value="Irlandese"></option><option value="Portoghese"></option><option value="Olandese"></option><option value="Belga"></option><option value="Svizzera"></option><option value="Austriaca"></option><option value="Greca"></option><option value="Polacca"></option><option value="Rumena"></option><option value="Svedese"></option><option value="Norvegese"></option><option value="Danese"></option><option value="Finlandese"></option><option value="Croata"></option><option value="Ceca"></option><option value="Ungherese"></option><option value="Russa"></option><option value="Ucraina"></option><option value="Turca"></option><option value="Statunitense"></option><option value="Canadese"></option><option value="Messicana"></option><option value="Brasiliana"></option><option value="Argentina"></option><option value="Cilena"></option><option value="Colombiana"></option><option value="Australiana"></option><option value="Neozelandese"></option><option value="Giapponese"></option><option value="Cinese"></option><option value="Coreana"></option><option value="Indiana"></option><option value="Marocchina"></option><option value="Egiziana"></option><option value="Sudafricana"></option>
-        </datalist>
 
         <h3 style="color:var(--accent-d);font-size:14px;margin:0 0 8px" data-i18n="d_describe">Descriviti</h3>
         <div class="field" style="margin-bottom:14px"><textarea id="bioInput" class="fieldin" rows="3" oninput="saveProfile()" data-i18n-ph="d_describe_ph" placeholder="Racconta chi sei e come lavori…" style="resize:none;font-weight:400;font-size:13px;line-height:1.5"></textarea></div>
@@ -628,7 +642,9 @@
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="acc_title">Il mio profilo</h2></div>
       <div class="scroll pad">
         <div style="display:flex;gap:14px;align-items:center;margin-bottom:12px">
-          <label class="avatar myAvatar" style="position:relative;cursor:pointer"><span class="ini">MR</span><span class="cambadge">📷</span><input type="file" accept="image/*" onchange="uploadPhoto(this)" style="display:none"></label>
+          <div class="avatar myAvatar" style="position:relative;cursor:pointer" onclick="openPhotoSheet()"><span class="ini">MR</span><span class="cambadge">📷</span></div>
+          <input id="camInput" type="file" accept="image/*" capture="environment" onchange="uploadPhoto(this)" style="display:none">
+          <input id="galInput" type="file" accept="image/*" onchange="uploadPhoto(this)" style="display:none">
           <div><h2 style="font-size:18px;color:var(--accent-d)"><span class="acctName">Luigi Travagliati</span></h2><div class="muted acctEmail">ltravagliati@libero.it</div></div>
         </div>
         <div class="sect" data-i18n="acc_role">Ruolo</div>
@@ -640,6 +656,13 @@
         <div class="srow" style="cursor:pointer" onclick="show('settings')"><span class="si">⚙️</span><div class="st"><b data-i18n="acc_settings">Impostazioni</b></div><span class="chev">›</span></div>
         <div class="srow" style="cursor:pointer" onclick="logout()"><span class="si">🚪</span><div class="st"><b data-i18n="acc_logout">Esci</b></div><span class="chev">›</span></div>
         <div class="srow" style="cursor:pointer" onclick="deleteAccount()"><span class="si">🗑️</span><div class="st"><b style="color:#dc2626" data-i18n="acc_delete">Cancella account</b></div><span class="chev" style="color:#dc2626">›</span></div>
+      </div>
+      <div class="sheet" id="photoSheet" onclick="if(event.target===this)closePhotoSheet()">
+        <div class="sheet-inner">
+          <button onclick="pickCamera()"><span>📷</span><span data-i18n="ph_take">Scatta foto</span></button>
+          <button onclick="pickGallery()"><span>🖼️</span><span data-i18n="ph_gallery">Scegli dalla galleria</span></button>
+          <button class="cancel" onclick="closePhotoSheet()" data-i18n="ph_cancel">Annulla</button>
+        </div>
       </div>
     </div>
 
@@ -666,6 +689,8 @@
         <div class="optrow langopt2" data-lang="es" onclick="chooseLang('es')"><span class="flag" data-flag="es"></span><span>Español</span><span class="chk">✓</span></div>
         <div class="optrow langopt2" data-lang="fr" onclick="chooseLang('fr')"><span class="flag" data-flag="fr"></span><span>Français</span><span class="chk">✓</span></div>
         <div class="optrow langopt2" data-lang="de" onclick="chooseLang('de')"><span class="flag" data-flag="de"></span><span>Deutsch</span><span class="chk">✓</span></div>
+        <div class="optrow langopt2" data-lang="zh" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span>中文</span><span class="chk">✓</span></div>
+        <div class="optrow langopt2" data-lang="ja" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span>日本語</span><span class="chk">✓</span></div>
 
         <div class="sect" data-i18n="set_notifs">Notifiche</div>
         <div class="srow"><span class="si">📅</span><div class="st"><b data-i18n="notif_bookings">Prenotazioni e richieste</b></div><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
@@ -819,7 +844,37 @@
     var f=input.files&&input.files[0]; if(!f) return;
     var r=new FileReader();
     r.onload=function(ev){ accountPhoto=ev.target.result; setPhotoUrl(ev.target.result); saveProfile(); };
-    r.readAsDataURL(f);
+    r.readAsDataURL(f); input.value='';
+  }
+  /* ---- foto profilo: scelta Scatta foto / Galleria (garantisce la fotocamera su ogni telefono) ---- */
+  function openPhotoSheet(){ var s=document.getElementById('photoSheet'); if(s) s.classList.add('open'); }
+  function closePhotoSheet(){ var s=document.getElementById('photoSheet'); if(s) s.classList.remove('open'); }
+  function pickCamera(){ closePhotoSheet(); var i=document.getElementById('camInput'); if(i) i.click(); }
+  function pickGallery(){ closePhotoSheet(); var i=document.getElementById('galInput'); if(i) i.click(); }
+  /* ---- menù a tendina con autocompletamento (nazionalità e destinazione) ---- */
+  var NATIONALITIES=['Italiana','Francese','Spagnola','Tedesca','Inglese','Irlandese','Portoghese','Olandese','Belga','Svizzera','Austriaca','Greca','Polacca','Rumena','Svedese','Norvegese','Danese','Finlandese','Croata','Ceca','Ungherese','Russa','Ucraina','Turca','Statunitense','Canadese','Messicana','Brasiliana','Argentina','Cilena','Colombiana','Australiana','Neozelandese','Giapponese','Cinese','Coreana','Indiana','Marocchina','Egiziana','Sudafricana'];
+  var DESTINATIONS=['Roma','Firenze','Venezia','Milano','Napoli','Torino','Bologna','Amalfi','Cinque Terre','Ibiza','Formentera','Tenerife','Palma di Maiorca','Fuerteventura','Barcellona','Madrid','Siviglia','Parigi','Nizza','Lisbona','Porto','Londra','Amsterdam','Berlino','Praga','Vienna','Santorini','Mykonos','Atene','Dubrovnik','Istanbul','New York','Miami','Los Angeles','Bali','Tokyo','Marrakech','Città del Capo'];
+  function attachAC(inputId,menuId,getOpts,onPick){
+    var inp=document.getElementById(inputId), menu=document.getElementById(menuId);
+    if(!inp||!menu) return;
+    function render(){
+      var q=(inp.value||'').trim().toLowerCase(), opts=getOpts();
+      var f=q?opts.filter(function(o){ return o.toLowerCase().indexOf(q)>=0; }):opts.slice();
+      if(!f.length){ menu.classList.remove('open'); menu.innerHTML=''; return; }
+      menu.innerHTML=f.map(function(o){ return '<div class="acitem">'+escHtml(o)+'</div>'; }).join('');
+      menu.classList.add('open');
+    }
+    inp.addEventListener('focus', render);
+    inp.addEventListener('input', render);
+    inp.addEventListener('blur', function(){ setTimeout(function(){ menu.classList.remove('open'); }, 180); });
+    menu.addEventListener('mousedown', function(e){
+      var it=(e.target&&e.target.closest)?e.target.closest('.acitem'):null;
+      if(!it) return;
+      e.preventDefault();
+      inp.value=it.textContent;
+      menu.classList.remove('open');
+      if(onPick) onPick();
+    });
   }
   function addWork(input){
     var f=input.files&&input.files[0]; if(!f) return;
@@ -1154,7 +1209,9 @@
     en:'<svg viewBox="0 0 60 30" preserveAspectRatio="none"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#ffffff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#c8102e" stroke-width="6"/></svg>',
     es:'<svg viewBox="0 0 3 4" preserveAspectRatio="none"><rect width="3" height="4" fill="#c60b1e"/><rect y="1" width="3" height="2" fill="#ffc400"/></svg>',
     fr:'<svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="1" height="2" fill="#0055a4"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ef4135"/></svg>',
-    de:'<svg viewBox="0 0 5 3" preserveAspectRatio="none"><rect width="5" height="1" fill="#000000"/><rect y="1" width="5" height="1" fill="#dd0000"/><rect y="2" width="5" height="1" fill="#ffce00"/></svg>'
+    de:'<svg viewBox="0 0 5 3" preserveAspectRatio="none"><rect width="5" height="1" fill="#000000"/><rect y="1" width="5" height="1" fill="#dd0000"/><rect y="2" width="5" height="1" fill="#ffce00"/></svg>',
+    zh:'<svg viewBox="0 0 30 20" preserveAspectRatio="none"><rect width="30" height="20" fill="#de2910"/><g fill="#ffde00"><polygon points="0,-1 0.2246,-0.309 0.9511,-0.309 0.3633,0.118 0.5878,0.809 0,0.382 -0.5878,0.809 -0.3633,0.118 -0.9511,-0.309 -0.2246,-0.309" transform="translate(6,6) scale(3.2)"/><polygon points="0,-1 0.2246,-0.309 0.9511,-0.309 0.3633,0.118 0.5878,0.809 0,0.382 -0.5878,0.809 -0.3633,0.118 -0.9511,-0.309 -0.2246,-0.309" transform="translate(12,2.5) scale(1.1)"/><polygon points="0,-1 0.2246,-0.309 0.9511,-0.309 0.3633,0.118 0.5878,0.809 0,0.382 -0.5878,0.809 -0.3633,0.118 -0.9511,-0.309 -0.2246,-0.309" transform="translate(14,5.5) scale(1.1)"/><polygon points="0,-1 0.2246,-0.309 0.9511,-0.309 0.3633,0.118 0.5878,0.809 0,0.382 -0.5878,0.809 -0.3633,0.118 -0.9511,-0.309 -0.2246,-0.309" transform="translate(14,9) scale(1.1)"/><polygon points="0,-1 0.2246,-0.309 0.9511,-0.309 0.3633,0.118 0.5878,0.809 0,0.382 -0.5878,0.809 -0.3633,0.118 -0.9511,-0.309 -0.2246,-0.309" transform="translate(12,12) scale(1.1)"/></g></svg>',
+    ja:'<svg viewBox="0 0 30 20" preserveAspectRatio="none"><rect width="30" height="20" fill="#ffffff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></svg>'
   };
 
   var I18N={
@@ -1214,7 +1271,7 @@
       av_location:"Località", av_from:"Dal", av_to:"Al",
       av_add_location:"+ Aggiungi un'altra località / periodo", av_your_rates:"Le tue tariffe",
       av_hourly:"Oraria", av_daily:"Giornaliera", av_weekly:"Settimanale",
-      add_chip:"+ aggiungi", equip_prompt:"Aggiungi attrezzatura (es. Sony A7 IV, 50mm f/1.8)", av_save:"Salva",
+      add_chip:"+ aggiungi", equip_prompt:"Aggiungi attrezzatura (es. Sony A7 IV, 50mm f/1.8)", av_save:"Salva", ph_take:"Scatta foto", ph_gallery:"Scegli dalla galleria", ph_cancel:"Annulla",
       acc_title:"Il mio profilo", acc_role:"Ruolo", role_traveler:"Viaggiatore", role_photographer:"Fotografo",
       acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci", acc_delete:"Cancella account", acc_delete_confirm:"Sei sicuro di voler cancellare il tuo account? L'operazione è irreversibile.", acc_delete_done:"Account cancellato.",
       set_title:"Impostazioni", set_account:"Account", set_email:"Email di accesso", set_appearance:"Aspetto",
@@ -1277,7 +1334,7 @@
       av_location:"Location", av_from:"From", av_to:"To",
       av_add_location:"+ Add another location / period", av_your_rates:"Your rates",
       av_hourly:"Hourly", av_daily:"Daily", av_weekly:"Weekly",
-      add_chip:"+ add", equip_prompt:"Add equipment (e.g. Sony A7 IV, 50mm f/1.8)", av_save:"Save",
+      add_chip:"+ add", equip_prompt:"Add equipment (e.g. Sony A7 IV, 50mm f/1.8)", av_save:"Save", ph_take:"Take a photo", ph_gallery:"Choose from gallery", ph_cancel:"Cancel",
       acc_title:"My profile", acc_role:"Role", role_traveler:"Traveler", role_photographer:"Photographer",
       acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out", acc_delete:"Delete account", acc_delete_confirm:"Are you sure you want to delete your account? This action cannot be undone.", acc_delete_done:"Account deleted.",
       set_title:"Settings", set_account:"Account", set_email:"Login email", set_appearance:"Appearance",
@@ -1340,7 +1397,7 @@
       av_location:"Ubicación", av_from:"Desde", av_to:"Hasta",
       av_add_location:"+ Añadir otra ubicación / periodo", av_your_rates:"Tus tarifas",
       av_hourly:"Por hora", av_daily:"Por día", av_weekly:"Por semana",
-      add_chip:"+ añadir", equip_prompt:"Añadir equipo (p. ej. Sony A7 IV, 50mm f/1.8)", av_save:"Guardar",
+      add_chip:"+ añadir", equip_prompt:"Añadir equipo (p. ej. Sony A7 IV, 50mm f/1.8)", av_save:"Guardar", ph_take:"Hacer una foto", ph_gallery:"Elegir de la galería", ph_cancel:"Cancelar",
       acc_title:"Mi perfil", acc_role:"Rol", role_traveler:"Viajero", role_photographer:"Fotógrafo",
       acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión", acc_delete:"Eliminar cuenta", acc_delete_confirm:"¿Seguro que quieres eliminar tu cuenta? Esta acción es irreversible.", acc_delete_done:"Cuenta eliminada.",
       set_title:"Ajustes", set_account:"Cuenta", set_email:"Email de acceso", set_appearance:"Apariencia",
@@ -1403,7 +1460,7 @@
       av_location:"Lieu", av_from:"Du", av_to:"Au",
       av_add_location:"+ Ajouter un autre lieu / période", av_your_rates:"Vos tarifs",
       av_hourly:"Horaire", av_daily:"Journalier", av_weekly:"Hebdomadaire",
-      add_chip:"+ ajouter", equip_prompt:"Ajouter du matériel (ex. Sony A7 IV, 50mm f/1.8)", av_save:"Enregistrer",
+      add_chip:"+ ajouter", equip_prompt:"Ajouter du matériel (ex. Sony A7 IV, 50mm f/1.8)", av_save:"Enregistrer", ph_take:"Prendre une photo", ph_gallery:"Choisir dans la galerie", ph_cancel:"Annuler",
       acc_title:"Mon profil", acc_role:"Rôle", role_traveler:"Voyageur", role_photographer:"Photographe",
       acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter", acc_delete:"Supprimer le compte", acc_delete_confirm:"Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.", acc_delete_done:"Compte supprimé.",
       set_title:"Paramètres", set_account:"Compte", set_email:"Email de connexion", set_appearance:"Apparence",
@@ -1466,12 +1523,138 @@
       av_location:"Ort", av_from:"Von", av_to:"Bis",
       av_add_location:"+ Weiteren Ort / Zeitraum hinzufügen", av_your_rates:"Deine Tarife",
       av_hourly:"Stündlich", av_daily:"Täglich", av_weekly:"Wöchentlich",
-      add_chip:"+ hinzufügen", equip_prompt:"Ausrüstung hinzufügen (z. B. Sony A7 IV, 50mm f/1.8)", av_save:"Speichern",
+      add_chip:"+ hinzufügen", equip_prompt:"Ausrüstung hinzufügen (z. B. Sony A7 IV, 50mm f/1.8)", av_save:"Speichern", ph_take:"Foto aufnehmen", ph_gallery:"Aus Galerie wählen", ph_cancel:"Abbrechen",
       acc_title:"Mein Profil", acc_role:"Rolle", role_traveler:"Reisender", role_photographer:"Fotograf",
       acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden", acc_delete:"Konto löschen", acc_delete_confirm:"Möchtest du dein Konto wirklich löschen? Dies kann nicht rückgängig gemacht werden.", acc_delete_done:"Konto gelöscht.",
       set_title:"Einstellungen", set_account:"Konto", set_email:"Anmelde-E-Mail", set_appearance:"Darstellung",
       set_theme:"Thema", theme_light:"Hell", theme_dark:"Dunkel", theme_auto:"Automatisch", set_language:"Sprache",
       set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen", pf_title:"Portfolio", pf_hint:"Lade deine bisherigen Arbeiten hoch", g_title:"Konto auswählen", g_sub:"um bei PHOllowME fortzufahren", g_other:"Anderes Konto verwenden", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Ein Foto aufnehmen", svc_title:"Deine Leistungen", svc_add:"+ Leistung hinzufügen", svc_name_ph:"Name der Leistung", svc_desc_ph:"Beschreibung", svc_remove:"🗑 Entfernen"
+    },
+    zh:{
+      sub_proto:"可点击原型 · 点击高亮元素进行导航",
+      login_sub:"登录，随时随地寻找并预订摄影师。", login_google:"使用 Google 继续", login_email:"使用邮箱继续", login_email_ph:"name@email.com", login_enter:"登录", login_pass_ph:"密码", login_register:"创建账户", login_forgot:"忘记密码？", login_need_both:"请输入邮箱和密码。", login_need_email:"请先输入你的邮箱。", login_reset_sent:"我们已向你发送重置密码的邮件。", fb_offline:"登录服务不可用，请检查网络连接。", vf_title:"确认你的邮箱", vf_msg:"我们给你发了一封带链接的邮件。打开并确认后，再回到这里。", vf_done:"我已确认，进入", vf_resend:"重新发送邮件", vf_sent:"邮件已发送！请查收邮箱（也看看垃圾邮件）。", vf_not_yet:"尚未确认。请点击邮件中的链接后再试。", acc_delete_relogin:"出于安全考虑，请重新登录后立即重试。",
+      w_tag:"无论走到哪里都有专业照片。为你的旅行寻找并预订摄影师。",
+      w_traveler:"我是旅行者", w_photographer:"我是摄影师",
+      s_where:"你想在哪里拍照？", s_sub:"按城市和入住日期搜索",
+      s_dest:"目的地", s_dest_ph:"城市或地点", s_checkin:"到达", s_checkout:"离开",
+      s_service_type:"服务类型", s_service_val:"人像 / 度假",
+      sm_mode:"服务方式", sm_fixed:"📍 固定地点", sm_roaming:"🚶 移动拍摄", sm_both:"两者皆可", av_mode:"提供方式",
+      s_search_btn:"搜索摄影师", s_popular:"热门目的地", s_near:"📍 搜索附近", s_near_lbl:"你附近",
+      nav_search:"搜索", nav_bookings:"预订", nav_chat:"聊天", nav_profile:"我的",
+      nav_home:"主页", nav_agenda:"日程", nav_earnings:"收入",
+      r_filters:"⚙ 筛选", r_price:"价格", r_level:"等级", r_spec:"专长", f_price:"价格 (€/小时)", f_min:"从", f_max:"到", f_spec:"专长", f_all:"全部", f_mode:"方式", f_rating:"评分", f_reset:"重置", f_apply:"应用", r_empty:"目前没有可用的摄影师。", r_none_match:"没有符合筛选条件的摄影师。", r_available:"位可用摄影师",
+      r_count:"这些日期有 6 位可用摄影师",
+      lvl_expert:"★ 资深", lvl_top:"★ 顶级", lvl_novice:"★ 新手",
+      r1_spec:"人像 · 街拍 · 情侣", r2_spec:"婚礼 · 时尚", r3_spec:"街拍 · 纪实",
+      p_reviews_count:"4.9 · 128 条评价", p_photographer_expert:"★ 资深摄影师",
+      p_bio:"在罗马从事人像和街拍摄影 8 年。带你去城市里最美、游客最少的地方拍出真实的照片。",
+      p_hourly:"每小时价格", p_daily:"每日", p_weekly:"每周",
+      spec_title:"专长", spec_portrait:"人像", spec_street:"街拍", spec_couples:"情侣", spec_reportage:"纪实",
+      equip_title:"设备", p_reviews_title:"评价",
+      p_rev1:"很棒的体验，照片美极了！",
+      p_rev2:"专业又亲切，交片很快。",
+      p_available:"7月12–15日可预约", p_book:"预订",
+      b_book_title:"预订", p_no_reviews:"暂无评价。", b_choose_date:"选择日期", b_month:"2026年7月",
+      cal_l1:"一", cal_l2:"二", cal_l3:"三", cal_l4:"四", cal_l5:"五", cal_l6:"六", cal_l7:"日",
+      b_duration:"时长", b_1h:"1 小时", b_2h:"2 小时", b_day:"全天",
+      b_time:"时间", b_time_val:"🕓 16:00 — 17:00（黄金时刻）",
+      b_service_1h:"服务（1 小时）", b_commission:"PHOllowME 服务费", total:"总计", b_to_pay:"去付款",
+      pay_title:"付款", pay_summary:"摘要", pay_method:"付款方式",
+      pay_card:"银行卡", pay_wallet_sub:"一键付款",
+      pay_escrow:"🔒 款项将被安全托管，仅在摄影师交付照片后才支付。",
+      pay_btn_confirm:"确认并支付 51,75 €", pay_btn_paypal:"使用 PayPal 支付 51,75 €", pay_btn_wallet:" 支付 51,75 €",
+      done_title:"预订已确认！",
+      done_msg:"我们已通过聊天发送了详情和会面地点。",
+      done_view_booking:"查看预订", done_back_search:"返回搜索",
+      bk_title:"我的预订", bk_confirmed:"已确认", bk_meeting:"📍 会面地点", bk_empty:"你还没有预订。",
+      bk_after:"服务结束后你可以下载相册并留下评价 ⭐", bk_sim:"📸 模拟：照片已发送", bk_wait:"等待照片…", bk_done:"已完成", rev_title:"写评价", rev_ph:"体验如何？写下你的感受…", rev_send:"提交评价", rev_thanks:"感谢你的评价！", rev_need_stars:"请至少选择一颗星。",
+      label_traveler:"旅行者端", label_photographer:"摄影师端",
+      d_hello:"你好", d_role:"摄影师 · 罗马", d_nationality:"国籍", d_nat_ph:"开始输入…", d_describe:"自我介绍", d_describe_ph:"介绍一下你是谁、如何工作…", d_languages:"掌握的语言", lang_ita:"意大利语", lang_eng:"英语", lang_fra:"法语", d_car:"有车", opt_yes:"是", opt_no:"否", d_services:"次服务", d_rating:"评分",
+      d_next_level:"下一等级：顶级 ★",
+      d_next_msg:"完成更多服务并保持高评分，以解锁最大曝光和更低佣金。",
+      d_pending:"待处理请求", d_no_requests:"暂无请求。", chats_empty:"暂无聊天。", d_accept:"接受", d_reject:"拒绝", d_manage:"管理资料和可预约时间", d_home_back:"↩ 返回主界面",
+      chats_title:"聊天", chat_bye:"好的，特拉斯特维雷见！",
+      time_yesterday:"昨天", chat_prev_james:"非常感谢照片 🙏",
+      time_mon:"周一", chat_prev_elena:"20号也有空吗？",
+      chat_hdr_sub:"人像 · 7月13日 16:00", day_today:"今天",
+      chat_b1:"马可！我刚预订了明天的服务，好期待😊",
+      chat_b2:"索菲亚！确认了，太好了。我们16:00在特里卢萨广场前见面好吗？",
+      chat_b3:"太好了！日落拍摄你建议我穿什么？",
+      chat_b4:"淡雅的颜色和纯色在金色光线下很好看。想的话也带件换的衣服！",
+      chat_input:"写消息…",
+      av_title:"资料和可预约时间", av_where_when:"你将在何时何地",
+      av_location:"地点", av_from:"从", av_to:"到",
+      av_add_location:"+ 添加另一个地点 / 时段", av_your_rates:"你的价格",
+      av_hourly:"每小时", av_daily:"每日", av_weekly:"每周",
+      add_chip:"+ 添加", equip_prompt:"添加设备（例如 Sony A7 IV、50mm f/1.8）", av_save:"保存", ph_take:"拍照", ph_gallery:"从相册选择", ph_cancel:"取消",
+      acc_title:"我的资料", acc_role:"角色", role_traveler:"旅行者", role_photographer:"摄影师",
+      acc_switch_hint:"你可以随时切换角色，保留同一份资料。", acc_settings:"设置", acc_logout:"退出", acc_delete:"删除账户", acc_delete_confirm:"确定要删除账户吗？此操作无法撤销。", acc_delete_done:"账户已删除。",
+      set_title:"设置", set_account:"账户", set_email:"登录邮箱", set_appearance:"外观",
+      set_theme:"主题", theme_light:"浅色", theme_dark:"深色", theme_auto:"自动", set_language:"语言",
+      set_notifs:"通知", notif_bookings:"预订和请求", notif_messages:"消息", notif_promos:"优惠和促销", notif_reminders:"提醒", pf_title:"作品集", pf_hint:"上传你以往的作品", g_title:"选择账户", g_sub:"以继续使用 PHOllowME", g_other:"使用其他账户", g_name_ph:"姓名", g_email_ph:"name@gmail.com", set_name:"姓名", acc_take_photo:"📷 拍照", svc_title:"你的服务", svc_add:"+ 添加服务", svc_name_ph:"服务名称", svc_desc_ph:"描述", svc_remove:"🗑 移除"
+    },
+    ja:{
+      sub_proto:"クリック可能なプロトタイプ · ハイライトされた要素をタップして移動",
+      login_sub:"ログインして、どこでも写真家を探して予約しましょう。", login_google:"Google で続ける", login_email:"メールで続ける", login_email_ph:"name@email.com", login_enter:"ログイン", login_pass_ph:"パスワード", login_register:"アカウントを作成", login_forgot:"パスワードをお忘れですか？", login_need_both:"メールとパスワードを入力してください。", login_need_email:"先にメールを入力してください。", login_reset_sent:"パスワード再設定のメールを送信しました。", fb_offline:"ログインサービスに接続できません。接続を確認してください。", vf_title:"メールを確認してください", vf_msg:"リンク付きのメールを送りました。開いて確認したら、ここに戻ってください。", vf_done:"確認しました、入る", vf_resend:"メールを再送する", vf_sent:"メールを送信しました！受信箱（迷惑メールも）を確認してください。", vf_not_yet:"まだ確認されていません。メール内のリンクをクリックして再度お試しください。", acc_delete_relogin:"安全のため、ログインし直してすぐに再試行してください。",
+      w_tag:"どこへ行ってもプロの写真を。旅のための写真家を探して予約。",
+      w_traveler:"旅行者です", w_photographer:"写真家です",
+      s_where:"どこで撮影しますか？", s_sub:"都市と滞在日で検索",
+      s_dest:"目的地", s_dest_ph:"都市または場所", s_checkin:"到着", s_checkout:"出発",
+      s_service_type:"サービスの種類", s_service_val:"ポートレート / バケーション",
+      sm_mode:"サービスの形式", sm_fixed:"📍 固定の場所", sm_roaming:"🚶 移動撮影", sm_both:"両方", av_mode:"提供形式",
+      s_search_btn:"写真家を探す", s_popular:"人気の目的地", s_near:"📍 近くを探す", s_near_lbl:"あなたの近く",
+      nav_search:"検索", nav_bookings:"予約", nav_chat:"チャット", nav_profile:"プロフィール",
+      nav_home:"ホーム", nav_agenda:"予定", nav_earnings:"収益",
+      r_filters:"⚙ フィルター", r_price:"価格", r_level:"レベル", r_spec:"専門", f_price:"価格 (€/時)", f_min:"から", f_max:"まで", f_spec:"専門", f_all:"すべて", f_mode:"形式", f_rating:"評価", f_reset:"リセット", f_apply:"適用", r_empty:"現在、対応可能な写真家はいません。", r_none_match:"条件に一致する写真家はいません。", r_available:"人の写真家が対応可能",
+      r_count:"この日程で6人の写真家が対応可能",
+      lvl_expert:"★ エキスパート", lvl_top:"★ トップ", lvl_novice:"★ 新人",
+      r1_spec:"ポートレート · ストリート · カップル", r2_spec:"ウェディング · ファッション", r3_spec:"ストリート · ルポルタージュ",
+      p_reviews_count:"4.9 · 128件のレビュー", p_photographer_expert:"★ エキスパート写真家",
+      p_bio:"ローマで8年間ポートレートとストリート撮影をしています。街の最も美しく観光客の少ない場所へご案内します。",
+      p_hourly:"1時間の料金", p_daily:"1日", p_weekly:"1週間",
+      spec_title:"専門", spec_portrait:"ポートレート", spec_street:"ストリート", spec_couples:"カップル", spec_reportage:"ルポルタージュ",
+      equip_title:"機材", p_reviews_title:"レビュー",
+      p_rev1:"素晴らしい体験、写真も最高でした！",
+      p_rev2:"プロフェッショナルで感じが良く、納品も早かったです。",
+      p_available:"7月12〜15日 空きあり", p_book:"予約する",
+      b_book_title:"予約する", p_no_reviews:"レビューはまだありません。", b_choose_date:"日付を選ぶ", b_month:"2026年7月",
+      cal_l1:"月", cal_l2:"火", cal_l3:"水", cal_l4:"木", cal_l5:"金", cal_l6:"土", cal_l7:"日",
+      b_duration:"時間", b_1h:"1時間", b_2h:"2時間", b_day:"1日",
+      b_time:"時刻", b_time_val:"🕓 16:00 — 17:00（ゴールデンアワー）",
+      b_service_1h:"サービス（1時間）", b_commission:"PHOllowME 手数料", total:"合計", b_to_pay:"支払いへ進む",
+      pay_title:"支払い", pay_summary:"概要", pay_method:"支払い方法",
+      pay_card:"カード", pay_wallet_sub:"ワンタッチで支払い",
+      pay_escrow:"🔒 料金は安全に預託され、写真の納品後にのみ写真家へ支払われます。",
+      pay_btn_confirm:"確認して 51,75 € を支払う", pay_btn_paypal:"PayPal で 51,75 € を支払う", pay_btn_wallet:" 51,75 € を支払う",
+      done_title:"予約が確定しました！",
+      done_msg:"詳細と待ち合わせ場所をチャットで送りました。",
+      done_view_booking:"予約を見る", done_back_search:"検索に戻る",
+      bk_title:"予約", bk_confirmed:"確定済み", bk_meeting:"📍 待ち合わせ場所", bk_empty:"まだ予約はありません。",
+      bk_after:"サービス後にギャラリーをダウンロードしてレビューを残せます ⭐", bk_sim:"📸 シミュレーション：写真送信済み", bk_wait:"写真を待っています…", bk_done:"完了", rev_title:"レビューを書く", rev_ph:"いかがでしたか？体験を書いてください…", rev_send:"レビューを送信", rev_thanks:"レビューありがとうございます！", rev_need_stars:"星を1つ以上選んでください。",
+      label_traveler:"旅行者側", label_photographer:"写真家側",
+      d_hello:"こんにちは", d_role:"写真家 · ローマ", d_nationality:"国籍", d_nat_ph:"入力を始めてください…", d_describe:"自己紹介", d_describe_ph:"あなたが誰で、どう働くかを書いてください…", d_languages:"話せる言語", lang_ita:"イタリア語", lang_eng:"英語", lang_fra:"フランス語", d_car:"車あり", opt_yes:"はい", opt_no:"いいえ", d_services:"件のサービス", d_rating:"評価",
+      d_next_level:"次のレベル：トップ ★",
+      d_next_msg:"サービスを重ね、高い評価を保つと、最大の露出と手数料の割引が解除されます。",
+      d_pending:"保留中のリクエスト", d_no_requests:"現在リクエストはありません。", chats_empty:"現在チャットはありません。", d_accept:"承認", d_reject:"却下", d_manage:"プロフィールと空き状況を管理", d_home_back:"↩ ホーム画面に戻る",
+      chats_title:"チャット", chat_bye:"了解、トラステヴェレで会いましょう！",
+      time_yesterday:"昨日", chat_prev_james:"写真ありがとうございました 🙏",
+      time_mon:"月", chat_prev_elena:"20日も空いていますか？",
+      chat_hdr_sub:"ポートレート · 7月13日 16:00", day_today:"今日",
+      chat_b1:"マルコさん！明日のサービスを予約しました、楽しみです😊",
+      chat_b2:"ソフィアさん！確認しました。16:00にトリルッサ広場前で待ち合わせでいいですか？",
+      chat_b3:"完璧です！夕暮れの撮影にはどんな服がいいですか？",
+      chat_b4:"淡い色や無地は黄金の光によく映えます。着替えも持ってきてください！",
+      chat_input:"メッセージを入力…",
+      av_title:"プロフィールと空き状況", av_where_when:"いつ・どこにいるか",
+      av_location:"場所", av_from:"から", av_to:"まで",
+      av_add_location:"+ 別の場所 / 期間を追加", av_your_rates:"あなたの料金",
+      av_hourly:"1時間", av_daily:"1日", av_weekly:"1週間",
+      add_chip:"+ 追加", equip_prompt:"機材を追加（例：Sony A7 IV、50mm f/1.8）", av_save:"保存", ph_take:"写真を撮る", ph_gallery:"ギャラリーから選ぶ", ph_cancel:"キャンセル",
+      acc_title:"マイプロフィール", acc_role:"役割", role_traveler:"旅行者", role_photographer:"写真家",
+      acc_switch_hint:"同じプロフィールのまま、いつでも役割を切り替えられます。", acc_settings:"設定", acc_logout:"ログアウト", acc_delete:"アカウントを削除", acc_delete_confirm:"本当にアカウントを削除しますか？この操作は元に戻せません。", acc_delete_done:"アカウントを削除しました。",
+      set_title:"設定", set_account:"アカウント", set_email:"ログインメール", set_appearance:"外観",
+      set_theme:"テーマ", theme_light:"ライト", theme_dark:"ダーク", theme_auto:"自動", set_language:"言語",
+      set_notifs:"通知", notif_bookings:"予約とリクエスト", notif_messages:"メッセージ", notif_promos:"特典とプロモーション", notif_reminders:"リマインダー", pf_title:"ポートフォリオ", pf_hint:"過去の作品をアップロード", g_title:"アカウントを選択", g_sub:"PHOllowME を続けるには", g_other:"別のアカウントを使う", g_name_ph:"名前", g_email_ph:"name@gmail.com", set_name:"名前", acc_take_photo:"📷 写真を撮る", svc_title:"あなたのサービス", svc_add:"+ サービスを追加", svc_name_ph:"サービス名", svc_desc_ph:"説明", svc_remove:"🗑 削除"
     }
   };
 
@@ -1480,6 +1663,8 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
     applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); updateBookingUI(); initFirebase();
+    attachAC('natInput','natMenu',function(){ return NATIONALITIES; }, saveProfile);
+    attachAC('destInput','destMenu',function(){ return DESTINATIONS; }, null);
     (function(){
       function iso(d){var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;}
       var t=new Date(), o=new Date(t.getFullYear(),t.getMonth(),t.getDate()+3);
