@@ -210,6 +210,8 @@
   .crop-actions button{border:none;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer}
   .crop-actions .ok{background:var(--accent);color:#fff}
   .crop-actions .no{background:rgba(255,255,255,.22);color:#fff}
+  .spinner{width:26px;height:26px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-top:16px}
+  @keyframes spin{to{transform:rotate(360deg)}}
   .svc-del{display:inline-block;margin-top:10px;font-size:12px;color:#e0574f;cursor:pointer}
   .gacct{display:flex;align-items:center;gap:12px;padding:13px 10px;border-radius:12px;cursor:pointer;border:1px solid var(--line);margin-bottom:10px}
   .gacct:hover{background:var(--light)}
@@ -238,8 +240,16 @@
   <div>
   <div class="phone"><div class="notch"></div><div class="screen">
 
+    <!-- ============ SPLASH (apertura) ============ -->
+    <div class="view active" id="splash">
+      <div class="hero" style="height:100%;justify-content:center;align-items:center">
+        <div class="welcome-brand" style="position:static">PHOllowME</div>
+        <div class="spinner"></div>
+      </div>
+    </div>
+
     <!-- ============ LOGIN ============ -->
-    <div class="view active" id="login">
+    <div class="view" id="login">
       <div class="applang">
         <button class="langbtn" type="button" onclick="toggleLang(event)" aria-haspopup="listbox" aria-expanded="false" aria-label="Lingua / Language">
           <span class="flag curFlag"></span><span class="curCode">IT</span><span class="caret">▾</span>
@@ -1157,13 +1167,14 @@
   var fbAuth=null;
   function initFirebase(){
     try{
-      if(!window.firebase || !firebase.initializeApp) return;
+      if(!window.firebase || !firebase.initializeApp){ _activate('login'); return; }
       firebase.initializeApp(FB_CONFIG);
       fbAuth=firebase.auth();
       /* persistenza LOCALE: chiudendo l'app si resta dentro; solo "Esci" disconnette */
       try{ fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); }catch(e){}
+      /* onAuthStateChanged decide splash -> login o app; niente lampo della schermata accesso */
       fbAuth.onAuthStateChanged(onAuthChanged);
-    }catch(e){}
+    }catch(e){ _activate('login'); }
   }
   function fbErr(e){ alert((e&&e.message)?e.message:String(e)); }
   function fbCreds(){
@@ -1802,6 +1813,8 @@
     attachAC('destInput','destMenu',function(){ return DESTINATIONS; }, null);
     var _st=document.getElementById('svcType'); if(_st) _st.innerHTML=svcOptionsHtml();
     initCropDrag();
+    /* rete di sicurezza: se Firebase non risponde (offline/file locale) esci dallo splash */
+    setTimeout(function(){ var a=document.querySelector('.view.active'); if(a && a.id==='splash') _activate('login'); }, 3000);
     (function(){
       function iso(d){var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;}
       var t=new Date(), o=new Date(t.getFullYear(),t.getMonth(),t.getDate()+3);
