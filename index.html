@@ -234,8 +234,8 @@
           <div class="langopt" role="option" onclick="chooseLang('es')"><span class="flag" data-flag="es"></span><span>Español</span></div>
           <div class="langopt" role="option" onclick="chooseLang('fr')"><span class="flag" data-flag="fr"></span><span>Français</span></div>
           <div class="langopt" role="option" onclick="chooseLang('de')"><span class="flag" data-flag="de"></span><span>Deutsch</span></div>
-          <div class="langopt" role="option" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span>中文</span></div>
-          <div class="langopt" role="option" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span>日本語</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span data-i18n="lang_zh">Cinese</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span data-i18n="lang_ja">Giapponese</span></div>
         </div>
       </div>
       <div class="welcome-brand">PHOllowME</div>
@@ -281,8 +281,8 @@
           <div class="langopt" role="option" onclick="chooseLang('es')"><span class="flag" data-flag="es"></span><span>Español</span></div>
           <div class="langopt" role="option" onclick="chooseLang('fr')"><span class="flag" data-flag="fr"></span><span>Français</span></div>
           <div class="langopt" role="option" onclick="chooseLang('de')"><span class="flag" data-flag="de"></span><span>Deutsch</span></div>
-          <div class="langopt" role="option" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span>中文</span></div>
-          <div class="langopt" role="option" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span>日本語</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span data-i18n="lang_zh">Cinese</span></div>
+          <div class="langopt" role="option" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span data-i18n="lang_ja">Giapponese</span></div>
         </div>
       </div>
       <div class="welcome-brand">PHOllowME</div>
@@ -310,7 +310,11 @@
           <div class="field"><div class="k" data-i18n="s_checkin">Arrivo</div><input id="dIn" class="fieldin" type="date"></div>
           <div class="field"><div class="k" data-i18n="s_checkout">Partenza</div><input id="dOut" class="fieldin" type="date"></div>
         </div>
-        <div class="field" onclick="show('results')"><div class="k" data-i18n="s_service_type">Tipo di servizio</div><div class="v" data-i18n="s_service_val">Ritratto / Vacanza</div></div>
+        <div class="field"><div class="k" data-i18n="s_service_type">Tipo di servizio</div>
+          <select id="svcType" class="fieldin">
+            <option>Ritratto</option><option>Vacanza</option><option>Matrimonio</option><option>Evento</option><option>Street</option><option>Reportage</option><option>Coppie</option><option>Fashion</option>
+          </select>
+        </div>
         <p class="muted" style="margin-bottom:6px" data-i18n="sm_mode">Modalità del servizio</p>
         <div class="seg" style="margin-bottom:14px">
           <button class="on" onclick="pickSeg(this)" data-i18n="sm_fixed">📍 Luogo fisso</button>
@@ -689,8 +693,8 @@
         <div class="optrow langopt2" data-lang="es" onclick="chooseLang('es')"><span class="flag" data-flag="es"></span><span>Español</span><span class="chk">✓</span></div>
         <div class="optrow langopt2" data-lang="fr" onclick="chooseLang('fr')"><span class="flag" data-flag="fr"></span><span>Français</span><span class="chk">✓</span></div>
         <div class="optrow langopt2" data-lang="de" onclick="chooseLang('de')"><span class="flag" data-flag="de"></span><span>Deutsch</span><span class="chk">✓</span></div>
-        <div class="optrow langopt2" data-lang="zh" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span>中文</span><span class="chk">✓</span></div>
-        <div class="optrow langopt2" data-lang="ja" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span>日本語</span><span class="chk">✓</span></div>
+        <div class="optrow langopt2" data-lang="zh" onclick="chooseLang('zh')"><span class="flag" data-flag="zh"></span><span data-i18n="lang_zh">Cinese</span><span class="chk">✓</span></div>
+        <div class="optrow langopt2" data-lang="ja" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span data-i18n="lang_ja">Giapponese</span><span class="chk">✓</span></div>
 
         <div class="sect" data-i18n="set_notifs">Notifiche</div>
         <div class="srow"><span class="si">📅</span><div class="st"><b data-i18n="notif_bookings">Prenotazioni e richieste</b></div><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
@@ -1027,6 +1031,8 @@
       if(!window.firebase || !firebase.initializeApp) return;
       firebase.initializeApp(FB_CONFIG);
       fbAuth=firebase.auth();
+      /* persistenza LOCALE: chiudendo l'app si resta dentro; solo "Esci" disconnette */
+      try{ fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); }catch(e){}
       fbAuth.onAuthStateChanged(onAuthChanged);
     }catch(e){}
   }
@@ -1115,7 +1121,9 @@
     roleChosen=false;
     var w=document.getElementById('emailWrap'); if(w) w.style.display='none';
     var lp=document.getElementById('loginPass'); if(lp) lp.value='';
-    if(fbAuth){ fbAuth.signOut().catch(function(){}); } else { _activate('login'); }
+    /* esce dall'account (richiede di riautenticarsi al prossimo accesso), non chiude l'app */
+    if(fbAuth){ fbAuth.signOut().then(function(){ _activate('login'); }).catch(function(){ _activate('login'); }); }
+    else { _activate('login'); }
   }
   function deleteAccount(){
     if(!confirm(I18N[curLang].acc_delete_confirm)) return;
@@ -1275,7 +1283,7 @@
       acc_title:"Il mio profilo", acc_role:"Ruolo", role_traveler:"Viaggiatore", role_photographer:"Fotografo",
       acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci", acc_delete:"Cancella account", acc_delete_confirm:"Sei sicuro di voler cancellare il tuo account? L'operazione è irreversibile.", acc_delete_done:"Account cancellato.",
       set_title:"Impostazioni", set_account:"Account", set_email:"Email di accesso", set_appearance:"Aspetto",
-      set_theme:"Tema", theme_light:"Chiaro", theme_dark:"Scuro", theme_auto:"Automatico", set_language:"Lingua",
+      set_theme:"Tema", theme_light:"Chiaro", theme_dark:"Scuro", theme_auto:"Automatico", set_language:"Lingua", lang_zh:"Cinese", lang_ja:"Giapponese",
       set_notifs:"Notifiche", notif_bookings:"Prenotazioni e richieste", notif_messages:"Messaggi", notif_promos:"Offerte e promozioni", notif_reminders:"Promemoria", pf_title:"Portfolio", pf_hint:"Carica i tuoi lavori precedenti", g_title:"Scegli un account", g_sub:"per continuare su PHOllowME", g_other:"Usa un altro account", g_name_ph:"Nome", g_email_ph:"nome@gmail.com", set_name:"Nome", acc_take_photo:"📷 Scatta una foto", svc_title:"I tuoi servizi", svc_add:"+ Aggiungi servizio", svc_name_ph:"Nome del servizio", svc_desc_ph:"Descrizione", svc_remove:"🗑 Rimuovi"
     },
     en:{
@@ -1338,7 +1346,7 @@
       acc_title:"My profile", acc_role:"Role", role_traveler:"Traveler", role_photographer:"Photographer",
       acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out", acc_delete:"Delete account", acc_delete_confirm:"Are you sure you want to delete your account? This action cannot be undone.", acc_delete_done:"Account deleted.",
       set_title:"Settings", set_account:"Account", set_email:"Login email", set_appearance:"Appearance",
-      set_theme:"Theme", theme_light:"Light", theme_dark:"Dark", theme_auto:"Automatic", set_language:"Language",
+      set_theme:"Theme", theme_light:"Light", theme_dark:"Dark", theme_auto:"Automatic", set_language:"Language", lang_zh:"Chinese", lang_ja:"Japanese",
       set_notifs:"Notifications", notif_bookings:"Bookings and requests", notif_messages:"Messages", notif_promos:"Offers and promotions", notif_reminders:"Reminders", pf_title:"Portfolio", pf_hint:"Upload your previous work", g_title:"Choose an account", g_sub:"to continue to PHOllowME", g_other:"Use another account", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Take a photo", svc_title:"Your services", svc_add:"+ Add service", svc_name_ph:"Service name", svc_desc_ph:"Description", svc_remove:"🗑 Remove"
     },
     es:{
@@ -1401,7 +1409,7 @@
       acc_title:"Mi perfil", acc_role:"Rol", role_traveler:"Viajero", role_photographer:"Fotógrafo",
       acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión", acc_delete:"Eliminar cuenta", acc_delete_confirm:"¿Seguro que quieres eliminar tu cuenta? Esta acción es irreversible.", acc_delete_done:"Cuenta eliminada.",
       set_title:"Ajustes", set_account:"Cuenta", set_email:"Email de acceso", set_appearance:"Apariencia",
-      set_theme:"Tema", theme_light:"Claro", theme_dark:"Oscuro", theme_auto:"Automático", set_language:"Idioma",
+      set_theme:"Tema", theme_light:"Claro", theme_dark:"Oscuro", theme_auto:"Automático", set_language:"Idioma", lang_zh:"Chino", lang_ja:"Japonés",
       set_notifs:"Notificaciones", notif_bookings:"Reservas y solicitudes", notif_messages:"Mensajes", notif_promos:"Ofertas y promociones", notif_reminders:"Recordatorios", pf_title:"Portfolio", pf_hint:"Sube tus trabajos anteriores", g_title:"Elige una cuenta", g_sub:"para continuar en PHOllowME", g_other:"Usar otra cuenta", g_name_ph:"Nombre", g_email_ph:"nombre@gmail.com", set_name:"Nombre", acc_take_photo:"📷 Hacer una foto", svc_title:"Tus servicios", svc_add:"+ Añadir servicio", svc_name_ph:"Nombre del servicio", svc_desc_ph:"Descripción", svc_remove:"🗑 Eliminar"
     },
     fr:{
@@ -1464,7 +1472,7 @@
       acc_title:"Mon profil", acc_role:"Rôle", role_traveler:"Voyageur", role_photographer:"Photographe",
       acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter", acc_delete:"Supprimer le compte", acc_delete_confirm:"Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.", acc_delete_done:"Compte supprimé.",
       set_title:"Paramètres", set_account:"Compte", set_email:"Email de connexion", set_appearance:"Apparence",
-      set_theme:"Thème", theme_light:"Clair", theme_dark:"Sombre", theme_auto:"Automatique", set_language:"Langue",
+      set_theme:"Thème", theme_light:"Clair", theme_dark:"Sombre", theme_auto:"Automatique", set_language:"Langue", lang_zh:"Chinois", lang_ja:"Japonais",
       set_notifs:"Notifications", notif_bookings:"Réservations et demandes", notif_messages:"Messages", notif_promos:"Offres et promotions", notif_reminders:"Rappels", pf_title:"Portfolio", pf_hint:"Ajoutez vos travaux précédents", g_title:"Choisir un compte", g_sub:"pour continuer sur PHOllowME", g_other:"Utiliser un autre compte", g_name_ph:"Nom", g_email_ph:"nom@gmail.com", set_name:"Nom", acc_take_photo:"📷 Prendre une photo", svc_title:"Vos services", svc_add:"+ Ajouter un service", svc_name_ph:"Nom du service", svc_desc_ph:"Description", svc_remove:"🗑 Supprimer"
     },
     de:{
@@ -1527,7 +1535,7 @@
       acc_title:"Mein Profil", acc_role:"Rolle", role_traveler:"Reisender", role_photographer:"Fotograf",
       acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden", acc_delete:"Konto löschen", acc_delete_confirm:"Möchtest du dein Konto wirklich löschen? Dies kann nicht rückgängig gemacht werden.", acc_delete_done:"Konto gelöscht.",
       set_title:"Einstellungen", set_account:"Konto", set_email:"Anmelde-E-Mail", set_appearance:"Darstellung",
-      set_theme:"Thema", theme_light:"Hell", theme_dark:"Dunkel", theme_auto:"Automatisch", set_language:"Sprache",
+      set_theme:"Thema", theme_light:"Hell", theme_dark:"Dunkel", theme_auto:"Automatisch", set_language:"Sprache", lang_zh:"Chinesisch", lang_ja:"Japanisch",
       set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen", pf_title:"Portfolio", pf_hint:"Lade deine bisherigen Arbeiten hoch", g_title:"Konto auswählen", g_sub:"um bei PHOllowME fortzufahren", g_other:"Anderes Konto verwenden", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Ein Foto aufnehmen", svc_title:"Deine Leistungen", svc_add:"+ Leistung hinzufügen", svc_name_ph:"Name der Leistung", svc_desc_ph:"Beschreibung", svc_remove:"🗑 Entfernen"
     },
     zh:{
@@ -1590,7 +1598,7 @@
       acc_title:"我的资料", acc_role:"角色", role_traveler:"旅行者", role_photographer:"摄影师",
       acc_switch_hint:"你可以随时切换角色，保留同一份资料。", acc_settings:"设置", acc_logout:"退出", acc_delete:"删除账户", acc_delete_confirm:"确定要删除账户吗？此操作无法撤销。", acc_delete_done:"账户已删除。",
       set_title:"设置", set_account:"账户", set_email:"登录邮箱", set_appearance:"外观",
-      set_theme:"主题", theme_light:"浅色", theme_dark:"深色", theme_auto:"自动", set_language:"语言",
+      set_theme:"主题", theme_light:"浅色", theme_dark:"深色", theme_auto:"自动", set_language:"语言", lang_zh:"中文", lang_ja:"日语",
       set_notifs:"通知", notif_bookings:"预订和请求", notif_messages:"消息", notif_promos:"优惠和促销", notif_reminders:"提醒", pf_title:"作品集", pf_hint:"上传你以往的作品", g_title:"选择账户", g_sub:"以继续使用 PHOllowME", g_other:"使用其他账户", g_name_ph:"姓名", g_email_ph:"name@gmail.com", set_name:"姓名", acc_take_photo:"📷 拍照", svc_title:"你的服务", svc_add:"+ 添加服务", svc_name_ph:"服务名称", svc_desc_ph:"描述", svc_remove:"🗑 移除"
     },
     ja:{
@@ -1653,7 +1661,7 @@
       acc_title:"マイプロフィール", acc_role:"役割", role_traveler:"旅行者", role_photographer:"写真家",
       acc_switch_hint:"同じプロフィールのまま、いつでも役割を切り替えられます。", acc_settings:"設定", acc_logout:"ログアウト", acc_delete:"アカウントを削除", acc_delete_confirm:"本当にアカウントを削除しますか？この操作は元に戻せません。", acc_delete_done:"アカウントを削除しました。",
       set_title:"設定", set_account:"アカウント", set_email:"ログインメール", set_appearance:"外観",
-      set_theme:"テーマ", theme_light:"ライト", theme_dark:"ダーク", theme_auto:"自動", set_language:"言語",
+      set_theme:"テーマ", theme_light:"ライト", theme_dark:"ダーク", theme_auto:"自動", set_language:"言語", lang_zh:"中国語", lang_ja:"日本語",
       set_notifs:"通知", notif_bookings:"予約とリクエスト", notif_messages:"メッセージ", notif_promos:"特典とプロモーション", notif_reminders:"リマインダー", pf_title:"ポートフォリオ", pf_hint:"過去の作品をアップロード", g_title:"アカウントを選択", g_sub:"PHOllowME を続けるには", g_other:"別のアカウントを使う", g_name_ph:"名前", g_email_ph:"name@gmail.com", set_name:"名前", acc_take_photo:"📷 写真を撮る", svc_title:"あなたのサービス", svc_add:"+ サービスを追加", svc_name_ph:"サービス名", svc_desc_ph:"説明", svc_remove:"🗑 削除"
     }
   };
