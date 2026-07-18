@@ -60,7 +60,7 @@
   /* view system */
   .view{position:absolute;inset:0;display:none;flex-direction:column;background:var(--screen);isolation:isolate}
   .view.active{display:flex}
-  .view::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background-color:var(--deco);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'260'%20height%3D'260'%20viewBox%3D'0%200%20260%20260'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'3.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cg%20transform%3D'translate(22%2C26)%20rotate(-6)'%3E%3Crect%20x%3D'0'%20y%3D'10'%20width%3D'46'%20height%3D'30'%20rx%3D'6'%2F%3E%3Cpath%20d%3D'M15%2010%20L19%203%20L29%203%20L33%2010'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'9'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'4'%2F%3E%3Ccircle%20cx%3D'38'%20cy%3D'16'%20r%3D'1.6'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(188%2C34)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'8'%2F%3E%3Cline%20x1%3D'12'%20y1%3D'0'%20x2%3D'17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'8.49'%20x2%3D'12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'12'%20x2%3D'0'%20y2%3D'17'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'8.49'%20x2%3D'-12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'-12'%20y1%3D'0'%20x2%3D'-17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'-8.49'%20x2%3D'-12.02'%20y2%3D'-12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'-12'%20x2%3D'0'%20y2%3D'-17'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'-8.49'%20x2%3D'12.02'%20y2%3D'-12.02'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(30%2C182)'%3E%3Cpath%20d%3D'M0%200%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2010%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2020%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(182%2C168)%20rotate(8)'%3E%3Cpath%20d%3D'M18%202%20C9%202%203%209%203%2017%20C3%2027%2018%2042%2018%2042%20C18%2042%2033%2027%2033%2017%20C33%209%2027%202%2018%202%20Z'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'17'%20r%3D'5'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 0 0/280px 280px repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'260'%20height%3D'260'%20viewBox%3D'0%200%20260%20260'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'3.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cg%20transform%3D'translate(22%2C26)%20rotate(-6)'%3E%3Crect%20x%3D'0'%20y%3D'10'%20width%3D'46'%20height%3D'30'%20rx%3D'6'%2F%3E%3Cpath%20d%3D'M15%2010%20L19%203%20L29%203%20L33%2010'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'9'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'4'%2F%3E%3Ccircle%20cx%3D'38'%20cy%3D'16'%20r%3D'1.6'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(188%2C34)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'8'%2F%3E%3Cline%20x1%3D'12'%20y1%3D'0'%20x2%3D'17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'8.49'%20x2%3D'12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'12'%20x2%3D'0'%20y2%3D'17'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'8.49'%20x2%3D'-12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'-12'%20y1%3D'0'%20x2%3D'-17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'-8.49'%20x2%3D'-12.02'%20y2%3D'-12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'-12'%20x2%3D'0'%20y2%3D'-17'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'-8.49'%20x2%3D'12.02'%20y2%3D'-12.02'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(30%2C182)'%3E%3Cpath%20d%3D'M0%200%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2010%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2020%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(182%2C168)%20rotate(8)'%3E%3Cpath%20d%3D'M18%202%20C9%202%203%209%203%2017%20C3%2027%2018%2042%2018%2042%20C18%2042%2033%2027%2033%2017%20C33%209%2027%202%2018%202%20Z'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'17'%20r%3D'5'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 0 0/280px 280px repeat}
+  .view::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background-color:var(--deco);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'260'%20height%3D'260'%20viewBox%3D'0%200%20260%20260'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.8'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cg%20transform%3D'translate(22%2C26)%20rotate(-6)'%3E%3Crect%20x%3D'0'%20y%3D'10'%20width%3D'46'%20height%3D'30'%20rx%3D'6'%2F%3E%3Cpath%20d%3D'M15%2010%20L19%203%20L29%203%20L33%2010'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'9'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'4'%2F%3E%3Ccircle%20cx%3D'38'%20cy%3D'16'%20r%3D'1.6'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(188%2C34)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'8'%2F%3E%3Cline%20x1%3D'12'%20y1%3D'0'%20x2%3D'17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'8.49'%20x2%3D'12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'12'%20x2%3D'0'%20y2%3D'17'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'8.49'%20x2%3D'-12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'-12'%20y1%3D'0'%20x2%3D'-17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'-8.49'%20x2%3D'-12.02'%20y2%3D'-12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'-12'%20x2%3D'0'%20y2%3D'-17'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'-8.49'%20x2%3D'12.02'%20y2%3D'-12.02'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(30%2C182)'%3E%3Cpath%20d%3D'M0%200%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2010%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2020%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(182%2C168)%20rotate(8)'%3E%3Cpath%20d%3D'M18%202%20C9%202%203%209%203%2017%20C3%2027%2018%2042%2018%2042%20C18%2042%2033%2027%2033%2017%20C33%209%2027%202%2018%202%20Z'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'17'%20r%3D'5'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 0 0/280px 280px repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'260'%20height%3D'260'%20viewBox%3D'0%200%20260%20260'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.8'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cg%20transform%3D'translate(22%2C26)%20rotate(-6)'%3E%3Crect%20x%3D'0'%20y%3D'10'%20width%3D'46'%20height%3D'30'%20rx%3D'6'%2F%3E%3Cpath%20d%3D'M15%2010%20L19%203%20L29%203%20L33%2010'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'9'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'4'%2F%3E%3Ccircle%20cx%3D'38'%20cy%3D'16'%20r%3D'1.6'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(188%2C34)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'8'%2F%3E%3Cline%20x1%3D'12'%20y1%3D'0'%20x2%3D'17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'8.49'%20x2%3D'12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'12'%20x2%3D'0'%20y2%3D'17'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'8.49'%20x2%3D'-12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'-12'%20y1%3D'0'%20x2%3D'-17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'-8.49'%20x2%3D'-12.02'%20y2%3D'-12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'-12'%20x2%3D'0'%20y2%3D'-17'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'-8.49'%20x2%3D'12.02'%20y2%3D'-12.02'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(30%2C182)'%3E%3Cpath%20d%3D'M0%200%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2010%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2020%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(182%2C168)%20rotate(8)'%3E%3Cpath%20d%3D'M18%202%20C9%202%203%209%203%2017%20C3%2027%2018%2042%2018%2042%20C18%2042%2033%2027%2033%2017%20C33%209%2027%202%2018%202%20Z'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'17'%20r%3D'5'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 0 0/280px 280px repeat}
   #splash::before,#login::before,#welcome::before{display:none}
   .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
   .scroll::-webkit-scrollbar{width:0}
@@ -113,6 +113,29 @@
   .nav div{flex:1;text-align:center;padding:10px 0 20px;font-size:10px;color:var(--grey);cursor:pointer}
   .nav div.on{color:var(--accent)}
   .nav .ic{font-size:18px;display:block;margin-bottom:2px}
+  .nav.six div{font-size:9px;padding:9px 0 16px}
+  .nav.six .ic{font-size:16px}
+  /* home / riquadri destinazione */
+  .secthead{display:flex;align-items:baseline;justify-content:space-between;margin:18px 0 9px}
+  .secthead b{font-size:15px;color:var(--text);font-weight:600}
+  .secthead .seeall{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;white-space:nowrap}
+  .hscroll{display:flex;gap:11px;overflow-x:auto;padding:1px 1px 6px;-webkit-overflow-scrolling:touch}
+  .hscroll::-webkit-scrollbar{height:0}
+  .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .dcard{position:relative;flex:0 0 134px;height:92px;border-radius:15px;overflow:hidden;color:#fff;cursor:pointer}
+  .dgrid .dcard{flex:none;width:auto;height:104px}
+  .dcard .sc{position:absolute;inset:0;width:100%;height:100%}
+  .dcard .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),rgba(0,0,0,0) 58%)}
+  .dcard .dname{position:absolute;left:10px;bottom:8px;font-size:13px;font-weight:600;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.45)}
+  .dcard .dfav{position:absolute;top:6px;right:6px;z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
+  /* menù laterali */
+  .drawer{position:absolute;inset:0;z-index:80;display:none}
+  .drawer.open{display:block}
+  .drawer .dov{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+  .drawer .dpanel{position:absolute;top:0;right:0;bottom:0;width:82%;max-width:290px;background:var(--screen);box-shadow:-8px 0 24px rgba(0,0,0,.25);transform:translateX(100%);transition:transform .22s ease;display:flex;flex-direction:column}
+  .drawer.open .dpanel{transform:translateX(0)}
+  .drawer .dhead{padding:46px 16px 12px;border-bottom:1px solid var(--line);font-weight:700;color:var(--accent-d);display:flex;align-items:center;gap:8px;font-size:16px}
+  .drawer .dbody{flex:1;overflow-y:auto;padding:8px}
 
   .row2{display:flex;gap:10px}
   .row2>*{flex:1}
@@ -322,6 +345,55 @@
       </div>
     </div>
 
+    <!-- ============ HOME (viaggiatore) ============ -->
+    <div class="view" id="home">
+      <div class="topbar">
+        <span class="brand">PHOllowME</span>
+        <span style="margin-left:auto;display:flex;gap:16px;align-items:center;font-size:20px">
+          <span onclick="openDrawer('notifDrawer')" style="cursor:pointer" aria-label="Notifiche">🔔</span>
+          <span onclick="openDrawer('menuDrawer')" style="cursor:pointer" aria-label="Menu">☰</span>
+        </span>
+      </div>
+      <div class="scroll pad">
+        <h2 id="homeGreet" style="color:var(--accent-d);font-size:22px;font-weight:700;line-height:1.2;margin:2px 0 0">Ciao!</h2>
+        <p style="color:var(--accent-d);font-size:17px;font-weight:600;margin:1px 0 2px" data-i18n="home_tagline">Crea il tuo prossimo ricordo</p>
+
+        <div class="secthead"><b data-i18n="s_popular">Destinazioni popolari</b><span class="seeall" onclick="show('popular_dests')"><span data-i18n="see_all">Vedi tutto</span> ›</span></div>
+        <div class="hscroll" id="homePopular"></div>
+
+        <div class="secthead"><b data-i18n="home_fav">Le tue mete preferite</b><span class="seeall" onclick="show('fav_dests')"><span data-i18n="see_all">Vedi tutto</span> ›</span></div>
+        <div class="hscroll" id="homeFav"></div>
+        <p class="muted" id="homeFavEmpty" style="margin:6px 2px 0" data-i18n="fav_dest_empty">Aggiungi le tue mete col cuoricino.</p>
+
+        <div style="height:80px"></div>
+      </div>
+      <div class="nav six">
+        <div class="on"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
+        <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
+        <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
+        <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
+        <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
+      </div>
+      <div class="drawer" id="notifDrawer" onclick="if(event.target.classList.contains('dov'))closeDrawer('notifDrawer')">
+        <div class="dov"></div>
+        <div class="dpanel">
+          <div class="dhead"><span>🔔</span><span data-i18n="notif_title">Notifiche</span></div>
+          <div class="dbody"><p class="muted" style="text-align:center;margin:24px 8px" data-i18n="notif_empty">Nessuna notifica al momento.</p></div>
+        </div>
+      </div>
+      <div class="drawer" id="menuDrawer" onclick="if(event.target.classList.contains('dov'))closeDrawer('menuDrawer')">
+        <div class="dov"></div>
+        <div class="dpanel">
+          <div class="dhead"><span>☰</span><span data-i18n="menu_title">Menu</span></div>
+          <div class="dbody">
+            <div class="srow" style="cursor:pointer" onclick="closeDrawer('menuDrawer');show('settings')"><span class="si">⚙️</span><div class="st"><b data-i18n="acc_settings">Impostazioni</b></div><span class="chev">›</span></div>
+            <div class="srow" style="cursor:pointer" onclick="closeDrawer('menuDrawer');logout()"><span class="si">🚪</span><div class="st"><b data-i18n="acc_logout">Esci</b></div><span class="chev">›</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ============ SEARCH ============ -->
     <div class="view" id="search">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
@@ -356,10 +428,12 @@
         <p class="muted" style="margin-bottom:8px" data-i18n="s_popular">Destinazioni popolari</p>
         <div class="dests"><span class="chip" onclick="setDest('Roma')">Roma</span><span class="chip" onclick="setDest('Firenze')">Firenze</span><span class="chip" onclick="setDest('Venezia')">Venezia</span><span class="chip" onclick="setDest('Parigi')">Parigi</span><span class="chip" onclick="setDest('Barcellona')">Barcellona</span><span class="chip" onclick="setDest('Amalfi')">Amalfi</span><span class="chip" onclick="setDest('Ibiza')">Ibiza</span><span class="chip" onclick="setDest('Formentera')">Formentera</span><span class="chip" onclick="setDest('Tenerife')">Tenerife</span><span class="chip" onclick="setDest('Palma di Maiorca')">Palma di Maiorca</span><span class="chip" onclick="setDest('Fuerteventura')">Fuerteventura</span></div>
       </div>
-      <div class="nav">
+      <div class="nav six">
+        <div onclick="show('home')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
         <div class="on"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
         <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
         <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
         <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
       </div>
     </div>
@@ -522,10 +596,12 @@
         <div id="bkList"></div>
         <p class="muted" id="bkEmpty" style="margin:24px 0;text-align:center" data-i18n="bk_empty">Non hai ancora prenotazioni.</p>
       </div>
-      <div class="nav">
+      <div class="nav six">
+        <div onclick="show('home')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
         <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
         <div class="on"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
         <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
         <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
       </div>
     </div>
@@ -537,10 +613,12 @@
         <div class="clist" id="trChatList"></div>
         <p class="muted" id="trChatsEmpty" style="margin:24px 0;text-align:center" data-i18n="chats_empty">Nessuna chat al momento.</p>
       </div>
-      <div class="nav">
+      <div class="nav six">
+        <div onclick="show('home')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
         <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
         <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
         <div class="on"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
         <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
       </div>
     </div>
@@ -549,8 +627,35 @@
     <div class="view" id="favorites">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="fav_title">Preferiti</h2></div>
       <div class="scroll pad">
+        <div class="sect" data-i18n="fav_ph_sect">Fotografi preferiti</div>
         <div id="favList"></div>
-        <p class="muted" id="favEmpty" style="margin:24px 0;text-align:center" data-i18n="fav_empty">Non hai ancora fotografi preferiti.</p>
+        <p class="muted" id="favEmpty" style="margin:10px 0 8px;text-align:center" data-i18n="fav_empty">Non hai ancora fotografi preferiti.</p>
+        <div class="sect" style="margin-top:20px" data-i18n="fav_dest_sect">Mete preferite</div>
+        <div class="dgrid" id="favDestList"></div>
+        <p class="muted" id="favDestEmpty" style="margin:10px 0 8px;text-align:center" data-i18n="fav_dest_empty">Aggiungi le tue mete col cuoricino.</p>
+      </div>
+      <div class="nav six">
+        <div onclick="show('home')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
+        <div onclick="show('search')"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
+        <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
+        <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div class="on"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
+        <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
+      </div>
+    </div>
+
+    <!-- ============ VEDI TUTTO: destinazioni popolari ============ -->
+    <div class="view" id="popular_dests">
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="s_popular">Destinazioni popolari</h2></div>
+      <div class="scroll pad"><div class="dgrid" id="popularGrid"></div></div>
+    </div>
+
+    <!-- ============ VEDI TUTTO: mete preferite ============ -->
+    <div class="view" id="fav_dests">
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="home_fav">Le tue mete preferite</h2></div>
+      <div class="scroll pad">
+        <div class="dgrid" id="favDestGrid"></div>
+        <p class="muted" id="favDestEmpty2" style="margin:16px 0;text-align:center" data-i18n="fav_dest_empty">Aggiungi le tue mete col cuoricino.</p>
       </div>
     </div>
 
@@ -695,7 +800,6 @@
         <div class="srow" style="cursor:pointer" onclick="show('favorites')"><span class="si">❤️</span><div class="st"><b data-i18n="fav_title">Preferiti</b></div><span class="chev">›</span></div>
         <div class="srow" style="cursor:pointer" onclick="show('settings')"><span class="si">⚙️</span><div class="st"><b data-i18n="acc_settings">Impostazioni</b></div><span class="chev">›</span></div>
         <div class="srow" style="cursor:pointer" onclick="logout()"><span class="si">🚪</span><div class="st"><b data-i18n="acc_logout">Esci</b></div><span class="chev">›</span></div>
-        <div class="srow" style="cursor:pointer" onclick="deleteAccount()"><span class="si">🗑️</span><div class="st"><b style="color:#dc2626" data-i18n="acc_delete">Cancella account</b></div><span class="chev" style="color:#dc2626">›</span></div>
       </div>
       <div class="cropper" id="cropper">
         <p class="crop-hint" data-i18n="crop_hint">Trascina per spostare · usa il cursore per ingrandire</p>
@@ -749,6 +853,8 @@
 
         <div style="height:14px"></div>
         <button class="btn ghost" onclick="logout()" data-i18n="acc_logout">Esci</button>
+        <div class="divider"></div>
+        <div class="srow" style="cursor:pointer" onclick="deleteAccount()"><span class="si">🗑️</span><div class="st"><b style="color:#dc2626" data-i18n="acc_delete">Cancella account</b></div><span class="chev" style="color:#dc2626">›</span></div>
       </div>
     </div>
 
@@ -795,7 +901,7 @@
       el.value=val||SERVICE_TYPES[0];
     } else { el.value=val||''; }
   }
-  var profLangs=[], profSpecs=[], profEquip=[], profFavs=[], accountPhoto='';
+  var profLangs=[], profSpecs=[], profEquip=[], profFavs=[], profDests=[], accountPhoto='';
   /* ---- Preferiti: fotografi salvati dal viaggiatore (per email, come il resto del profilo) ---- */
   function favKey(ph){ return ph.id||ph.name; }
   function isFav(id){ return profFavs.indexOf(id)>=0; }
@@ -818,11 +924,53 @@
   }
   function renderFavs(){
     var list=document.getElementById('favList'), empty=document.getElementById('favEmpty');
-    if(!list) return;
-    var arr=PHOTOGRAPHERS.filter(function(ph){ return isFav(favKey(ph)); });
-    list.innerHTML=arr.map(photoCardHtml).join('');
-    if(empty) empty.style.display=arr.length?'none':'';
+    if(list){
+      var arr=PHOTOGRAPHERS.filter(function(ph){ return isFav(favKey(ph)); });
+      list.innerHTML=arr.map(photoCardHtml).join('');
+      if(empty) empty.style.display=arr.length?'none':'';
+    }
+    renderFavDests();
   }
+  /* ---- Home viaggiatore: destinazioni popolari, mete preferite, menù laterali ---- */
+  var DEST_SCENE={'Roma':'monument','Firenze':'monument','Venezia':'monument','Milano':'city','Napoli':'sea','Torino':'city','Bologna':'monument','Amalfi':'sea','Cinque Terre':'sea','Ibiza':'sea','Formentera':'sea','Tenerife':'sea','Palma di Maiorca':'sea','Fuerteventura':'sea','Barcellona':'monument','Madrid':'city','Siviglia':'monument','Parigi':'monument','Nizza':'sea','Lisbona':'monument','Porto':'monument','Londra':'city','Amsterdam':'city','Berlino':'city','Praga':'monument','Vienna':'monument','Santorini':'sea','Mykonos':'sea','Atene':'monument','Dubrovnik':'sea','Istanbul':'monument','New York':'city','Miami':'sea','Los Angeles':'city','Bali':'palm','Tokyo':'city','Marrakech':'palm','Città del Capo':'sea'};
+  var SCENES={
+    sea:"<svg class='sc' viewBox='0 0 160 90' preserveAspectRatio='xMidYMax slice'><circle cx='128' cy='26' r='13' fill='#fff' opacity='.30'/><path d='M0 66 q20 -9 40 0 t40 0 t40 0 t40 0 V90 H0Z' fill='#fff' opacity='.20'/><path d='M0 76 q20 -8 40 0 t40 0 t40 0 t40 0 V90 H0Z' fill='#fff' opacity='.32'/></svg>",
+    city:"<svg class='sc' viewBox='0 0 160 90' preserveAspectRatio='xMidYMax slice'><circle cx='26' cy='24' r='10' fill='#fff' opacity='.26'/><g fill='#fff' opacity='.28'><rect x='6' y='52' width='18' height='38'/><rect x='28' y='38' width='20' height='52'/><rect x='52' y='58' width='16' height='32'/><rect x='72' y='30' width='22' height='60'/><rect x='98' y='50' width='18' height='40'/><rect x='120' y='42' width='20' height='48'/><rect x='144' y='60' width='14' height='30'/></g></svg>",
+    monument:"<svg class='sc' viewBox='0 0 160 90' preserveAspectRatio='xMidYMax slice'><g fill='#fff' opacity='.28'><polygon points='80,34 42,56 118,56'/><rect x='46' y='56' width='9' height='34'/><rect x='64' y='56' width='9' height='34'/><rect x='87' y='56' width='9' height='34'/><rect x='105' y='56' width='9' height='34'/><rect x='38' y='86' width='84' height='4'/></g></svg>",
+    palm:"<svg class='sc' viewBox='0 0 160 90' preserveAspectRatio='xMidYMax slice'><circle cx='34' cy='26' r='12' fill='#fff' opacity='.28'/><g fill='#fff' opacity='.28'><path d='M0 80 q20 -7 40 0 t40 0 t40 0 t40 0 V90 H0Z'/><rect x='112' y='52' width='4' height='34' rx='2'/><ellipse cx='102' cy='50' rx='17' ry='5.5' transform='rotate(-22 102 50)'/><ellipse cx='126' cy='50' rx='17' ry='5.5' transform='rotate(22 126 50)'/><ellipse cx='114' cy='45' rx='17' ry='5.5'/></g></svg>"
+  };
+  function hashHue(s){ var h=0,i; for(i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h%360; }
+  function cityGrad(city){ var h=hashHue(city); return 'linear-gradient(135deg,hsl('+h+',56%,52%),hsl('+((h+30)%360)+',60%,38%))'; }
+  function destFavBtnHtml(city){ return '<span class="dfav" onclick="event.stopPropagation();toggleDestFav(\''+city+'\')">'+(isDestFav(city)?'❤️':'🤍')+'</span>'; }
+  function destCardHtml(city){
+    var sc=SCENES[DEST_SCENE[city]||'city']||SCENES.city;
+    return '<div class="dcard" style="background:'+cityGrad(city)+'" onclick="openDest(\''+city+'\')">'+sc+'<div class="ov"></div>'+destFavBtnHtml(city)+'<span class="dname">'+escHtml(city)+'</span></div>';
+  }
+  function openDest(city){
+    var i=document.getElementById('destInput'); if(i) i.value=city;
+    document.body.classList.remove('nearby');
+    var h=document.getElementById('resHead'); if(h) h.textContent=city;
+    renderResults(); show('results');
+  }
+  function isDestFav(city){ return profDests.indexOf(city)>=0; }
+  function toggleDestFav(city){
+    var i=profDests.indexOf(city);
+    if(i>=0){ profDests.splice(i,1); } else { profDests.push(city); }
+    saveProfile(); renderPopularDests(); renderFavDests();
+  }
+  function renderPopularDests(){
+    var html=DESTINATIONS.map(destCardHtml).join('');
+    var a=document.getElementById('homePopular'); if(a) a.innerHTML=html;
+    var b=document.getElementById('popularGrid'); if(b) b.innerHTML=html;
+  }
+  function renderFavDests(){
+    var arr=profDests.filter(function(c){ return DESTINATIONS.indexOf(c)>=0; });
+    var html=arr.map(destCardHtml).join(''), has=arr.length>0;
+    function set(listId,emptyId){ var l=document.getElementById(listId); if(l) l.innerHTML=html; var e=document.getElementById(emptyId); if(e) e.style.display=has?'none':''; }
+    set('homeFav','homeFavEmpty'); set('favDestGrid','favDestEmpty2'); set('favDestList','favDestEmpty');
+  }
+  function openDrawer(id){ var d=document.getElementById(id); if(d) d.classList.add('open'); }
+  function closeDrawer(id){ var d=document.getElementById(id); if(d) d.classList.remove('open'); }
   function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function segVal(id){ var s=document.getElementById(id); if(!s) return ''; var b=s.querySelector('button.on'); return b?(b.getAttribute('data-val')||''):''; }
   function segSet(id,v){ var s=document.getElementById(id); if(!s||!v) return; s.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-val')===v); }); }
@@ -850,7 +998,7 @@
   function collectProfile(){
     var g=function(id){ var e=document.getElementById(id); return e?e.value:''; };
     var p={ nat:g('natInput'), bio:g('bioInput'), loc:g('avLoc'), from:g('avFrom'), to:g('avTo'),
-      langs:profLangs.slice(), specs:profSpecs.slice(), equip:profEquip.slice(), favs:profFavs.slice(),
+      langs:profLangs.slice(), specs:profSpecs.slice(), equip:profEquip.slice(), favs:profFavs.slice(), favDests:profDests.slice(),
       car:segVal('carSeg'), mode:segVal('modeSeg'), services:[], works:[], photo:accountPhoto||'' };
     document.querySelectorAll('#svcList .svc').forEach(function(s){
       var t=s.querySelectorAll('.svc-in'), r=s.querySelectorAll('.rates input');
@@ -882,9 +1030,9 @@
   function applyProfile(){
     var p=loadProfile();
     restoringProfile=true;
-    profLangs=(p&&p.langs)||[]; profSpecs=(p&&p.specs)||[]; profEquip=(p&&p.equip)||[]; profFavs=(p&&p.favs)||[];
+    profLangs=(p&&p.langs)||[]; profSpecs=(p&&p.specs)||[]; profEquip=(p&&p.equip)||[]; profFavs=(p&&p.favs)||[]; profDests=(p&&p.favDests)||[];
     accountPhoto=(p&&p.photo)||'';
-    renderLangChips(); renderSpecChips(); renderEquipChips(); renderFavs();
+    renderLangChips(); renderSpecChips(); renderEquipChips(); renderFavs(); renderPopularDests();
     var s=function(id,v){ var e=document.getElementById(id); if(e) e.value=v||''; };
     s('natInput',p&&p.nat); s('bioInput',p&&p.bio); s('avLoc',p&&p.loc); s('avFrom',p&&p.from); s('avTo',p&&p.to);
     segSet('carSeg',(p&&p.car)||'yes'); segSet('modeSeg',(p&&p.mode)||'both');
@@ -933,7 +1081,7 @@
   function goBack(){
     if(navStack.length){ try{ history.back(); return; }catch(e){} _activate(navStack.pop()); }
   }
-  function goHome(){ show(currentRole==='photographer'?'ph_dash':'search'); }
+  function goHome(){ show(currentRole==='photographer'?'ph_dash':'home'); }
   window.addEventListener('popstate', function(){
     var prev=navStack.pop();
     if(prev){ _activate(prev); } else { try{ history.pushState({trap:1},''); }catch(e){} }
@@ -1233,7 +1381,7 @@
     applyProfile();
     if(u.photoURL && !accountPhoto){ setPhotoUrl(u.photoURL); }
     var r=loadRole();
-    if(r){ roleChosen=true; setRole(r); _activate(r==='photographer'?'ph_dash':'search'); }
+    if(r){ roleChosen=true; setRole(r); _activate(r==='photographer'?'ph_dash':'home'); }
     else { roleChosen=false; _activate('welcome'); }
   }
   function setName(v){ v=(v||'').trim(); if(!v) return; accountName=v; updateAccountUI(); try{ if(fbAuth&&fbAuth.currentUser) fbAuth.currentUser.updateProfile({displayName:v}); }catch(e){} }
@@ -1253,11 +1401,12 @@
     return n.split(/\s+/)[0];
   }
   function updateGreeting(){
-    var el=document.getElementById('greet'); if(!el) return;
     var d=I18N[curLang]||I18N.it||{};
-    var base=d.s_where||el.textContent;
     var fn=greetFirstName();
-    el.textContent = (fn && d.s_hi) ? d.s_hi.replace('%s',fn)+' '+base : base;
+    var el=document.getElementById('greet');
+    if(el){ var base=d.s_where||el.textContent; el.textContent=(fn&&d.s_hi)?d.s_hi.replace('%s',fn)+' '+base:base; }
+    var hg=document.getElementById('homeGreet');
+    if(hg){ hg.textContent=(fn&&d.s_hi)?d.s_hi.replace('%s',fn):(d.home_hi||'Ciao!'); }
   }
   function addService(){
     var list=document.getElementById('svcList'); if(!list) return;
@@ -1320,7 +1469,7 @@
 
   /* ---- role ---- */
   function setRole(r){ currentRole=r; markRole(); }
-  function switchRole(r){ setRole(r); roleChosen=true; saveRole(); show(r==='photographer'?'ph_dash':'search'); }
+  function switchRole(r){ setRole(r); roleChosen=true; saveRole(); show(r==='photographer'?'ph_dash':'home'); }
   function markRole(){ document.querySelectorAll('.roleopt').forEach(function(el){ el.classList.toggle('on', el.getAttribute('data-role')===currentRole); }); }
 
   /* ---- theme ---- */
@@ -1382,7 +1531,7 @@
       login_sub:"Accedi per trovare e prenotare fotografi ovunque tu vada.", login_google:"Continua con Google", login_email:"Continua con email", login_email_ph:"nome@email.com", login_enter:"Accedi", login_pass_ph:"Password", login_register:"Crea un account", login_forgot:"Password dimenticata?", login_need_both:"Inserisci email e password.", login_need_email:"Scrivi prima la tua email.", login_reset_sent:"Ti abbiamo inviato una mail per reimpostare la password.", fb_offline:"Servizio di accesso non raggiungibile. Controlla la connessione.", vf_title:"Conferma la tua email", vf_msg:"Ti abbiamo inviato una mail con un link da cliccare. Aprila, conferma, poi torna qui.", vf_done:"Ho confermato, entra", vf_resend:"Invia di nuovo la mail", vf_sent:"Mail inviata! Controlla la posta (anche lo spam).", vf_not_yet:"Non risulta ancora confermata. Clicca il link nella mail e riprova.", acc_delete_relogin:"Per sicurezza devi rientrare e riprovare subito dopo.",
       w_tag:"Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.",
       w_traveler:"Sono un viaggiatore", w_photographer:"Sono un fotografo",
-      s_where:"Dove ti farai fotografare?", s_hi:"Ciao %s!", s_sub:"Cerca per città e date del tuo soggiorno",
+      s_where:"Dove ti farai fotografare?", s_hi:"Ciao %s!", s_sub:"Cerca per città e date del tuo soggiorno", home_tagline:"Crea il tuo prossimo ricordo", home_hi:"Ciao!", see_all:"Vedi tutto", home_fav:"Le tue mete preferite", nav_favorites:"Preferiti", fav_ph_sect:"Fotografi preferiti", fav_dest_sect:"Mete preferite", fav_dest_empty:"Aggiungi le tue mete col cuoricino.", notif_title:"Notifiche", notif_empty:"Nessuna notifica al momento.", menu_title:"Menu",
       s_dest:"Destinazione", s_dest_ph:"Città o luogo", s_checkin:"Arrivo", s_checkout:"Partenza",
       s_service_type:"Tipo di servizio", s_service_val:"Ritratto / Vacanza",
       sm_mode:"Modalità del servizio", sm_fixed:"📍 Luogo fisso", sm_roaming:"🚶 Itinerante", sm_both:"Entrambi", av_mode:"Modalità offerte",
@@ -1445,7 +1594,7 @@
       login_sub:"Sign in to find and book photographers wherever you go.", login_google:"Continue with Google", login_email:"Continue with email", login_email_ph:"name@email.com", login_enter:"Sign in", login_pass_ph:"Password", login_register:"Create an account", login_forgot:"Forgot your password?", login_need_both:"Enter email and password.", login_need_email:"Enter your email first.", login_reset_sent:"We've sent you an email to reset your password.", fb_offline:"Sign-in service unreachable. Check your connection.", vf_title:"Confirm your email", vf_msg:"We've sent you an email with a link. Open it, confirm, then come back here.", vf_done:"I confirmed, let me in", vf_resend:"Send the email again", vf_sent:"Email sent! Check your inbox (and spam).", vf_not_yet:"Not confirmed yet. Click the link in the email and try again.", acc_delete_relogin:"For security, sign in again and retry right after.",
       w_tag:"Professional photos wherever you go. Find and book a photographer for your trip.",
       w_traveler:"I'm a traveler", w_photographer:"I'm a photographer",
-      s_where:"Where will you get your photos taken?", s_hi:"Hi %s!", s_sub:"Search by city and dates of your stay",
+      s_where:"Where will you get your photos taken?", s_hi:"Hi %s!", s_sub:"Search by city and dates of your stay", home_tagline:"Create your next memory", home_hi:"Hi!", see_all:"See all", home_fav:"Your favorite places", nav_favorites:"Favorites", fav_ph_sect:"Favorite photographers", fav_dest_sect:"Favorite places", fav_dest_empty:"Add places with the heart button.", notif_title:"Notifications", notif_empty:"No notifications yet.", menu_title:"Menu",
       s_dest:"Destination", s_dest_ph:"City or place", s_checkin:"Check-in", s_checkout:"Check-out",
       s_service_type:"Service type", s_service_val:"Portrait / Vacation",
       sm_mode:"Service mode", sm_fixed:"📍 Fixed location", sm_roaming:"🚶 Roaming", sm_both:"Both", av_mode:"Modes offered",
@@ -1508,7 +1657,7 @@
       login_sub:"Inicia sesión para encontrar y reservar fotógrafos dondequiera que vayas.", login_google:"Continuar con Google", login_email:"Continuar con email", login_email_ph:"nombre@email.com", login_enter:"Entrar", login_pass_ph:"Contraseña", login_register:"Crear una cuenta", login_forgot:"¿Olvidaste la contraseña?", login_need_both:"Introduce email y contraseña.", login_need_email:"Escribe primero tu email.", login_reset_sent:"Te hemos enviado un email para restablecer la contraseña.", fb_offline:"Servicio de acceso no disponible. Comprueba la conexión.", vf_title:"Confirma tu email", vf_msg:"Te hemos enviado un email con un enlace. Ábrelo, confirma y vuelve aquí.", vf_done:"Ya confirmé, entrar", vf_resend:"Enviar el email de nuevo", vf_sent:"¡Email enviado! Revisa tu correo (y el spam).", vf_not_yet:"Aún no está confirmado. Haz clic en el enlace del email e inténtalo de nuevo.", acc_delete_relogin:"Por seguridad, vuelve a entrar e inténtalo justo después.",
       w_tag:"Fotos profesionales dondequiera que vayas. Encuentra y reserva un fotógrafo para tu viaje.",
       w_traveler:"Soy un viajero", w_photographer:"Soy un fotógrafo",
-      s_where:"¿Dónde te harás las fotos?", s_hi:"¡Hola %s!", s_sub:"Busca por ciudad y fechas de tu estancia",
+      s_where:"¿Dónde te harás las fotos?", s_hi:"¡Hola %s!", s_sub:"Busca por ciudad y fechas de tu estancia", home_tagline:"Crea tu próximo recuerdo", home_hi:"¡Hola!", see_all:"Ver todo", home_fav:"Tus destinos favoritos", nav_favorites:"Favoritos", fav_ph_sect:"Fotógrafos favoritos", fav_dest_sect:"Destinos favoritos", fav_dest_empty:"Añade destinos con el corazón.", notif_title:"Notificaciones", notif_empty:"No hay notificaciones por ahora.", menu_title:"Menú",
       s_dest:"Destino", s_dest_ph:"Ciudad o lugar", s_checkin:"Llegada", s_checkout:"Salida",
       s_service_type:"Tipo de servicio", s_service_val:"Retrato / Vacaciones",
       sm_mode:"Modalidad del servicio", sm_fixed:"📍 Lugar fijo", sm_roaming:"🚶 Itinerante", sm_both:"Ambos", av_mode:"Modalidades ofrecidas",
@@ -1571,7 +1720,7 @@
       login_sub:"Connectez-vous pour trouver et réserver des photographes où que vous alliez.", login_google:"Continuer avec Google", login_email:"Continuer avec l'email", login_email_ph:"nom@email.com", login_enter:"Se connecter", login_pass_ph:"Mot de passe", login_register:"Créer un compte", login_forgot:"Mot de passe oublié ?", login_need_both:"Saisissez l'email et le mot de passe.", login_need_email:"Saisissez d'abord votre email.", login_reset_sent:"Nous vous avons envoyé un email pour réinitialiser le mot de passe.", fb_offline:"Service de connexion injoignable. Vérifiez votre connexion.", vf_title:"Confirmez votre email", vf_msg:"Nous vous avons envoyé un email avec un lien. Ouvrez-le, confirmez, puis revenez ici.", vf_done:"J'ai confirmé, entrer", vf_resend:"Renvoyer l'email", vf_sent:"Email envoyé ! Vérifiez votre boîte (et les spams).", vf_not_yet:"Pas encore confirmé. Cliquez sur le lien dans l'email et réessayez.", acc_delete_relogin:"Par sécurité, reconnectez-vous et réessayez juste après.",
       w_tag:"Des photos professionnelles où que vous alliez. Trouvez et réservez un photographe pour votre voyage.",
       w_traveler:"Je suis un voyageur", w_photographer:"Je suis un photographe",
-      s_where:"Où vas-tu te faire photographier ?", s_hi:"Salut %s !", s_sub:"Recherchez par ville et dates de votre séjour",
+      s_where:"Où vas-tu te faire photographier ?", s_hi:"Salut %s !", s_sub:"Recherchez par ville et dates de votre séjour", home_tagline:"Crée ton prochain souvenir", home_hi:"Salut !", see_all:"Voir tout", home_fav:"Tes destinations favorites", nav_favorites:"Favoris", fav_ph_sect:"Photographes favoris", fav_dest_sect:"Destinations favorites", fav_dest_empty:"Ajoute des destinations avec le cœur.", notif_title:"Notifications", notif_empty:"Aucune notification pour l'instant.", menu_title:"Menu",
       s_dest:"Destination", s_dest_ph:"Ville ou lieu", s_checkin:"Arrivée", s_checkout:"Départ",
       s_service_type:"Type de service", s_service_val:"Portrait / Vacances",
       sm_mode:"Mode du service", sm_fixed:"📍 Lieu fixe", sm_roaming:"🚶 Itinérant", sm_both:"Les deux", av_mode:"Modes proposés",
@@ -1634,7 +1783,7 @@
       login_sub:"Melde dich an, um Fotografen zu finden und zu buchen, wohin du auch gehst.", login_google:"Mit Google fortfahren", login_email:"Mit E-Mail fortfahren", login_email_ph:"name@email.com", login_enter:"Anmelden", login_pass_ph:"Passwort", login_register:"Konto erstellen", login_forgot:"Passwort vergessen?", login_need_both:"Gib E-Mail und Passwort ein.", login_need_email:"Gib zuerst deine E-Mail ein.", login_reset_sent:"Wir haben dir eine E-Mail zum Zurücksetzen des Passworts geschickt.", fb_offline:"Anmeldedienst nicht erreichbar. Prüfe deine Verbindung.", vf_title:"Bestätige deine E-Mail", vf_msg:"Wir haben dir eine E-Mail mit einem Link geschickt. Öffne sie, bestätige und komm zurück.", vf_done:"Bestätigt, rein damit", vf_resend:"E-Mail erneut senden", vf_sent:"E-Mail gesendet! Prüfe dein Postfach (auch Spam).", vf_not_yet:"Noch nicht bestätigt. Klicke den Link in der E-Mail und versuche es erneut.", acc_delete_relogin:"Aus Sicherheitsgründen melde dich erneut an und versuche es gleich danach.",
       w_tag:"Professionelle Fotos, wohin du auch gehst. Finde und buche einen Fotografen für deine Reise.",
       w_traveler:"Ich bin ein Reisender", w_photographer:"Ich bin ein Fotograf",
-      s_where:"Wo wirst du dich fotografieren lassen?", s_hi:"Hallo %s!", s_sub:"Suche nach Stadt und Daten deines Aufenthalts",
+      s_where:"Wo wirst du dich fotografieren lassen?", s_hi:"Hallo %s!", s_sub:"Suche nach Stadt und Daten deines Aufenthalts", home_tagline:"Schaffe deine nächste Erinnerung", home_hi:"Hallo!", see_all:"Alle ansehen", home_fav:"Deine Lieblingsziele", nav_favorites:"Favoriten", fav_ph_sect:"Lieblingsfotografen", fav_dest_sect:"Lieblingsziele", fav_dest_empty:"Füge Ziele mit dem Herz hinzu.", notif_title:"Benachrichtigungen", notif_empty:"Noch keine Benachrichtigungen.", menu_title:"Menü",
       s_dest:"Reiseziel", s_dest_ph:"Stadt oder Ort", s_checkin:"Anreise", s_checkout:"Abreise",
       s_service_type:"Art des Service", s_service_val:"Porträt / Urlaub",
       sm_mode:"Service-Modus", sm_fixed:"📍 Fester Ort", sm_roaming:"🚶 Unterwegs", sm_both:"Beides", av_mode:"Angebotene Modi",
@@ -1697,7 +1846,7 @@
       login_sub:"登录，随时随地寻找并预订摄影师。", login_google:"使用 Google 继续", login_email:"使用邮箱继续", login_email_ph:"name@email.com", login_enter:"登录", login_pass_ph:"密码", login_register:"创建账户", login_forgot:"忘记密码？", login_need_both:"请输入邮箱和密码。", login_need_email:"请先输入你的邮箱。", login_reset_sent:"我们已向你发送重置密码的邮件。", fb_offline:"登录服务不可用，请检查网络连接。", vf_title:"确认你的邮箱", vf_msg:"我们给你发了一封带链接的邮件。打开并确认后，再回到这里。", vf_done:"我已确认，进入", vf_resend:"重新发送邮件", vf_sent:"邮件已发送！请查收邮箱（也看看垃圾邮件）。", vf_not_yet:"尚未确认。请点击邮件中的链接后再试。", acc_delete_relogin:"出于安全考虑，请重新登录后立即重试。",
       w_tag:"无论走到哪里都有专业照片。为你的旅行寻找并预订摄影师。",
       w_traveler:"我是旅行者", w_photographer:"我是摄影师",
-      s_where:"你想在哪里拍照？", s_hi:"你好，%s！", s_sub:"按城市和入住日期搜索",
+      s_where:"你想在哪里拍照？", s_hi:"你好，%s！", s_sub:"按城市和入住日期搜索", home_tagline:"创造你的下一段回忆", home_hi:"你好！", see_all:"查看全部", home_fav:"你的收藏目的地", nav_favorites:"收藏", fav_ph_sect:"收藏的摄影师", fav_dest_sect:"收藏的目的地", fav_dest_empty:"用爱心添加目的地。", notif_title:"通知", notif_empty:"暂无通知。", menu_title:"菜单",
       s_dest:"目的地", s_dest_ph:"城市或地点", s_checkin:"到达", s_checkout:"离开",
       s_service_type:"服务类型", s_service_val:"人像 / 度假",
       sm_mode:"服务方式", sm_fixed:"📍 固定地点", sm_roaming:"🚶 移动拍摄", sm_both:"两者皆可", av_mode:"提供方式",
@@ -1760,7 +1909,7 @@
       login_sub:"ログインして、どこでも写真家を探して予約しましょう。", login_google:"Google で続ける", login_email:"メールで続ける", login_email_ph:"name@email.com", login_enter:"ログイン", login_pass_ph:"パスワード", login_register:"アカウントを作成", login_forgot:"パスワードをお忘れですか？", login_need_both:"メールとパスワードを入力してください。", login_need_email:"先にメールを入力してください。", login_reset_sent:"パスワード再設定のメールを送信しました。", fb_offline:"ログインサービスに接続できません。接続を確認してください。", vf_title:"メールを確認してください", vf_msg:"リンク付きのメールを送りました。開いて確認したら、ここに戻ってください。", vf_done:"確認しました、入る", vf_resend:"メールを再送する", vf_sent:"メールを送信しました！受信箱（迷惑メールも）を確認してください。", vf_not_yet:"まだ確認されていません。メール内のリンクをクリックして再度お試しください。", acc_delete_relogin:"安全のため、ログインし直してすぐに再試行してください。",
       w_tag:"どこへ行ってもプロの写真を。旅のための写真家を探して予約。",
       w_traveler:"旅行者です", w_photographer:"写真家です",
-      s_where:"どこで撮影しますか？", s_hi:"%sさん、こんにちは！", s_sub:"都市と滞在日で検索",
+      s_where:"どこで撮影しますか？", s_hi:"%sさん、こんにちは！", s_sub:"都市と滞在日で検索", home_tagline:"次の思い出をつくろう", home_hi:"こんにちは！", see_all:"すべて見る", home_fav:"お気に入りの旅先", nav_favorites:"お気に入り", fav_ph_sect:"お気に入りの写真家", fav_dest_sect:"お気に入りの旅先", fav_dest_empty:"ハートで旅先を追加できます。", notif_title:"通知", notif_empty:"通知はまだありません。", menu_title:"メニュー",
       s_dest:"目的地", s_dest_ph:"都市または場所", s_checkin:"到着", s_checkout:"出発",
       s_service_type:"サービスの種類", s_service_val:"ポートレート / バケーション",
       sm_mode:"サービスの形式", sm_fixed:"📍 固定の場所", sm_roaming:"🚶 移動撮影", sm_both:"両方", av_mode:"提供形式",
@@ -1824,7 +1973,7 @@
     try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); updateBookingUI(); initFirebase();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); renderPopularDests(); updateBookingUI(); initFirebase();
     attachAC('natInput','natMenu',function(){ return NATIONALITIES; }, saveProfile);
     attachAC('destInput','destMenu',function(){ return DESTINATIONS; }, null);
     var _st=document.getElementById('svcType'); if(_st) _st.innerHTML=svcOptionsHtml();
