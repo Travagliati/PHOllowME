@@ -15,11 +15,11 @@
   :root{
     --accent:#1E90D6; --accent-d:#0B5A87; --light:#E4F2FB; --grey:#6b7280;
     --line:#e5e7eb; --bg:#f3f5f6; --gold:#d4a017; --silver:#94a3b8;
-    --page:#dfe6e7; --screen:#ffffff; --text:#1f2937; --text2:#374151; --chatbg:#eef4f8; --track:#cbd5e1;
+    --page:#dfe6e7; --screen:#ffffff; --text:#1f2937; --text2:#374151; --chatbg:#eef4f8; --track:#cbd5e1; --deco:rgba(232,115,12,.20);
   }
   :root[data-theme="dark"]{
     --accent:#3aa8e6; --accent-d:#8fd0f2; --light:#123243; --grey:#8b97a0;
-    --line:#2a343c; --bg:#1e272e; --page:#0c1216; --screen:#171f26; --text:#e7eef3; --text2:#c4ced6; --chatbg:#10171c; --track:#3a4650;
+    --line:#2a343c; --bg:#1e272e; --page:#0c1216; --screen:#171f26; --text:#e7eef3; --text2:#c4ced6; --chatbg:#10171c; --track:#3a4650; --deco:rgba(245,158,66,.16);
   }
   *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
   body{background:var(--page);color:var(--text);padding:24px;display:flex;flex-direction:column;align-items:center;min-height:100vh;transition:background .2s}
@@ -58,8 +58,10 @@
   .credit a{color:var(--accent-d)}
 
   /* view system */
-  .view{position:absolute;inset:0;display:none;flex-direction:column;background:var(--screen)}
+  .view{position:absolute;inset:0;display:none;flex-direction:column;background:var(--screen);isolation:isolate}
   .view.active{display:flex}
+  .view::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background-color:var(--deco);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'260'%20height%3D'260'%20viewBox%3D'0%200%20260%20260'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'3.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cg%20transform%3D'translate(22%2C26)%20rotate(-6)'%3E%3Crect%20x%3D'0'%20y%3D'10'%20width%3D'46'%20height%3D'30'%20rx%3D'6'%2F%3E%3Cpath%20d%3D'M15%2010%20L19%203%20L29%203%20L33%2010'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'9'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'4'%2F%3E%3Ccircle%20cx%3D'38'%20cy%3D'16'%20r%3D'1.6'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(188%2C34)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'8'%2F%3E%3Cline%20x1%3D'12'%20y1%3D'0'%20x2%3D'17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'8.49'%20x2%3D'12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'12'%20x2%3D'0'%20y2%3D'17'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'8.49'%20x2%3D'-12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'-12'%20y1%3D'0'%20x2%3D'-17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'-8.49'%20x2%3D'-12.02'%20y2%3D'-12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'-12'%20x2%3D'0'%20y2%3D'-17'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'-8.49'%20x2%3D'12.02'%20y2%3D'-12.02'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(30%2C182)'%3E%3Cpath%20d%3D'M0%200%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2010%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2020%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(182%2C168)%20rotate(8)'%3E%3Cpath%20d%3D'M18%202%20C9%202%203%209%203%2017%20C3%2027%2018%2042%2018%2042%20C18%2042%2033%2027%2033%2017%20C33%209%2027%202%2018%202%20Z'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'17'%20r%3D'5'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 0 0/280px 280px repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'260'%20height%3D'260'%20viewBox%3D'0%200%20260%20260'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'3.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cg%20transform%3D'translate(22%2C26)%20rotate(-6)'%3E%3Crect%20x%3D'0'%20y%3D'10'%20width%3D'46'%20height%3D'30'%20rx%3D'6'%2F%3E%3Cpath%20d%3D'M15%2010%20L19%203%20L29%203%20L33%2010'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'9'%2F%3E%3Ccircle%20cx%3D'23'%20cy%3D'26'%20r%3D'4'%2F%3E%3Ccircle%20cx%3D'38'%20cy%3D'16'%20r%3D'1.6'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(188%2C34)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'8'%2F%3E%3Cline%20x1%3D'12'%20y1%3D'0'%20x2%3D'17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'8.49'%20x2%3D'12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'12'%20x2%3D'0'%20y2%3D'17'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'8.49'%20x2%3D'-12.02'%20y2%3D'12.02'%2F%3E%3Cline%20x1%3D'-12'%20y1%3D'0'%20x2%3D'-17'%20y2%3D'0'%2F%3E%3Cline%20x1%3D'-8.49'%20y1%3D'-8.49'%20x2%3D'-12.02'%20y2%3D'-12.02'%2F%3E%3Cline%20x1%3D'0'%20y1%3D'-12'%20x2%3D'0'%20y2%3D'-17'%2F%3E%3Cline%20x1%3D'8.49'%20y1%3D'-8.49'%20x2%3D'12.02'%20y2%3D'-12.02'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(30%2C182)'%3E%3Cpath%20d%3D'M0%200%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2010%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3Cpath%20d%3D'M0%2020%20q%208%20-8%2016%200%20t%2016%200%20t%2016%200'%2F%3E%3C%2Fg%3E%3Cg%20transform%3D'translate(182%2C168)%20rotate(8)'%3E%3Cpath%20d%3D'M18%202%20C9%202%203%209%203%2017%20C3%2027%2018%2042%2018%2042%20C18%2042%2033%2027%2033%2017%20C33%209%2027%202%2018%202%20Z'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'17'%20r%3D'5'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 0 0/280px 280px repeat}
+  #splash::before,#login::before,#welcome::before{display:none}
   .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
   .scroll::-webkit-scrollbar{width:0}
 
@@ -324,7 +326,7 @@
     <div class="view" id="search">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
       <div class="scroll pad">
-        <h2 style="font-size:20px;color:var(--accent-d);margin-bottom:4px" data-i18n="s_where">Dove ti fai fotografare?</h2>
+        <h2 id="greet" style="font-size:20px;color:var(--accent-d);margin-bottom:4px" data-i18n="s_where">Dove ti farai fotografare?</h2>
         <p class="muted" style="margin-bottom:16px" data-i18n="s_sub">Cerca per città e date del tuo soggiorno</p>
         <button class="btn ghost" style="margin-bottom:14px" onclick="nearMe()" data-i18n="s_near">📍 Cerca intorno a te</button>
         <div class="field" style="position:relative">
@@ -1242,6 +1244,20 @@
     var gi=document.getElementById('gInit'); if(gi) gi.textContent=(accountName||'?').charAt(0).toUpperCase();
     var p=accountName.split(/\s+/), ini=((p[0]||'').charAt(0)+((p[1]||'').charAt(0))).toUpperCase();
     document.querySelectorAll('.myAvatar .ini').forEach(function(el){ el.textContent=ini||'?'; });
+    updateGreeting();
+  }
+  function greetFirstName(){
+    var n=String(accountName||'').trim(); if(!n) return '';
+    var local=String(accountEmail||'').split('@')[0]||'';
+    if(local && n.toLowerCase()===local.toLowerCase()) return '';
+    return n.split(/\s+/)[0];
+  }
+  function updateGreeting(){
+    var el=document.getElementById('greet'); if(!el) return;
+    var d=I18N[curLang]||I18N.it||{};
+    var base=d.s_where||el.textContent;
+    var fn=greetFirstName();
+    el.textContent = (fn && d.s_hi) ? d.s_hi.replace('%s',fn)+' '+base : base;
   }
   function addService(){
     var list=document.getElementById('svcList'); if(!list) return;
@@ -1331,7 +1347,7 @@
       if(dict[k]!==undefined) el.setAttribute('placeholder',dict[k]);
     });
     document.documentElement.setAttribute('lang',lang);
-    refreshPayBtn(); renderEquipChips();
+    refreshPayBtn(); renderEquipChips(); updateGreeting();
   }
   function toggleLang(e){
     e.stopPropagation();
@@ -1366,7 +1382,7 @@
       login_sub:"Accedi per trovare e prenotare fotografi ovunque tu vada.", login_google:"Continua con Google", login_email:"Continua con email", login_email_ph:"nome@email.com", login_enter:"Accedi", login_pass_ph:"Password", login_register:"Crea un account", login_forgot:"Password dimenticata?", login_need_both:"Inserisci email e password.", login_need_email:"Scrivi prima la tua email.", login_reset_sent:"Ti abbiamo inviato una mail per reimpostare la password.", fb_offline:"Servizio di accesso non raggiungibile. Controlla la connessione.", vf_title:"Conferma la tua email", vf_msg:"Ti abbiamo inviato una mail con un link da cliccare. Aprila, conferma, poi torna qui.", vf_done:"Ho confermato, entra", vf_resend:"Invia di nuovo la mail", vf_sent:"Mail inviata! Controlla la posta (anche lo spam).", vf_not_yet:"Non risulta ancora confermata. Clicca il link nella mail e riprova.", acc_delete_relogin:"Per sicurezza devi rientrare e riprovare subito dopo.",
       w_tag:"Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.",
       w_traveler:"Sono un viaggiatore", w_photographer:"Sono un fotografo",
-      s_where:"Dove ti fai fotografare?", s_sub:"Cerca per città e date del tuo soggiorno",
+      s_where:"Dove ti farai fotografare?", s_hi:"Ciao %s!", s_sub:"Cerca per città e date del tuo soggiorno",
       s_dest:"Destinazione", s_dest_ph:"Città o luogo", s_checkin:"Arrivo", s_checkout:"Partenza",
       s_service_type:"Tipo di servizio", s_service_val:"Ritratto / Vacanza",
       sm_mode:"Modalità del servizio", sm_fixed:"📍 Luogo fisso", sm_roaming:"🚶 Itinerante", sm_both:"Entrambi", av_mode:"Modalità offerte",
@@ -1429,7 +1445,7 @@
       login_sub:"Sign in to find and book photographers wherever you go.", login_google:"Continue with Google", login_email:"Continue with email", login_email_ph:"name@email.com", login_enter:"Sign in", login_pass_ph:"Password", login_register:"Create an account", login_forgot:"Forgot your password?", login_need_both:"Enter email and password.", login_need_email:"Enter your email first.", login_reset_sent:"We've sent you an email to reset your password.", fb_offline:"Sign-in service unreachable. Check your connection.", vf_title:"Confirm your email", vf_msg:"We've sent you an email with a link. Open it, confirm, then come back here.", vf_done:"I confirmed, let me in", vf_resend:"Send the email again", vf_sent:"Email sent! Check your inbox (and spam).", vf_not_yet:"Not confirmed yet. Click the link in the email and try again.", acc_delete_relogin:"For security, sign in again and retry right after.",
       w_tag:"Professional photos wherever you go. Find and book a photographer for your trip.",
       w_traveler:"I'm a traveler", w_photographer:"I'm a photographer",
-      s_where:"Where do you want your photos taken?", s_sub:"Search by city and dates of your stay",
+      s_where:"Where will you get your photos taken?", s_hi:"Hi %s!", s_sub:"Search by city and dates of your stay",
       s_dest:"Destination", s_dest_ph:"City or place", s_checkin:"Check-in", s_checkout:"Check-out",
       s_service_type:"Service type", s_service_val:"Portrait / Vacation",
       sm_mode:"Service mode", sm_fixed:"📍 Fixed location", sm_roaming:"🚶 Roaming", sm_both:"Both", av_mode:"Modes offered",
@@ -1492,7 +1508,7 @@
       login_sub:"Inicia sesión para encontrar y reservar fotógrafos dondequiera que vayas.", login_google:"Continuar con Google", login_email:"Continuar con email", login_email_ph:"nombre@email.com", login_enter:"Entrar", login_pass_ph:"Contraseña", login_register:"Crear una cuenta", login_forgot:"¿Olvidaste la contraseña?", login_need_both:"Introduce email y contraseña.", login_need_email:"Escribe primero tu email.", login_reset_sent:"Te hemos enviado un email para restablecer la contraseña.", fb_offline:"Servicio de acceso no disponible. Comprueba la conexión.", vf_title:"Confirma tu email", vf_msg:"Te hemos enviado un email con un enlace. Ábrelo, confirma y vuelve aquí.", vf_done:"Ya confirmé, entrar", vf_resend:"Enviar el email de nuevo", vf_sent:"¡Email enviado! Revisa tu correo (y el spam).", vf_not_yet:"Aún no está confirmado. Haz clic en el enlace del email e inténtalo de nuevo.", acc_delete_relogin:"Por seguridad, vuelve a entrar e inténtalo justo después.",
       w_tag:"Fotos profesionales dondequiera que vayas. Encuentra y reserva un fotógrafo para tu viaje.",
       w_traveler:"Soy un viajero", w_photographer:"Soy un fotógrafo",
-      s_where:"¿Dónde quieres tus fotos?", s_sub:"Busca por ciudad y fechas de tu estancia",
+      s_where:"¿Dónde te harás las fotos?", s_hi:"¡Hola %s!", s_sub:"Busca por ciudad y fechas de tu estancia",
       s_dest:"Destino", s_dest_ph:"Ciudad o lugar", s_checkin:"Llegada", s_checkout:"Salida",
       s_service_type:"Tipo de servicio", s_service_val:"Retrato / Vacaciones",
       sm_mode:"Modalidad del servicio", sm_fixed:"📍 Lugar fijo", sm_roaming:"🚶 Itinerante", sm_both:"Ambos", av_mode:"Modalidades ofrecidas",
@@ -1555,7 +1571,7 @@
       login_sub:"Connectez-vous pour trouver et réserver des photographes où que vous alliez.", login_google:"Continuer avec Google", login_email:"Continuer avec l'email", login_email_ph:"nom@email.com", login_enter:"Se connecter", login_pass_ph:"Mot de passe", login_register:"Créer un compte", login_forgot:"Mot de passe oublié ?", login_need_both:"Saisissez l'email et le mot de passe.", login_need_email:"Saisissez d'abord votre email.", login_reset_sent:"Nous vous avons envoyé un email pour réinitialiser le mot de passe.", fb_offline:"Service de connexion injoignable. Vérifiez votre connexion.", vf_title:"Confirmez votre email", vf_msg:"Nous vous avons envoyé un email avec un lien. Ouvrez-le, confirmez, puis revenez ici.", vf_done:"J'ai confirmé, entrer", vf_resend:"Renvoyer l'email", vf_sent:"Email envoyé ! Vérifiez votre boîte (et les spams).", vf_not_yet:"Pas encore confirmé. Cliquez sur le lien dans l'email et réessayez.", acc_delete_relogin:"Par sécurité, reconnectez-vous et réessayez juste après.",
       w_tag:"Des photos professionnelles où que vous alliez. Trouvez et réservez un photographe pour votre voyage.",
       w_traveler:"Je suis un voyageur", w_photographer:"Je suis un photographe",
-      s_where:"Où voulez-vous être photographié ?", s_sub:"Recherchez par ville et dates de votre séjour",
+      s_where:"Où vas-tu te faire photographier ?", s_hi:"Salut %s !", s_sub:"Recherchez par ville et dates de votre séjour",
       s_dest:"Destination", s_dest_ph:"Ville ou lieu", s_checkin:"Arrivée", s_checkout:"Départ",
       s_service_type:"Type de service", s_service_val:"Portrait / Vacances",
       sm_mode:"Mode du service", sm_fixed:"📍 Lieu fixe", sm_roaming:"🚶 Itinérant", sm_both:"Les deux", av_mode:"Modes proposés",
@@ -1618,7 +1634,7 @@
       login_sub:"Melde dich an, um Fotografen zu finden und zu buchen, wohin du auch gehst.", login_google:"Mit Google fortfahren", login_email:"Mit E-Mail fortfahren", login_email_ph:"name@email.com", login_enter:"Anmelden", login_pass_ph:"Passwort", login_register:"Konto erstellen", login_forgot:"Passwort vergessen?", login_need_both:"Gib E-Mail und Passwort ein.", login_need_email:"Gib zuerst deine E-Mail ein.", login_reset_sent:"Wir haben dir eine E-Mail zum Zurücksetzen des Passworts geschickt.", fb_offline:"Anmeldedienst nicht erreichbar. Prüfe deine Verbindung.", vf_title:"Bestätige deine E-Mail", vf_msg:"Wir haben dir eine E-Mail mit einem Link geschickt. Öffne sie, bestätige und komm zurück.", vf_done:"Bestätigt, rein damit", vf_resend:"E-Mail erneut senden", vf_sent:"E-Mail gesendet! Prüfe dein Postfach (auch Spam).", vf_not_yet:"Noch nicht bestätigt. Klicke den Link in der E-Mail und versuche es erneut.", acc_delete_relogin:"Aus Sicherheitsgründen melde dich erneut an und versuche es gleich danach.",
       w_tag:"Professionelle Fotos, wohin du auch gehst. Finde und buche einen Fotografen für deine Reise.",
       w_traveler:"Ich bin ein Reisender", w_photographer:"Ich bin ein Fotograf",
-      s_where:"Wo möchtest du fotografiert werden?", s_sub:"Suche nach Stadt und Daten deines Aufenthalts",
+      s_where:"Wo wirst du dich fotografieren lassen?", s_hi:"Hallo %s!", s_sub:"Suche nach Stadt und Daten deines Aufenthalts",
       s_dest:"Reiseziel", s_dest_ph:"Stadt oder Ort", s_checkin:"Anreise", s_checkout:"Abreise",
       s_service_type:"Art des Service", s_service_val:"Porträt / Urlaub",
       sm_mode:"Service-Modus", sm_fixed:"📍 Fester Ort", sm_roaming:"🚶 Unterwegs", sm_both:"Beides", av_mode:"Angebotene Modi",
@@ -1681,7 +1697,7 @@
       login_sub:"登录，随时随地寻找并预订摄影师。", login_google:"使用 Google 继续", login_email:"使用邮箱继续", login_email_ph:"name@email.com", login_enter:"登录", login_pass_ph:"密码", login_register:"创建账户", login_forgot:"忘记密码？", login_need_both:"请输入邮箱和密码。", login_need_email:"请先输入你的邮箱。", login_reset_sent:"我们已向你发送重置密码的邮件。", fb_offline:"登录服务不可用，请检查网络连接。", vf_title:"确认你的邮箱", vf_msg:"我们给你发了一封带链接的邮件。打开并确认后，再回到这里。", vf_done:"我已确认，进入", vf_resend:"重新发送邮件", vf_sent:"邮件已发送！请查收邮箱（也看看垃圾邮件）。", vf_not_yet:"尚未确认。请点击邮件中的链接后再试。", acc_delete_relogin:"出于安全考虑，请重新登录后立即重试。",
       w_tag:"无论走到哪里都有专业照片。为你的旅行寻找并预订摄影师。",
       w_traveler:"我是旅行者", w_photographer:"我是摄影师",
-      s_where:"你想在哪里拍照？", s_sub:"按城市和入住日期搜索",
+      s_where:"你想在哪里拍照？", s_hi:"你好，%s！", s_sub:"按城市和入住日期搜索",
       s_dest:"目的地", s_dest_ph:"城市或地点", s_checkin:"到达", s_checkout:"离开",
       s_service_type:"服务类型", s_service_val:"人像 / 度假",
       sm_mode:"服务方式", sm_fixed:"📍 固定地点", sm_roaming:"🚶 移动拍摄", sm_both:"两者皆可", av_mode:"提供方式",
@@ -1744,7 +1760,7 @@
       login_sub:"ログインして、どこでも写真家を探して予約しましょう。", login_google:"Google で続ける", login_email:"メールで続ける", login_email_ph:"name@email.com", login_enter:"ログイン", login_pass_ph:"パスワード", login_register:"アカウントを作成", login_forgot:"パスワードをお忘れですか？", login_need_both:"メールとパスワードを入力してください。", login_need_email:"先にメールを入力してください。", login_reset_sent:"パスワード再設定のメールを送信しました。", fb_offline:"ログインサービスに接続できません。接続を確認してください。", vf_title:"メールを確認してください", vf_msg:"リンク付きのメールを送りました。開いて確認したら、ここに戻ってください。", vf_done:"確認しました、入る", vf_resend:"メールを再送する", vf_sent:"メールを送信しました！受信箱（迷惑メールも）を確認してください。", vf_not_yet:"まだ確認されていません。メール内のリンクをクリックして再度お試しください。", acc_delete_relogin:"安全のため、ログインし直してすぐに再試行してください。",
       w_tag:"どこへ行ってもプロの写真を。旅のための写真家を探して予約。",
       w_traveler:"旅行者です", w_photographer:"写真家です",
-      s_where:"どこで撮影しますか？", s_sub:"都市と滞在日で検索",
+      s_where:"どこで撮影しますか？", s_hi:"%sさん、こんにちは！", s_sub:"都市と滞在日で検索",
       s_dest:"目的地", s_dest_ph:"都市または場所", s_checkin:"到着", s_checkout:"出発",
       s_service_type:"サービスの種類", s_service_val:"ポートレート / バケーション",
       sm_mode:"サービスの形式", sm_fixed:"📍 固定の場所", sm_roaming:"🚶 移動撮影", sm_both:"両方", av_mode:"提供形式",
