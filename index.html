@@ -79,6 +79,28 @@
   .field .k{font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.5px}
   .field .v{font-size:15px;color:var(--text);margin-top:2px;font-weight:500}
   .field .fieldin{width:100%;border:none;background:transparent;color:var(--text);font-size:15px;font-weight:500;margin-top:2px;padding:0;outline:none;font-family:inherit;color-scheme:light dark}
+  /* barra di ricerca destinazione */
+  .searchbar{display:flex;align-items:center;gap:9px;background:var(--bg);border:1.5px solid var(--line);border-radius:16px;padding:13px 15px;margin-bottom:12px}
+  .searchbar .sbicon{font-size:16px;opacity:.7;flex-shrink:0}
+  .searchbar .sbinput{flex:1;min-width:0;border:none;background:transparent;color:var(--text);font-size:16px;font-weight:600;outline:none;font-family:inherit}
+  .searchbar .acmenu{top:calc(100% + 6px)}
+  .slabel{font-size:14px;font-weight:700;color:var(--text)}
+  /* calendario a intervallo */
+  .calbox{border:1.5px solid var(--line);border-radius:16px;padding:12px 12px 10px;margin-bottom:16px;background:var(--screen)}
+  .calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .calhead #calTitle{font-weight:700;color:var(--accent-d);font-size:15px;text-transform:capitalize}
+  .calnav{cursor:pointer;font-size:22px;color:var(--accent-d);padding:2px 12px;user-select:none}
+  .calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:0}
+  .cwd{text-align:center;font-size:10px;color:var(--grey);padding:3px 0 6px;text-transform:uppercase;font-weight:700}
+  .cday{text-align:center;padding:9px 0;font-size:13.5px;cursor:pointer;color:var(--text);font-weight:500}
+  .cday.empty{cursor:default}
+  .cday.past{color:var(--grey);opacity:.35;pointer-events:none}
+  .cday.inrange{background:rgba(30,144,214,.18)}
+  .cday.pick{background:var(--accent);color:#fff;font-weight:700}
+  .cday.start{border-radius:10px 0 0 10px}
+  .cday.end{border-radius:0 10px 10px 0}
+  .cday.solo{border-radius:10px}
+  .calfoot{text-align:center;font-size:12px;color:var(--accent-d);font-weight:600;margin-top:8px;min-height:16px}
   .field .fieldin::placeholder{color:var(--grey)}
 
   .photo{background:linear-gradient(135deg,#3aa8e6,#0B5A87);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.55);font-size:26px}
@@ -403,35 +425,31 @@
     <div class="view" id="search">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
       <div class="scroll pad">
-        <h2 id="greet" style="font-size:20px;color:var(--accent-d);margin-bottom:4px" data-i18n="s_where">Dove ti farai fotografare?</h2>
-        <p class="muted" style="margin-bottom:16px" data-i18n="s_sub">Cerca per città e date del tuo soggiorno</p>
-        <button class="btn ghost" style="margin-bottom:14px" onclick="nearMe()" data-i18n="s_near">📍 Cerca intorno a te</button>
-        <div class="field" style="position:relative">
-          <div class="k" data-i18n="s_dest">Destinazione</div>
-          <input id="destInput" class="fieldin" autocomplete="off" data-i18n-ph="s_dest_ph" placeholder="Città o luogo">
+        <h2 id="greet" style="font-size:24px;font-weight:800;color:var(--accent-d);margin-bottom:14px;line-height:1.15" data-i18n="s_where">Dove ti farai fotografare?</h2>
+        <div class="searchbar" style="position:relative">
+          <span class="sbicon">🔍</span>
+          <input id="destInput" class="sbinput" autocomplete="off" data-i18n-ph="s_dest_ph" placeholder="Città o luogo">
           <div class="acmenu" id="destMenu"></div>
         </div>
-        <div class="row2">
-          <div class="field"><div class="k" data-i18n="s_checkin">Arrivo</div><input id="dIn" class="fieldin" type="date"></div>
-          <div class="field"><div class="k" data-i18n="s_checkout">Partenza</div><input id="dOut" class="fieldin" type="date"></div>
+        <button class="btn ghost" style="margin-bottom:16px" onclick="nearMe()" data-i18n="s_near">📍 Cerca intorno a te</button>
+        <div class="calbox">
+          <div class="calhead">
+            <span class="calnav" onclick="calShift(-1)" aria-label="Mese precedente">‹</span>
+            <span id="calTitle">—</span>
+            <span class="calnav" onclick="calShift(1)" aria-label="Mese successivo">›</span>
+          </div>
+          <div class="calgrid" id="calGrid"></div>
+          <div class="calfoot" id="calFoot"></div>
         </div>
         <div class="field"><div class="k" data-i18n="s_service_type">Tipo di servizio</div>
           <select id="svcType" class="fieldin"></select>
         </div>
-        <p class="muted" style="margin-bottom:6px" data-i18n="sm_mode">Modalità del servizio</p>
-        <div class="seg" style="margin-bottom:14px">
+        <p class="slabel" style="margin-bottom:6px" data-i18n="sm_mode">Modalità del servizio</p>
+        <div class="seg" style="margin-bottom:18px">
           <button class="on" onclick="pickSeg(this)" data-i18n="sm_fixed">📍 Luogo fisso</button>
           <button onclick="pickSeg(this)" data-i18n="sm_roaming">🚶 Itinerante</button>
         </div>
-        <p class="muted" style="margin-bottom:6px" data-i18n="d_car">Automunito</p>
-        <div class="seg" style="margin-bottom:14px">
-          <button class="on" onclick="pickSeg(this)" data-i18n="opt_yes">Sì</button>
-          <button onclick="pickSeg(this)" data-i18n="opt_no">No</button>
-        </div>
-        <button class="btn" onclick="doSearch()" data-i18n="s_search_btn">Cerca fotografi</button>
-        <div class="divider"></div>
-        <p class="muted" style="margin-bottom:8px" data-i18n="s_popular">Destinazioni popolari</p>
-        <div class="dests"><span class="chip" onclick="setDest('Roma')">Roma</span><span class="chip" onclick="setDest('Firenze')">Firenze</span><span class="chip" onclick="setDest('Venezia')">Venezia</span><span class="chip" onclick="setDest('Parigi')">Parigi</span><span class="chip" onclick="setDest('Barcellona')">Barcellona</span><span class="chip" onclick="setDest('Amalfi')">Amalfi</span><span class="chip" onclick="setDest('Ibiza')">Ibiza</span><span class="chip" onclick="setDest('Formentera')">Formentera</span><span class="chip" onclick="setDest('Tenerife')">Tenerife</span><span class="chip" onclick="setDest('Palma di Maiorca')">Palma di Maiorca</span><span class="chip" onclick="setDest('Fuerteventura')">Fuerteventura</span></div>
+        <button class="btn" style="border-radius:26px" onclick="doSearch()" data-i18n="s_search_btn">Cerca fotografi</button>
       </div>
       <div class="nav six">
         <div onclick="show('home')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
@@ -1258,10 +1276,40 @@
     var dt=new Date(+p[0], +p[1]-1, +p[2]);
     try{ return dt.toLocaleDateString(curLang,{day:'numeric',month:'short'}); }catch(e){ return p[2]+'/'+p[1]; }
   }
-  function searchRange(){
-    var a=document.getElementById('dIn'), b=document.getElementById('dOut');
-    if(a&&a.value&&b&&b.value) return fmtDate(a.value)+'–'+fmtDate(b.value);
-    return '';
+  function searchRange(){ if(rangeStart&&rangeEnd) return fmtDate(rangeStart)+'–'+fmtDate(rangeEnd); return ''; }
+  /* ---- Calendario a intervallo (arrivo/partenza) ---- */
+  var calY, calM, rangeStart=null, rangeEnd=null;
+  function pad2(n){ return (n<10?'0':'')+n; }
+  function todayISO(){ var d=new Date(); return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+  function calInit(){ var d=new Date(); calY=d.getFullYear(); calM=d.getMonth(); }
+  function calShift(n){ if(calY===undefined) calInit(); calM+=n; if(calM<0){ calM=11; calY--; } if(calM>11){ calM=0; calY++; } renderCalendar(); }
+  function calPick(iso){
+    if(!rangeStart || (rangeStart&&rangeEnd)){ rangeStart=iso; rangeEnd=null; }
+    else if(iso<rangeStart){ rangeStart=iso; }
+    else if(iso>rangeStart){ rangeEnd=iso; }
+    renderCalendar();
+  }
+  function renderCalendar(){
+    var grid=document.getElementById('calGrid'); if(!grid) return;
+    if(calY===undefined) calInit();
+    var first=new Date(calY,calM,1);
+    var title=document.getElementById('calTitle'); if(title) title.textContent=first.toLocaleDateString(curLang,{month:'long',year:'numeric'});
+    var html='';
+    for(var w=0;w<7;w++){ var wd=new Date(2024,0,1+w); html+='<div class="cwd">'+wd.toLocaleDateString(curLang,{weekday:'short'})+'</div>'; }
+    var lead=(first.getDay()+6)%7, dim=new Date(calY,calM+1,0).getDate(), tISO=todayISO();
+    for(var b=0;b<lead;b++){ html+='<div class="cday empty"></div>'; }
+    for(var day=1;day<=dim;day++){
+      var iso=calY+'-'+pad2(calM+1)+'-'+pad2(day), cls='cday';
+      if(iso<tISO) cls+=' past';
+      if(rangeStart&&rangeEnd&&iso>rangeStart&&iso<rangeEnd) cls+=' inrange';
+      if(iso===rangeStart&&rangeEnd) cls+=' pick start';
+      else if(iso===rangeEnd) cls+=' pick end';
+      else if(iso===rangeStart) cls+=' pick solo';
+      html+='<div class="'+cls+'" onclick="calPick(\''+iso+'\')">'+day+'</div>';
+    }
+    grid.innerHTML=html;
+    var foot=document.getElementById('calFoot'), d=I18N[curLang]||I18N.it||{};
+    if(foot) foot.textContent=(rangeStart&&rangeEnd)?(fmtDate(rangeStart)+' – '+fmtDate(rangeEnd)):(d.cal_hint||'');
   }
   function doSearch(){
     var i=document.getElementById('destInput');
@@ -1547,7 +1595,7 @@
       if(dict[k]!==undefined) el.setAttribute('placeholder',dict[k]);
     });
     document.documentElement.setAttribute('lang',lang);
-    refreshPayBtn(); renderEquipChips(); updateGreeting(); renderFavDests();
+    refreshPayBtn(); renderEquipChips(); updateGreeting(); renderFavDests(); renderCalendar();
   }
   function toggleLang(e){
     e.stopPropagation();
@@ -1582,7 +1630,7 @@
       login_sub:"Accedi per trovare e prenotare fotografi ovunque tu vada.", login_google:"Continua con Google", login_email:"Continua con email", login_email_ph:"nome@email.com", login_enter:"Accedi", login_pass_ph:"Password", login_register:"Crea un account", login_forgot:"Password dimenticata?", login_need_both:"Inserisci email e password.", login_need_email:"Scrivi prima la tua email.", login_reset_sent:"Ti abbiamo inviato una mail per reimpostare la password.", fb_offline:"Servizio di accesso non raggiungibile. Controlla la connessione.", vf_title:"Conferma la tua email", vf_msg:"Ti abbiamo inviato una mail con un link da cliccare. Aprila, conferma, poi torna qui.", vf_done:"Ho confermato, entra", vf_resend:"Invia di nuovo la mail", vf_sent:"Mail inviata! Controlla la posta (anche lo spam).", vf_not_yet:"Non risulta ancora confermata. Clicca il link nella mail e riprova.", acc_delete_relogin:"Per sicurezza devi rientrare e riprovare subito dopo.",
       w_tag:"Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.",
       w_traveler:"Sono un viaggiatore", w_photographer:"Sono un fotografo",
-      s_where:"Dove ti farai fotografare?", s_hi:"Ciao %s!", s_sub:"Cerca per città e date del tuo soggiorno", home_tagline:"Crea il tuo prossimo ricordo", home_hi:"Ciao!", see_all:"Vedi tutto", home_fav:"Le tue mete preferite", nav_favorites:"Preferiti", fav_ph_sect:"Fotografi preferiti", fav_dest_sect:"Mete preferite", fav_dest_empty:"Aggiungi le tue mete col cuoricino.", notif_title:"Notifiche", notif_empty:"Nessuna notifica al momento.", menu_title:"Menu", svc_detail_soon:"La descrizione di questo servizio arriverà presto.",
+      s_where:"Dove ti farai fotografare?", s_hi:"Ciao %s!", s_sub:"Cerca per città e date del tuo soggiorno", home_tagline:"Crea il tuo prossimo ricordo", home_hi:"Ciao!", see_all:"Vedi tutto", home_fav:"Le tue mete preferite", nav_favorites:"Preferiti", fav_ph_sect:"Fotografi preferiti", fav_dest_sect:"Mete preferite", fav_dest_empty:"Aggiungi le tue mete col cuoricino.", notif_title:"Notifiche", notif_empty:"Nessuna notifica al momento.", menu_title:"Menu", svc_detail_soon:"La descrizione di questo servizio arriverà presto.", cal_hint:"Seleziona arrivo e partenza",
       s_dest:"Destinazione", s_dest_ph:"Città o luogo", s_checkin:"Arrivo", s_checkout:"Partenza",
       s_service_type:"Tipo di servizio", s_service_val:"Ritratto / Vacanza",
       sm_mode:"Modalità del servizio", sm_fixed:"📍 Luogo fisso", sm_roaming:"🚶 Itinerante", sm_both:"Entrambi", av_mode:"Modalità offerte",
@@ -1645,7 +1693,7 @@
       login_sub:"Sign in to find and book photographers wherever you go.", login_google:"Continue with Google", login_email:"Continue with email", login_email_ph:"name@email.com", login_enter:"Sign in", login_pass_ph:"Password", login_register:"Create an account", login_forgot:"Forgot your password?", login_need_both:"Enter email and password.", login_need_email:"Enter your email first.", login_reset_sent:"We've sent you an email to reset your password.", fb_offline:"Sign-in service unreachable. Check your connection.", vf_title:"Confirm your email", vf_msg:"We've sent you an email with a link. Open it, confirm, then come back here.", vf_done:"I confirmed, let me in", vf_resend:"Send the email again", vf_sent:"Email sent! Check your inbox (and spam).", vf_not_yet:"Not confirmed yet. Click the link in the email and try again.", acc_delete_relogin:"For security, sign in again and retry right after.",
       w_tag:"Professional photos wherever you go. Find and book a photographer for your trip.",
       w_traveler:"I'm a traveler", w_photographer:"I'm a photographer",
-      s_where:"Where will you get your photos taken?", s_hi:"Hi %s!", s_sub:"Search by city and dates of your stay", home_tagline:"Create your next memory", home_hi:"Hi!", see_all:"See all", home_fav:"Your favorite places", nav_favorites:"Favorites", fav_ph_sect:"Favorite photographers", fav_dest_sect:"Favorite places", fav_dest_empty:"Add places with the heart button.", notif_title:"Notifications", notif_empty:"No notifications yet.", menu_title:"Menu", svc_detail_soon:"The description of this service is coming soon.",
+      s_where:"Where will you get your photos taken?", s_hi:"Hi %s!", s_sub:"Search by city and dates of your stay", home_tagline:"Create your next memory", home_hi:"Hi!", see_all:"See all", home_fav:"Your favorite places", nav_favorites:"Favorites", fav_ph_sect:"Favorite photographers", fav_dest_sect:"Favorite places", fav_dest_empty:"Add places with the heart button.", notif_title:"Notifications", notif_empty:"No notifications yet.", menu_title:"Menu", svc_detail_soon:"The description of this service is coming soon.", cal_hint:"Select arrival and departure",
       s_dest:"Destination", s_dest_ph:"City or place", s_checkin:"Check-in", s_checkout:"Check-out",
       s_service_type:"Service type", s_service_val:"Portrait / Vacation",
       sm_mode:"Service mode", sm_fixed:"📍 Fixed location", sm_roaming:"🚶 Roaming", sm_both:"Both", av_mode:"Modes offered",
@@ -1708,7 +1756,7 @@
       login_sub:"Inicia sesión para encontrar y reservar fotógrafos dondequiera que vayas.", login_google:"Continuar con Google", login_email:"Continuar con email", login_email_ph:"nombre@email.com", login_enter:"Entrar", login_pass_ph:"Contraseña", login_register:"Crear una cuenta", login_forgot:"¿Olvidaste la contraseña?", login_need_both:"Introduce email y contraseña.", login_need_email:"Escribe primero tu email.", login_reset_sent:"Te hemos enviado un email para restablecer la contraseña.", fb_offline:"Servicio de acceso no disponible. Comprueba la conexión.", vf_title:"Confirma tu email", vf_msg:"Te hemos enviado un email con un enlace. Ábrelo, confirma y vuelve aquí.", vf_done:"Ya confirmé, entrar", vf_resend:"Enviar el email de nuevo", vf_sent:"¡Email enviado! Revisa tu correo (y el spam).", vf_not_yet:"Aún no está confirmado. Haz clic en el enlace del email e inténtalo de nuevo.", acc_delete_relogin:"Por seguridad, vuelve a entrar e inténtalo justo después.",
       w_tag:"Fotos profesionales dondequiera que vayas. Encuentra y reserva un fotógrafo para tu viaje.",
       w_traveler:"Soy un viajero", w_photographer:"Soy un fotógrafo",
-      s_where:"¿Dónde te harás las fotos?", s_hi:"¡Hola %s!", s_sub:"Busca por ciudad y fechas de tu estancia", home_tagline:"Crea tu próximo recuerdo", home_hi:"¡Hola!", see_all:"Ver todo", home_fav:"Tus destinos favoritos", nav_favorites:"Favoritos", fav_ph_sect:"Fotógrafos favoritos", fav_dest_sect:"Destinos favoritos", fav_dest_empty:"Añade destinos con el corazón.", notif_title:"Notificaciones", notif_empty:"No hay notificaciones por ahora.", menu_title:"Menú", svc_detail_soon:"La descripción de este servicio llegará pronto.",
+      s_where:"¿Dónde te harás las fotos?", s_hi:"¡Hola %s!", s_sub:"Busca por ciudad y fechas de tu estancia", home_tagline:"Crea tu próximo recuerdo", home_hi:"¡Hola!", see_all:"Ver todo", home_fav:"Tus destinos favoritos", nav_favorites:"Favoritos", fav_ph_sect:"Fotógrafos favoritos", fav_dest_sect:"Destinos favoritos", fav_dest_empty:"Añade destinos con el corazón.", notif_title:"Notificaciones", notif_empty:"No hay notificaciones por ahora.", menu_title:"Menú", svc_detail_soon:"La descripción de este servicio llegará pronto.", cal_hint:"Selecciona llegada y salida",
       s_dest:"Destino", s_dest_ph:"Ciudad o lugar", s_checkin:"Llegada", s_checkout:"Salida",
       s_service_type:"Tipo de servicio", s_service_val:"Retrato / Vacaciones",
       sm_mode:"Modalidad del servicio", sm_fixed:"📍 Lugar fijo", sm_roaming:"🚶 Itinerante", sm_both:"Ambos", av_mode:"Modalidades ofrecidas",
@@ -1771,7 +1819,7 @@
       login_sub:"Connectez-vous pour trouver et réserver des photographes où que vous alliez.", login_google:"Continuer avec Google", login_email:"Continuer avec l'email", login_email_ph:"nom@email.com", login_enter:"Se connecter", login_pass_ph:"Mot de passe", login_register:"Créer un compte", login_forgot:"Mot de passe oublié ?", login_need_both:"Saisissez l'email et le mot de passe.", login_need_email:"Saisissez d'abord votre email.", login_reset_sent:"Nous vous avons envoyé un email pour réinitialiser le mot de passe.", fb_offline:"Service de connexion injoignable. Vérifiez votre connexion.", vf_title:"Confirmez votre email", vf_msg:"Nous vous avons envoyé un email avec un lien. Ouvrez-le, confirmez, puis revenez ici.", vf_done:"J'ai confirmé, entrer", vf_resend:"Renvoyer l'email", vf_sent:"Email envoyé ! Vérifiez votre boîte (et les spams).", vf_not_yet:"Pas encore confirmé. Cliquez sur le lien dans l'email et réessayez.", acc_delete_relogin:"Par sécurité, reconnectez-vous et réessayez juste après.",
       w_tag:"Des photos professionnelles où que vous alliez. Trouvez et réservez un photographe pour votre voyage.",
       w_traveler:"Je suis un voyageur", w_photographer:"Je suis un photographe",
-      s_where:"Où vas-tu te faire photographier ?", s_hi:"Salut %s !", s_sub:"Recherchez par ville et dates de votre séjour", home_tagline:"Crée ton prochain souvenir", home_hi:"Salut !", see_all:"Voir tout", home_fav:"Tes destinations favorites", nav_favorites:"Favoris", fav_ph_sect:"Photographes favoris", fav_dest_sect:"Destinations favorites", fav_dest_empty:"Ajoute des destinations avec le cœur.", notif_title:"Notifications", notif_empty:"Aucune notification pour l'instant.", menu_title:"Menu", svc_detail_soon:"La description de ce service arrivera bientôt.",
+      s_where:"Où vas-tu te faire photographier ?", s_hi:"Salut %s !", s_sub:"Recherchez par ville et dates de votre séjour", home_tagline:"Crée ton prochain souvenir", home_hi:"Salut !", see_all:"Voir tout", home_fav:"Tes destinations favorites", nav_favorites:"Favoris", fav_ph_sect:"Photographes favoris", fav_dest_sect:"Destinations favorites", fav_dest_empty:"Ajoute des destinations avec le cœur.", notif_title:"Notifications", notif_empty:"Aucune notification pour l'instant.", menu_title:"Menu", svc_detail_soon:"La description de ce service arrivera bientôt.", cal_hint:"Sélectionne l'arrivée et le départ",
       s_dest:"Destination", s_dest_ph:"Ville ou lieu", s_checkin:"Arrivée", s_checkout:"Départ",
       s_service_type:"Type de service", s_service_val:"Portrait / Vacances",
       sm_mode:"Mode du service", sm_fixed:"📍 Lieu fixe", sm_roaming:"🚶 Itinérant", sm_both:"Les deux", av_mode:"Modes proposés",
@@ -1834,7 +1882,7 @@
       login_sub:"Melde dich an, um Fotografen zu finden und zu buchen, wohin du auch gehst.", login_google:"Mit Google fortfahren", login_email:"Mit E-Mail fortfahren", login_email_ph:"name@email.com", login_enter:"Anmelden", login_pass_ph:"Passwort", login_register:"Konto erstellen", login_forgot:"Passwort vergessen?", login_need_both:"Gib E-Mail und Passwort ein.", login_need_email:"Gib zuerst deine E-Mail ein.", login_reset_sent:"Wir haben dir eine E-Mail zum Zurücksetzen des Passworts geschickt.", fb_offline:"Anmeldedienst nicht erreichbar. Prüfe deine Verbindung.", vf_title:"Bestätige deine E-Mail", vf_msg:"Wir haben dir eine E-Mail mit einem Link geschickt. Öffne sie, bestätige und komm zurück.", vf_done:"Bestätigt, rein damit", vf_resend:"E-Mail erneut senden", vf_sent:"E-Mail gesendet! Prüfe dein Postfach (auch Spam).", vf_not_yet:"Noch nicht bestätigt. Klicke den Link in der E-Mail und versuche es erneut.", acc_delete_relogin:"Aus Sicherheitsgründen melde dich erneut an und versuche es gleich danach.",
       w_tag:"Professionelle Fotos, wohin du auch gehst. Finde und buche einen Fotografen für deine Reise.",
       w_traveler:"Ich bin ein Reisender", w_photographer:"Ich bin ein Fotograf",
-      s_where:"Wo wirst du dich fotografieren lassen?", s_hi:"Hallo %s!", s_sub:"Suche nach Stadt und Daten deines Aufenthalts", home_tagline:"Schaffe deine nächste Erinnerung", home_hi:"Hallo!", see_all:"Alle ansehen", home_fav:"Deine Lieblingsziele", nav_favorites:"Favoriten", fav_ph_sect:"Lieblingsfotografen", fav_dest_sect:"Lieblingsziele", fav_dest_empty:"Füge Ziele mit dem Herz hinzu.", notif_title:"Benachrichtigungen", notif_empty:"Noch keine Benachrichtigungen.", menu_title:"Menü", svc_detail_soon:"Die Beschreibung dieses Dienstes folgt in Kürze.",
+      s_where:"Wo wirst du dich fotografieren lassen?", s_hi:"Hallo %s!", s_sub:"Suche nach Stadt und Daten deines Aufenthalts", home_tagline:"Schaffe deine nächste Erinnerung", home_hi:"Hallo!", see_all:"Alle ansehen", home_fav:"Deine Lieblingsziele", nav_favorites:"Favoriten", fav_ph_sect:"Lieblingsfotografen", fav_dest_sect:"Lieblingsziele", fav_dest_empty:"Füge Ziele mit dem Herz hinzu.", notif_title:"Benachrichtigungen", notif_empty:"Noch keine Benachrichtigungen.", menu_title:"Menü", svc_detail_soon:"Die Beschreibung dieses Dienstes folgt in Kürze.", cal_hint:"Ankunft und Abreise wählen",
       s_dest:"Reiseziel", s_dest_ph:"Stadt oder Ort", s_checkin:"Anreise", s_checkout:"Abreise",
       s_service_type:"Art des Service", s_service_val:"Porträt / Urlaub",
       sm_mode:"Service-Modus", sm_fixed:"📍 Fester Ort", sm_roaming:"🚶 Unterwegs", sm_both:"Beides", av_mode:"Angebotene Modi",
@@ -1897,7 +1945,7 @@
       login_sub:"登录，随时随地寻找并预订摄影师。", login_google:"使用 Google 继续", login_email:"使用邮箱继续", login_email_ph:"name@email.com", login_enter:"登录", login_pass_ph:"密码", login_register:"创建账户", login_forgot:"忘记密码？", login_need_both:"请输入邮箱和密码。", login_need_email:"请先输入你的邮箱。", login_reset_sent:"我们已向你发送重置密码的邮件。", fb_offline:"登录服务不可用，请检查网络连接。", vf_title:"确认你的邮箱", vf_msg:"我们给你发了一封带链接的邮件。打开并确认后，再回到这里。", vf_done:"我已确认，进入", vf_resend:"重新发送邮件", vf_sent:"邮件已发送！请查收邮箱（也看看垃圾邮件）。", vf_not_yet:"尚未确认。请点击邮件中的链接后再试。", acc_delete_relogin:"出于安全考虑，请重新登录后立即重试。",
       w_tag:"无论走到哪里都有专业照片。为你的旅行寻找并预订摄影师。",
       w_traveler:"我是旅行者", w_photographer:"我是摄影师",
-      s_where:"你想在哪里拍照？", s_hi:"你好，%s！", s_sub:"按城市和入住日期搜索", home_tagline:"创造你的下一段回忆", home_hi:"你好！", see_all:"查看全部", home_fav:"你的收藏目的地", nav_favorites:"收藏", fav_ph_sect:"收藏的摄影师", fav_dest_sect:"收藏的目的地", fav_dest_empty:"用爱心添加目的地。", notif_title:"通知", notif_empty:"暂无通知。", menu_title:"菜单", svc_detail_soon:"该服务的说明即将推出。",
+      s_where:"你想在哪里拍照？", s_hi:"你好，%s！", s_sub:"按城市和入住日期搜索", home_tagline:"创造你的下一段回忆", home_hi:"你好！", see_all:"查看全部", home_fav:"你的收藏目的地", nav_favorites:"收藏", fav_ph_sect:"收藏的摄影师", fav_dest_sect:"收藏的目的地", fav_dest_empty:"用爱心添加目的地。", notif_title:"通知", notif_empty:"暂无通知。", menu_title:"菜单", svc_detail_soon:"该服务的说明即将推出。", cal_hint:"选择到达和离开日期",
       s_dest:"目的地", s_dest_ph:"城市或地点", s_checkin:"到达", s_checkout:"离开",
       s_service_type:"服务类型", s_service_val:"人像 / 度假",
       sm_mode:"服务方式", sm_fixed:"📍 固定地点", sm_roaming:"🚶 移动拍摄", sm_both:"两者皆可", av_mode:"提供方式",
@@ -1960,7 +2008,7 @@
       login_sub:"ログインして、どこでも写真家を探して予約しましょう。", login_google:"Google で続ける", login_email:"メールで続ける", login_email_ph:"name@email.com", login_enter:"ログイン", login_pass_ph:"パスワード", login_register:"アカウントを作成", login_forgot:"パスワードをお忘れですか？", login_need_both:"メールとパスワードを入力してください。", login_need_email:"先にメールを入力してください。", login_reset_sent:"パスワード再設定のメールを送信しました。", fb_offline:"ログインサービスに接続できません。接続を確認してください。", vf_title:"メールを確認してください", vf_msg:"リンク付きのメールを送りました。開いて確認したら、ここに戻ってください。", vf_done:"確認しました、入る", vf_resend:"メールを再送する", vf_sent:"メールを送信しました！受信箱（迷惑メールも）を確認してください。", vf_not_yet:"まだ確認されていません。メール内のリンクをクリックして再度お試しください。", acc_delete_relogin:"安全のため、ログインし直してすぐに再試行してください。",
       w_tag:"どこへ行ってもプロの写真を。旅のための写真家を探して予約。",
       w_traveler:"旅行者です", w_photographer:"写真家です",
-      s_where:"どこで撮影しますか？", s_hi:"%sさん、こんにちは！", s_sub:"都市と滞在日で検索", home_tagline:"次の思い出をつくろう", home_hi:"こんにちは！", see_all:"すべて見る", home_fav:"お気に入りの旅先", nav_favorites:"お気に入り", fav_ph_sect:"お気に入りの写真家", fav_dest_sect:"お気に入りの旅先", fav_dest_empty:"ハートで旅先を追加できます。", notif_title:"通知", notif_empty:"通知はまだありません。", menu_title:"メニュー", svc_detail_soon:"このサービスの説明は近日公開予定です。",
+      s_where:"どこで撮影しますか？", s_hi:"%sさん、こんにちは！", s_sub:"都市と滞在日で検索", home_tagline:"次の思い出をつくろう", home_hi:"こんにちは！", see_all:"すべて見る", home_fav:"お気に入りの旅先", nav_favorites:"お気に入り", fav_ph_sect:"お気に入りの写真家", fav_dest_sect:"お気に入りの旅先", fav_dest_empty:"ハートで旅先を追加できます。", notif_title:"通知", notif_empty:"通知はまだありません。", menu_title:"メニュー", svc_detail_soon:"このサービスの説明は近日公開予定です。", cal_hint:"到着日と出発日を選択",
       s_dest:"目的地", s_dest_ph:"都市または場所", s_checkin:"到着", s_checkout:"出発",
       s_service_type:"サービスの種類", s_service_val:"ポートレート / バケーション",
       sm_mode:"サービスの形式", sm_fixed:"📍 固定の場所", sm_roaming:"🚶 移動撮影", sm_both:"両方", av_mode:"提供形式",
@@ -2031,13 +2079,7 @@
     initCropDrag();
     /* rete di sicurezza: se Firebase non risponde (offline/file locale) esci dallo splash */
     setTimeout(function(){ var a=document.querySelector('.view.active'); if(a && a.id==='splash') _activate('login'); }, 3000);
-    (function(){
-      function iso(d){var m=d.getMonth()+1,day=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;}
-      var t=new Date(), o=new Date(t.getFullYear(),t.getMonth(),t.getDate()+3);
-      var a=document.getElementById('dIn'), b=document.getElementById('dOut');
-      if(a&&!a.value) a.value=iso(t);
-      if(b&&!b.value) b.value=iso(o);
-    })();
+    calInit(); renderCalendar();
   })();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
