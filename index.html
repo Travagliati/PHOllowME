@@ -144,14 +144,16 @@
   .hscroll{display:flex;gap:11px;overflow-x:auto;padding:1px 1px 6px;-webkit-overflow-scrolling:touch}
   .hscroll::-webkit-scrollbar{height:0}
   .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-  .dcard{position:relative;flex:0 0 134px;height:92px;border-radius:15px;overflow:hidden;color:#fff;cursor:pointer}
-  .dgrid .dcard{flex:none;width:auto;height:104px}
+  .dcard{position:relative;flex:0 0 220px;height:140px;border-radius:18px;overflow:hidden;color:#fff;cursor:pointer}
+  .dgrid .dcard{flex:none;width:auto;height:122px}
   .dcard .sc{position:absolute;inset:0;width:100%;height:100%}
   .dcard .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),rgba(0,0,0,0) 58%)}
-  .dcard .dname{position:absolute;left:10px;bottom:8px;font-size:13px;font-weight:600;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.45)}
-  .dcard .dfav{position:absolute;top:6px;right:6px;z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
-  .dplace{flex:0 0 200px;height:92px;border:2px dashed var(--line);border-radius:15px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--grey);font-size:12px;padding:10px}
-  .dgrid .dplace{flex:none;width:auto;height:104px;grid-column:1/-1}
+  .dcard .dname{position:absolute;left:12px;bottom:10px;font-size:15px;font-weight:600;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.45)}
+  .dcard .dfav{position:absolute;top:8px;right:8px;z-index:2;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+  .dplace{flex:0 0 220px;height:140px;border:2px dashed var(--line);border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--grey);font-size:13px;padding:12px}
+  .dgrid .dplace{flex:none;width:auto;height:122px;grid-column:1/-1}
+  .seetile{flex:0 0 220px;height:140px;border:2px dashed var(--accent);border-radius:18px;background:var(--light);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--accent-d);font-weight:700;font-size:14px;cursor:pointer}
+  .seetile .seearr{font-size:30px;line-height:1}
   /* menù laterali */
   .drawer{position:absolute;inset:0;z-index:80;visibility:hidden;transition:visibility .36s}
   .drawer.open{visibility:visible;transition:visibility 0s}
@@ -996,18 +998,20 @@
     if(i>=0){ profDests.splice(i,1); } else { profDests.push(city); }
     saveProfile(); renderPopularDests(); renderFavDests();
   }
+  function seeTileHtml(view){ var d=I18N[curLang]||I18N.it||{}; return '<div class="seetile" onclick="show(\''+view+'\')"><span class="seearr">›</span><span>'+(d.see_all||'')+'</span></div>'; }
   function renderPopularDests(){
-    var html=DESTINATIONS.map(destCardHtml).join('');
-    var a=document.getElementById('homePopular'); if(a) a.innerHTML=html;
-    var b=document.getElementById('popularGrid'); if(b) b.innerHTML=html;
+    var a=document.getElementById('homePopular'); if(a) a.innerHTML=DESTINATIONS.slice(0,6).map(destCardHtml).join('')+seeTileHtml('popular_dests');
+    var b=document.getElementById('popularGrid'); if(b) b.innerHTML=DESTINATIONS.map(destCardHtml).join('');
   }
   function renderFavDests(){
     var arr=profDests.filter(function(c){ return DESTINATIONS.indexOf(c)>=0; });
-    var has=arr.length>0, tiles=arr.map(destCardHtml).join('');
-    var d=I18N[curLang]||I18N.it||{};
+    var has=arr.length>0, d=I18N[curLang]||I18N.it||{};
     var ph='<div class="dplace">'+(d.fav_dest_empty||'')+'</div>';
-    function set(listId,emptyId){ var l=document.getElementById(listId); if(l) l.innerHTML=has?tiles:ph; var e=document.getElementById(emptyId); if(e) e.style.display='none'; }
-    set('homeFav','homeFavEmpty'); set('favDestGrid','favDestEmpty2'); set('favDestList','favDestEmpty');
+    var hf=document.getElementById('homeFav');
+    if(hf) hf.innerHTML = has ? (arr.slice(0,6).map(destCardHtml).join('')+seeTileHtml('fav_dests')) : ph;
+    var allTiles=arr.map(destCardHtml).join('');
+    function setGrid(id,emptyId){ var l=document.getElementById(id); if(l) l.innerHTML=has?allTiles:ph; var e=document.getElementById(emptyId); if(e) e.style.display='none'; }
+    setGrid('favDestGrid','favDestEmpty2'); setGrid('favDestList','favDestEmpty');
   }
   function openDrawer(id){ var d=document.getElementById(id); if(d) d.classList.add('open'); }
   function closeDrawer(id){ var d=document.getElementById(id); if(d) d.classList.remove('open'); }
@@ -1030,9 +1034,8 @@
     return '<div class="dcard" style="background:'+cityGrad(svc)+'" onclick="openService(\''+svc+'\')">'+sc+'<div class="ov"></div><span class="dname">'+escHtml(svc)+'</span></div>';
   }
   function renderServices(){
-    var html=SERVICE_TYPES.map(serviceCardHtml).join('');
-    var a=document.getElementById('homeServices'); if(a) a.innerHTML=html;
-    var b=document.getElementById('allServicesGrid'); if(b) b.innerHTML=html;
+    var a=document.getElementById('homeServices'); if(a) a.innerHTML=SERVICE_TYPES.slice(0,6).map(serviceCardHtml).join('')+seeTileHtml('all_services');
+    var b=document.getElementById('allServicesGrid'); if(b) b.innerHTML=SERVICE_TYPES.map(serviceCardHtml).join('');
   }
   function openService(svc){
     var t=document.getElementById('svcDetailTitle'); if(t) t.textContent=svc;
@@ -1595,7 +1598,7 @@
       if(dict[k]!==undefined) el.setAttribute('placeholder',dict[k]);
     });
     document.documentElement.setAttribute('lang',lang);
-    refreshPayBtn(); renderEquipChips(); updateGreeting(); renderFavDests(); renderCalendar();
+    refreshPayBtn(); renderEquipChips(); updateGreeting(); renderFavDests(); renderPopularDests(); renderServices(); renderCalendar();
   }
   function toggleLang(e){
     e.stopPropagation();
