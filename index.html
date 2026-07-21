@@ -536,22 +536,6 @@
         <div class="field"><div class="k" data-i18n="s_service_type">Tipo di servizio</div>
           <select id="svcType" class="fieldin"></select>
         </div>
-        <button class="btn" style="border-radius:26px" onclick="doSearch()" data-i18n="s_search_btn">Cerca fotografi</button>
-      </div>
-      <div class="nav six">
-        <div onclick="show('home')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
-        <div class="on"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
-        <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
-        <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
-        <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
-        <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
-      </div>
-    </div>
-
-    <!-- ============ RESULTS ============ -->
-    <div class="view" id="results">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 id="resHead">Roma · 12–15 lug</h2></div>
-      <div class="scroll pad">
         <button class="btn ghost" style="margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="toggleFilters()"><span data-i18n="r_filters">⚙ Filtri</span><span id="filtCount" class="chip" style="display:none"></span></button>
         <div id="filterPanel" style="display:none;border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:12px;background:var(--bg)">
           <div class="k" style="margin-bottom:5px" data-i18n="f_price">Prezzo (€/h)</div>
@@ -587,6 +571,22 @@
             <button class="btn sm" onclick="applyFilters()" data-i18n="f_apply">Applica</button>
           </div>
         </div>
+        <button class="btn" style="border-radius:26px" onclick="doSearch()" data-i18n="s_search_btn">Cerca fotografi</button>
+      </div>
+      <div class="nav six">
+        <div onclick="show('home')"><span class="ic">🏠</span><span data-i18n="nav_home">Home</span></div>
+        <div class="on"><span class="ic">🔍</span><span data-i18n="nav_search">Cerca</span></div>
+        <div onclick="show('bookings')"><span class="ic">📅</span><span data-i18n="nav_bookings">Prenotazioni</span></div>
+        <div onclick="show('tr_chats')"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
+        <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
+        <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
+      </div>
+    </div>
+
+    <!-- ============ RESULTS ============ -->
+    <div class="view" id="results">
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 id="resHead">Roma · 12–15 lug</h2></div>
+      <div class="scroll pad">
         <div id="activeFilters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
         <p class="muted" id="resCount" style="margin-bottom:10px" data-i18n="r_empty">Nessun fotografo disponibile per ora.</p>
         <div id="resList"></div>
@@ -986,6 +986,18 @@
       </div>
     </div>
 
+    <!-- ============ METODI DI PAGAMENTO ============ -->
+    <div class="view" id="payment_methods">
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="set_payment">Metodo di pagamento</h2></div>
+      <div class="scroll pad">
+        <div id="payMethodsList"></div>
+        <p class="muted" id="payMethodsEmpty" style="margin:16px 0;text-align:center" data-i18n="pay_none">Nessun metodo di pagamento salvato.</p>
+        <button class="btn ghost" style="margin-top:8px" onclick="addPayCard()" data-i18n="pay_add_card">+ Aggiungi carta</button>
+        <button class="btn ghost" style="margin-top:10px" onclick="addPayPaypal()" data-i18n="pay_add_paypal">+ Aggiungi PayPal</button>
+        <p class="muted" style="margin-top:14px;font-size:12px" data-i18n="pay_demo_note">Nel prototipo i pagamenti sono simulati.</p>
+      </div>
+    </div>
+
     <!-- ============ SALVATI (viaggiatore) ============ -->
     <div class="view" id="saved">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="acc_saved">Salvati</h2></div>
@@ -1007,6 +1019,7 @@
             <input id="lastNameIn" class="txtin" oninput="setFullName()" data-i18n-ph="set_surname" placeholder="Cognome">
           </div>
         </div>
+        <div class="srow" style="cursor:pointer" onclick="show('payment_methods')"><span class="si">💳</span><div class="st"><b data-i18n="set_payment">Metodo di pagamento</b></div><span class="chev">›</span></div>
         <div class="srow"><span class="si">👤</span><div class="st"><b data-i18n="acc_role">Ruolo</b></div>
           <div class="seg" style="width:200px;margin:0"><button class="roleopt" data-role="traveler" onclick="switchRole('traveler')" style="font-size:12px" data-i18n="role_traveler">Viaggiatore</button><button class="roleopt" data-role="photographer" onclick="switchRole('photographer')" style="font-size:12px" data-i18n="role_photographer">Fotografo</button></div>
         </div>
@@ -1082,9 +1095,16 @@
       el.value=val||SERVICE_TYPES[0];
     } else { el.value=val||''; }
   }
-  var profLangs=[], profSpecs=[], profEquip=[], profFavs=[], profDests=[], profSaved=[], profBanner='', accountPhoto='';
+  var profLangs=[], profSpecs=[], profEquip=[], profFavs=[], profDests=[], profSaved=[], profPay=[], profBanner='', accountPhoto='';
   /* ---- Preferiti: fotografi salvati dal viaggiatore (per email, come il resto del profilo) ---- */
   function favKey(ph){ return ph.id||ph.name; }
+  /* trova un fotografo per id: prima tra i risultati, poi tra i fotografi prenotati (polaroid) */
+  function photographerById(id){
+    var i;
+    for(i=0;i<PHOTOGRAPHERS.length;i++){ if(favKey(PHOTOGRAPHERS[i])===id) return PHOTOGRAPHERS[i]; }
+    for(i=0;i<EXAMPLE_BOOKINGS.length;i++){ if(EXAMPLE_BOOKINGS[i].id===id){ var b=EXAMPLE_BOOKINGS[i]; return {id:b.id,name:b.name,city:b.city,svc:b.svc,specs:[b.svc]}; } }
+    return null;
+  }
   function isFav(id){ return profFavs.indexOf(id)>=0; }
   function toggleFav(id){
     var i=profFavs.indexOf(id);
@@ -1109,23 +1129,41 @@
   function renderSaved(){
     var list=document.getElementById('savedList'), empty=document.getElementById('savedEmpty');
     if(!list) return;
-    var arr=PHOTOGRAPHERS.filter(function(ph){ return isSaved(favKey(ph)); });
+    var arr=profSaved.map(photographerById).filter(Boolean);
     list.innerHTML=arr.map(photoCardHtml).join('');
     if(empty) empty.style.display=arr.length?'none':'';
   }
+  /* ---- Metodi di pagamento (mock, per-email; nel prototipo i pagamenti sono simulati) ---- */
+  function renderPayMethods(){
+    var list=document.getElementById('payMethodsList'), empty=document.getElementById('payMethodsEmpty');
+    if(!list) return;
+    list.innerHTML=profPay.map(function(m,i){
+      return '<div class="srow"><span class="si">'+(m.type==='paypal'?'🅿️':'💳')+'</span><div class="st"><b>'+escHtml(m.label)+'</b></div><span class="chev" style="cursor:pointer;color:#dc2626" onclick="delPayMethod('+i+')">🗑</span></div>';
+    }).join('');
+    if(empty) empty.style.display=profPay.length?'none':'';
+  }
+  function addPayCard(){ profPay.push({type:'card',label:'Carta •••• '+String(Math.floor(1000+Math.random()*9000))}); saveProfile(); renderPayMethods(); }
+  function addPayPaypal(){ profPay.push({type:'paypal',label:'PayPal'}); saveProfile(); renderPayMethods(); }
+  function delPayMethod(i){ profPay.splice(i,1); saveProfile(); renderPayMethods(); }
   /* un solo posto che disegna la scheda fotografo: la usano risultati, preferiti e salvati */
   function photoCardHtml(ph){
-    var id=favKey(ph);
+    var id=favKey(ph), mid, bottom;
+    if(ph.rating!=null){
+      mid='<div style="margin:5px 0"><span class="stars">'+ratingStars(ph.rating)+'</span> <span class="muted">'+String(ph.rating).replace('.',',')+'</span></div>';
+      bottom='<div class="row"><span class="muted">'+escHtml((ph.specs||[]).join(' · '))+'</span><span class="price">'+escHtml(String(ph.price))+' €/h</span></div>';
+    } else {
+      mid=ph.city?'<div class="muted" style="margin:5px 0">📍 '+escHtml(ph.city)+'</div>':'';
+      bottom='<div class="row"><span class="muted">'+escHtml((ph.specs||[]).join(' · '))+'</span></div>';
+    }
     return '<div class="card" onclick="show(\'profile\')"><div class="ph photo">📷</div><div class="body">'
       +'<div class="row"><h3>'+escHtml(ph.name)+'</h3><span class="cardbtns">'+favBtnHtml(id)+savedBtnHtml(id)+'</span></div>'
-      +'<div style="margin:5px 0"><span class="stars">'+ratingStars(ph.rating)+'</span> <span class="muted">'+String(ph.rating).replace('.',',')+'</span></div>'
-      +'<div class="row"><span class="muted">'+escHtml((ph.specs||[]).join(' · '))+'</span><span class="price">'+escHtml(String(ph.price))+' €/h</span></div>'
+      +mid+bottom
       +'</div></div>';
   }
   function renderFavs(){
     var list=document.getElementById('favList'), empty=document.getElementById('favEmpty');
     if(list){
-      var arr=PHOTOGRAPHERS.filter(function(ph){ return isFav(favKey(ph)); });
+      var arr=profFavs.map(photographerById).filter(Boolean);
       list.innerHTML=arr.map(photoCardHtml).join('');
       if(empty) empty.style.display=arr.length?'none':'';
     }
@@ -1401,7 +1439,7 @@
   function collectProfile(){
     var g=function(id){ var e=document.getElementById(id); return e?e.value:''; };
     var p={ nat:g('natInput'), bio:g('bioInput'), tbio:g('travBio'), loc:g('avLoc'), from:g('avFrom'), to:g('avTo'),
-      langs:profLangs.slice(), specs:profSpecs.slice(), equip:profEquip.slice(), favs:profFavs.slice(), saved:profSaved.slice(), favDests:profDests.slice(),
+      langs:profLangs.slice(), specs:profSpecs.slice(), equip:profEquip.slice(), favs:profFavs.slice(), saved:profSaved.slice(), pay:profPay.slice(), favDests:profDests.slice(),
       car:segVal('carSeg'), mode:segVal('modeSeg'), banner:profBanner||'', services:[], works:[], photo:accountPhoto||'' };
     document.querySelectorAll('#svcList .svc').forEach(function(s){
       var t=s.querySelectorAll('.svc-in'), r=s.querySelectorAll('.rates input');
@@ -1433,9 +1471,9 @@
   function applyProfile(){
     var p=loadProfile();
     restoringProfile=true;
-    profLangs=(p&&p.langs)||[]; profSpecs=(p&&p.specs)||[]; profEquip=(p&&p.equip)||[]; profFavs=(p&&p.favs)||[]; profSaved=(p&&p.saved)||[]; profDests=(p&&p.favDests)||[];
+    profLangs=(p&&p.langs)||[]; profSpecs=(p&&p.specs)||[]; profEquip=(p&&p.equip)||[]; profFavs=(p&&p.favs)||[]; profSaved=(p&&p.saved)||[]; profPay=(p&&p.pay)||[]; profDests=(p&&p.favDests)||[];
     accountPhoto=(p&&p.photo)||''; profBanner=(p&&p.banner)||'';
-    renderLangChips(); renderSpecChips(); renderEquipChips(); renderFavs(); renderSaved(); renderPopularDests();
+    renderLangChips(); renderSpecChips(); renderEquipChips(); renderFavs(); renderSaved(); renderPayMethods(); renderPopularDests();
     var s=function(id,v){ var e=document.getElementById(id); if(e) e.value=v||''; };
     s('natInput',p&&p.nat); s('bioInput',p&&p.bio); s('travBio',p&&p.tbio); s('avLoc',p&&p.loc); s('avFrom',p&&p.from); s('avTo',p&&p.to);
     refreshProfileUI();
@@ -1654,7 +1692,7 @@
     if(r) parts.push(r);
     var h=document.getElementById('resHead'); if(h) h.textContent=parts.join(' · ');
     document.body.classList.remove('nearby');
-    show('results');
+    renderResults(); show('results');
   }
   function nearMe(){
     if(navigator.geolocation){ try{ navigator.geolocation.getCurrentPosition(function(){}, function(){}); }catch(e){} }
@@ -1663,7 +1701,7 @@
     var r=searchRange();
     var h=document.getElementById('resHead'); if(h) h.textContent=lbl+(r?(' · '+r):'');
     document.body.classList.add('nearby');
-    show('results');
+    renderResults(); show('results');
   }
   /* ---- Filtri risultati (lista data-driven, pronta per i fotografi veri) ---- */
   var PHOTOGRAPHERS=[]; /* vuota: qui arriveranno i fotografi veri col backend */
@@ -2079,7 +2117,7 @@
       av_hourly:"Oraria", av_daily:"Giornaliera", av_weekly:"Settimanale",
       add_chip:"+ aggiungi", equip_prompt:"Aggiungi attrezzatura (es. Sony A7 IV, 50mm f/1.8)", av_save:"Salva", ph_take:"Scatta foto", ph_gallery:"Scegli dalla galleria", ph_cancel:"Annulla",
       acc_title:"Il mio profilo", acc_role:"Ruolo", role_traveler:"Viaggiatore", role_photographer:"Fotografo",
-      acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci", acc_edit:"Modifica profilo", acc_edit_done:"Fatto", acc_bio_ph:"Scrivi qualcosa su di te…", acc_countries:"paesi visitati", acc_services_done:"servizi completati", acc_saved:"Salvati", saved_empty:"Non hai ancora fotografi salvati.", acc_name_ph:"Nome e cognome", acc_banner_edit:"📷 Cambia banner", acc_delete:"Cancella account", set_firstname:"Nome", set_surname:"Cognome", acc_delete_confirm:"Sei sicuro di voler cancellare il tuo account? L'operazione è irreversibile.", acc_delete_done:"Account cancellato.",
+      acc_switch_hint:"Puoi cambiare ruolo quando vuoi, mantenendo lo stesso profilo.", acc_settings:"Impostazioni", acc_logout:"Esci", acc_edit:"Modifica profilo", acc_edit_done:"Fatto", acc_bio_ph:"Scrivi qualcosa su di te…", acc_countries:"paesi visitati", acc_services_done:"servizi completati", acc_saved:"Salvati", saved_empty:"Non hai ancora fotografi salvati.", acc_name_ph:"Nome e cognome", acc_banner_edit:"📷 Cambia banner", set_payment:"Metodo di pagamento", pay_none:"Nessun metodo di pagamento salvato.", pay_add_card:"+ Aggiungi carta", pay_add_paypal:"+ Aggiungi PayPal", pay_demo_note:"Nel prototipo i pagamenti sono simulati.", acc_delete:"Cancella account", set_firstname:"Nome", set_surname:"Cognome", acc_delete_confirm:"Sei sicuro di voler cancellare il tuo account? L'operazione è irreversibile.", acc_delete_done:"Account cancellato.",
       set_title:"Impostazioni", set_account:"Account", set_email:"Email di accesso", set_appearance:"Aspetto",
       set_theme:"Tema", theme_light:"Chiaro", theme_dark:"Scuro", theme_auto:"Automatico", set_language:"Lingua", lang_zh:"Cinese", lang_ja:"Giapponese", fav_title:"Preferiti", fav_empty:"Non hai ancora fotografi preferiti.", crop_hint:"Trascina per spostare · usa il cursore per ingrandire", crop_use:"Usa questa foto", crop_err:"Non riesco a leggere questa immagine.",
       set_notifs:"Notifiche", notif_bookings:"Prenotazioni e richieste", notif_messages:"Messaggi", notif_promos:"Offerte e promozioni", notif_reminders:"Promemoria", pf_title:"Portfolio", pf_hint:"Carica i tuoi lavori precedenti", g_title:"Scegli un account", g_sub:"per continuare su PHOllowME", g_other:"Usa un altro account", g_name_ph:"Nome", g_email_ph:"nome@gmail.com", set_name:"Nome", acc_take_photo:"📷 Scatta una foto", svc_title:"I tuoi servizi", svc_add:"+ Aggiungi servizio", svc_name_ph:"Nome del servizio", svc_desc_ph:"Descrizione", svc_remove:"🗑 Rimuovi"
@@ -2142,7 +2180,7 @@
       av_hourly:"Hourly", av_daily:"Daily", av_weekly:"Weekly",
       add_chip:"+ add", equip_prompt:"Add equipment (e.g. Sony A7 IV, 50mm f/1.8)", av_save:"Save", ph_take:"Take a photo", ph_gallery:"Choose from gallery", ph_cancel:"Cancel",
       acc_title:"My profile", acc_role:"Role", role_traveler:"Traveler", role_photographer:"Photographer",
-      acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out", acc_edit:"Edit profile", acc_edit_done:"Done", acc_bio_ph:"Write something about you…", acc_countries:"countries visited", acc_services_done:"services completed", acc_saved:"Saved", saved_empty:"No saved photographers yet.", acc_name_ph:"Full name", acc_banner_edit:"📷 Change banner", acc_delete:"Delete account", set_firstname:"First name", set_surname:"Surname", acc_delete_confirm:"Are you sure you want to delete your account? This action cannot be undone.", acc_delete_done:"Account deleted.",
+      acc_switch_hint:"You can switch role anytime, keeping the same profile.", acc_settings:"Settings", acc_logout:"Log out", acc_edit:"Edit profile", acc_edit_done:"Done", acc_bio_ph:"Write something about you…", acc_countries:"countries visited", acc_services_done:"services completed", acc_saved:"Saved", saved_empty:"No saved photographers yet.", acc_name_ph:"Full name", acc_banner_edit:"📷 Change banner", set_payment:"Payment method", pay_none:"No payment method saved yet.", pay_add_card:"+ Add card", pay_add_paypal:"+ Add PayPal", pay_demo_note:"In this prototype, payments are simulated.", acc_delete:"Delete account", set_firstname:"First name", set_surname:"Surname", acc_delete_confirm:"Are you sure you want to delete your account? This action cannot be undone.", acc_delete_done:"Account deleted.",
       set_title:"Settings", set_account:"Account", set_email:"Login email", set_appearance:"Appearance",
       set_theme:"Theme", theme_light:"Light", theme_dark:"Dark", theme_auto:"Automatic", set_language:"Language", lang_zh:"Chinese", lang_ja:"Japanese", fav_title:"Favourites", fav_empty:"You have no favourite photographers yet.", crop_hint:"Drag to move · use the slider to zoom", crop_use:"Use this photo", crop_err:"I can't read this image.",
       set_notifs:"Notifications", notif_bookings:"Bookings and requests", notif_messages:"Messages", notif_promos:"Offers and promotions", notif_reminders:"Reminders", pf_title:"Portfolio", pf_hint:"Upload your previous work", g_title:"Choose an account", g_sub:"to continue to PHOllowME", g_other:"Use another account", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Take a photo", svc_title:"Your services", svc_add:"+ Add service", svc_name_ph:"Service name", svc_desc_ph:"Description", svc_remove:"🗑 Remove"
@@ -2205,7 +2243,7 @@
       av_hourly:"Por hora", av_daily:"Por día", av_weekly:"Por semana",
       add_chip:"+ añadir", equip_prompt:"Añadir equipo (p. ej. Sony A7 IV, 50mm f/1.8)", av_save:"Guardar", ph_take:"Hacer una foto", ph_gallery:"Elegir de la galería", ph_cancel:"Cancelar",
       acc_title:"Mi perfil", acc_role:"Rol", role_traveler:"Viajero", role_photographer:"Fotógrafo",
-      acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión", acc_edit:"Editar perfil", acc_edit_done:"Hecho", acc_bio_ph:"Escribe algo sobre ti…", acc_countries:"países visitados", acc_services_done:"servicios completados", acc_saved:"Guardados", saved_empty:"Aún no tienes fotógrafos guardados.", acc_name_ph:"Nombre y apellido", acc_banner_edit:"📷 Cambiar banner", acc_delete:"Eliminar cuenta", set_firstname:"Nombre", set_surname:"Apellido", acc_delete_confirm:"¿Seguro que quieres eliminar tu cuenta? Esta acción es irreversible.", acc_delete_done:"Cuenta eliminada.",
+      acc_switch_hint:"Puedes cambiar de rol cuando quieras, manteniendo el mismo perfil.", acc_settings:"Ajustes", acc_logout:"Cerrar sesión", acc_edit:"Editar perfil", acc_edit_done:"Hecho", acc_bio_ph:"Escribe algo sobre ti…", acc_countries:"países visitados", acc_services_done:"servicios completados", acc_saved:"Guardados", saved_empty:"Aún no tienes fotógrafos guardados.", acc_name_ph:"Nombre y apellido", acc_banner_edit:"📷 Cambiar banner", set_payment:"Método de pago", pay_none:"No hay método de pago guardado.", pay_add_card:"+ Añadir tarjeta", pay_add_paypal:"+ Añadir PayPal", pay_demo_note:"En este prototipo, los pagos son simulados.", acc_delete:"Eliminar cuenta", set_firstname:"Nombre", set_surname:"Apellido", acc_delete_confirm:"¿Seguro que quieres eliminar tu cuenta? Esta acción es irreversible.", acc_delete_done:"Cuenta eliminada.",
       set_title:"Ajustes", set_account:"Cuenta", set_email:"Email de acceso", set_appearance:"Apariencia",
       set_theme:"Tema", theme_light:"Claro", theme_dark:"Oscuro", theme_auto:"Automático", set_language:"Idioma", lang_zh:"Chino", lang_ja:"Japonés", fav_title:"Favoritos", fav_empty:"Aún no tienes fotógrafos favoritos.", crop_hint:"Arrastra para mover · usa el control para acercar", crop_use:"Usar esta foto", crop_err:"No puedo leer esta imagen.",
       set_notifs:"Notificaciones", notif_bookings:"Reservas y solicitudes", notif_messages:"Mensajes", notif_promos:"Ofertas y promociones", notif_reminders:"Recordatorios", pf_title:"Portfolio", pf_hint:"Sube tus trabajos anteriores", g_title:"Elige una cuenta", g_sub:"para continuar en PHOllowME", g_other:"Usar otra cuenta", g_name_ph:"Nombre", g_email_ph:"nombre@gmail.com", set_name:"Nombre", acc_take_photo:"📷 Hacer una foto", svc_title:"Tus servicios", svc_add:"+ Añadir servicio", svc_name_ph:"Nombre del servicio", svc_desc_ph:"Descripción", svc_remove:"🗑 Eliminar"
@@ -2268,7 +2306,7 @@
       av_hourly:"Horaire", av_daily:"Journalier", av_weekly:"Hebdomadaire",
       add_chip:"+ ajouter", equip_prompt:"Ajouter du matériel (ex. Sony A7 IV, 50mm f/1.8)", av_save:"Enregistrer", ph_take:"Prendre une photo", ph_gallery:"Choisir dans la galerie", ph_cancel:"Annuler",
       acc_title:"Mon profil", acc_role:"Rôle", role_traveler:"Voyageur", role_photographer:"Photographe",
-      acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter", acc_edit:"Modifier le profil", acc_edit_done:"Terminé", acc_bio_ph:"Écrivez quelque chose sur vous…", acc_countries:"pays visités", acc_services_done:"services terminés", acc_saved:"Enregistrés", saved_empty:"Aucun photographe enregistré pour l'instant.", acc_name_ph:"Nom et prénom", acc_banner_edit:"📷 Changer la bannière", acc_delete:"Supprimer le compte", set_firstname:"Prénom", set_surname:"Nom", acc_delete_confirm:"Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.", acc_delete_done:"Compte supprimé.",
+      acc_switch_hint:"Vous pouvez changer de rôle à tout moment, en gardant le même profil.", acc_settings:"Paramètres", acc_logout:"Se déconnecter", acc_edit:"Modifier le profil", acc_edit_done:"Terminé", acc_bio_ph:"Écrivez quelque chose sur vous…", acc_countries:"pays visités", acc_services_done:"services terminés", acc_saved:"Enregistrés", saved_empty:"Aucun photographe enregistré pour l'instant.", acc_name_ph:"Nom et prénom", acc_banner_edit:"📷 Changer la bannière", set_payment:"Moyen de paiement", pay_none:"Aucun moyen de paiement enregistré.", pay_add_card:"+ Ajouter une carte", pay_add_paypal:"+ Ajouter PayPal", pay_demo_note:"Dans ce prototype, les paiements sont simulés.", acc_delete:"Supprimer le compte", set_firstname:"Prénom", set_surname:"Nom", acc_delete_confirm:"Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.", acc_delete_done:"Compte supprimé.",
       set_title:"Paramètres", set_account:"Compte", set_email:"Email de connexion", set_appearance:"Apparence",
       set_theme:"Thème", theme_light:"Clair", theme_dark:"Sombre", theme_auto:"Automatique", set_language:"Langue", lang_zh:"Chinois", lang_ja:"Japonais", fav_title:"Favoris", fav_empty:"Vous n'avez pas encore de photographes favoris.", crop_hint:"Faites glisser pour déplacer · utilisez le curseur pour zoomer", crop_use:"Utiliser cette photo", crop_err:"Impossible de lire cette image.",
       set_notifs:"Notifications", notif_bookings:"Réservations et demandes", notif_messages:"Messages", notif_promos:"Offres et promotions", notif_reminders:"Rappels", pf_title:"Portfolio", pf_hint:"Ajoutez vos travaux précédents", g_title:"Choisir un compte", g_sub:"pour continuer sur PHOllowME", g_other:"Utiliser un autre compte", g_name_ph:"Nom", g_email_ph:"nom@gmail.com", set_name:"Nom", acc_take_photo:"📷 Prendre une photo", svc_title:"Vos services", svc_add:"+ Ajouter un service", svc_name_ph:"Nom du service", svc_desc_ph:"Description", svc_remove:"🗑 Supprimer"
@@ -2331,7 +2369,7 @@
       av_hourly:"Stündlich", av_daily:"Täglich", av_weekly:"Wöchentlich",
       add_chip:"+ hinzufügen", equip_prompt:"Ausrüstung hinzufügen (z. B. Sony A7 IV, 50mm f/1.8)", av_save:"Speichern", ph_take:"Foto aufnehmen", ph_gallery:"Aus Galerie wählen", ph_cancel:"Abbrechen",
       acc_title:"Mein Profil", acc_role:"Rolle", role_traveler:"Reisender", role_photographer:"Fotograf",
-      acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden", acc_edit:"Profil bearbeiten", acc_edit_done:"Fertig", acc_bio_ph:"Schreibe etwas über dich…", acc_countries:"besuchte Länder", acc_services_done:"abgeschlossene Aufträge", acc_saved:"Gespeichert", saved_empty:"Noch keine gespeicherten Fotografen.", acc_name_ph:"Vor- und Nachname", acc_banner_edit:"📷 Banner ändern", acc_delete:"Konto löschen", set_firstname:"Vorname", set_surname:"Nachname", acc_delete_confirm:"Möchtest du dein Konto wirklich löschen? Dies kann nicht rückgängig gemacht werden.", acc_delete_done:"Konto gelöscht.",
+      acc_switch_hint:"Du kannst die Rolle jederzeit wechseln und dasselbe Profil behalten.", acc_settings:"Einstellungen", acc_logout:"Abmelden", acc_edit:"Profil bearbeiten", acc_edit_done:"Fertig", acc_bio_ph:"Schreibe etwas über dich…", acc_countries:"besuchte Länder", acc_services_done:"abgeschlossene Aufträge", acc_saved:"Gespeichert", saved_empty:"Noch keine gespeicherten Fotografen.", acc_name_ph:"Vor- und Nachname", acc_banner_edit:"📷 Banner ändern", set_payment:"Zahlungsmethode", pay_none:"Keine Zahlungsmethode gespeichert.", pay_add_card:"+ Karte hinzufügen", pay_add_paypal:"+ PayPal hinzufügen", pay_demo_note:"In diesem Prototyp sind Zahlungen simuliert.", acc_delete:"Konto löschen", set_firstname:"Vorname", set_surname:"Nachname", acc_delete_confirm:"Möchtest du dein Konto wirklich löschen? Dies kann nicht rückgängig gemacht werden.", acc_delete_done:"Konto gelöscht.",
       set_title:"Einstellungen", set_account:"Konto", set_email:"Anmelde-E-Mail", set_appearance:"Darstellung",
       set_theme:"Thema", theme_light:"Hell", theme_dark:"Dunkel", theme_auto:"Automatisch", set_language:"Sprache", lang_zh:"Chinesisch", lang_ja:"Japanisch", fav_title:"Favoriten", fav_empty:"Du hast noch keine Lieblingsfotografen.", crop_hint:"Ziehen zum Verschieben · Regler zum Zoomen", crop_use:"Dieses Foto verwenden", crop_err:"Dieses Bild kann nicht gelesen werden.",
       set_notifs:"Benachrichtigungen", notif_bookings:"Buchungen und Anfragen", notif_messages:"Nachrichten", notif_promos:"Angebote und Aktionen", notif_reminders:"Erinnerungen", pf_title:"Portfolio", pf_hint:"Lade deine bisherigen Arbeiten hoch", g_title:"Konto auswählen", g_sub:"um bei PHOllowME fortzufahren", g_other:"Anderes Konto verwenden", g_name_ph:"Name", g_email_ph:"name@gmail.com", set_name:"Name", acc_take_photo:"📷 Ein Foto aufnehmen", svc_title:"Deine Leistungen", svc_add:"+ Leistung hinzufügen", svc_name_ph:"Name der Leistung", svc_desc_ph:"Beschreibung", svc_remove:"🗑 Entfernen"
@@ -2394,7 +2432,7 @@
       av_hourly:"每小时", av_daily:"每日", av_weekly:"每周",
       add_chip:"+ 添加", equip_prompt:"添加设备（例如 Sony A7 IV、50mm f/1.8）", av_save:"保存", ph_take:"拍照", ph_gallery:"从相册选择", ph_cancel:"取消",
       acc_title:"我的资料", acc_role:"角色", role_traveler:"旅行者", role_photographer:"摄影师",
-      acc_switch_hint:"你可以随时切换角色，保留同一份资料。", acc_settings:"设置", acc_logout:"退出", acc_edit:"编辑资料", acc_edit_done:"完成", acc_bio_ph:"写点关于你的介绍…", acc_countries:"个到访国家", acc_services_done:"个已完成服务", acc_saved:"已保存", saved_empty:"你还没有保存的摄影师。", acc_name_ph:"姓名", acc_banner_edit:"📷 更换横幅", acc_delete:"删除账户", set_firstname:"名字", set_surname:"姓", acc_delete_confirm:"确定要删除账户吗？此操作无法撤销。", acc_delete_done:"账户已删除。",
+      acc_switch_hint:"你可以随时切换角色，保留同一份资料。", acc_settings:"设置", acc_logout:"退出", acc_edit:"编辑资料", acc_edit_done:"完成", acc_bio_ph:"写点关于你的介绍…", acc_countries:"个到访国家", acc_services_done:"个已完成服务", acc_saved:"已保存", saved_empty:"你还没有保存的摄影师。", acc_name_ph:"姓名", acc_banner_edit:"📷 更换横幅", set_payment:"支付方式", pay_none:"尚未保存支付方式。", pay_add_card:"+ 添加银行卡", pay_add_paypal:"+ 添加 PayPal", pay_demo_note:"在此原型中，支付为模拟。", acc_delete:"删除账户", set_firstname:"名字", set_surname:"姓", acc_delete_confirm:"确定要删除账户吗？此操作无法撤销。", acc_delete_done:"账户已删除。",
       set_title:"设置", set_account:"账户", set_email:"登录邮箱", set_appearance:"外观",
       set_theme:"主题", theme_light:"浅色", theme_dark:"深色", theme_auto:"自动", set_language:"语言", lang_zh:"中文", lang_ja:"日语", fav_title:"收藏", fav_empty:"你还没有收藏的摄影师。", crop_hint:"拖动移动 · 使用滑块缩放", crop_use:"使用这张照片", crop_err:"无法读取这张图片。",
       set_notifs:"通知", notif_bookings:"预订和请求", notif_messages:"消息", notif_promos:"优惠和促销", notif_reminders:"提醒", pf_title:"作品集", pf_hint:"上传你以往的作品", g_title:"选择账户", g_sub:"以继续使用 PHOllowME", g_other:"使用其他账户", g_name_ph:"姓名", g_email_ph:"name@gmail.com", set_name:"姓名", acc_take_photo:"📷 拍照", svc_title:"你的服务", svc_add:"+ 添加服务", svc_name_ph:"服务名称", svc_desc_ph:"描述", svc_remove:"🗑 移除"
@@ -2457,7 +2495,7 @@
       av_hourly:"1時間", av_daily:"1日", av_weekly:"1週間",
       add_chip:"+ 追加", equip_prompt:"機材を追加（例：Sony A7 IV、50mm f/1.8）", av_save:"保存", ph_take:"写真を撮る", ph_gallery:"ギャラリーから選ぶ", ph_cancel:"キャンセル",
       acc_title:"マイプロフィール", acc_role:"役割", role_traveler:"旅行者", role_photographer:"写真家",
-      acc_switch_hint:"同じプロフィールのまま、いつでも役割を切り替えられます。", acc_settings:"設定", acc_logout:"ログアウト", acc_edit:"プロフィールを編集", acc_edit_done:"完了", acc_bio_ph:"自己紹介を書いてください…", acc_countries:"訪問した国", acc_services_done:"完了したサービス", acc_saved:"保存済み", saved_empty:"保存した写真家はまだいません。", acc_name_ph:"氏名", acc_banner_edit:"📷 バナーを変更", acc_delete:"アカウントを削除", set_firstname:"名", set_surname:"姓", acc_delete_confirm:"本当にアカウントを削除しますか？この操作は元に戻せません。", acc_delete_done:"アカウントを削除しました。",
+      acc_switch_hint:"同じプロフィールのまま、いつでも役割を切り替えられます。", acc_settings:"設定", acc_logout:"ログアウト", acc_edit:"プロフィールを編集", acc_edit_done:"完了", acc_bio_ph:"自己紹介を書いてください…", acc_countries:"訪問した国", acc_services_done:"完了したサービス", acc_saved:"保存済み", saved_empty:"保存した写真家はまだいません。", acc_name_ph:"氏名", acc_banner_edit:"📷 バナーを変更", set_payment:"支払い方法", pay_none:"保存された支払い方法はありません。", pay_add_card:"+ カードを追加", pay_add_paypal:"+ PayPalを追加", pay_demo_note:"このプロトタイプでは支払いはシミュレーションです。", acc_delete:"アカウントを削除", set_firstname:"名", set_surname:"姓", acc_delete_confirm:"本当にアカウントを削除しますか？この操作は元に戻せません。", acc_delete_done:"アカウントを削除しました。",
       set_title:"設定", set_account:"アカウント", set_email:"ログインメール", set_appearance:"外観",
       set_theme:"テーマ", theme_light:"ライト", theme_dark:"ダーク", theme_auto:"自動", set_language:"言語", lang_zh:"中国語", lang_ja:"日本語", fav_title:"お気に入り", fav_empty:"お気に入りの写真家はまだいません。", crop_hint:"ドラッグで移動 · スライダーで拡大", crop_use:"この写真を使う", crop_err:"この画像を読み込めません。",
       set_notifs:"通知", notif_bookings:"予約とリクエスト", notif_messages:"メッセージ", notif_promos:"特典とプロモーション", notif_reminders:"リマインダー", pf_title:"ポートフォリオ", pf_hint:"過去の作品をアップロード", g_title:"アカウントを選択", g_sub:"PHOllowME を続けるには", g_other:"別のアカウントを使う", g_name_ph:"名前", g_email_ph:"name@gmail.com", set_name:"名前", acc_take_photo:"📷 写真を撮る", svc_title:"あなたのサービス", svc_add:"+ サービスを追加", svc_name_ph:"サービス名", svc_desc_ph:"説明", svc_remove:"🗑 削除"
