@@ -73,7 +73,7 @@
   .pavatar{width:96px;height:96px;border-radius:50%;border:4px solid var(--screen);box-shadow:0 3px 10px rgba(0,0,0,.18);position:relative;background:linear-gradient(135deg,#3aa8e6,#0B5A87);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;font-weight:700}
   .pavatar .cambadge{position:absolute;right:2px;bottom:2px;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:14px;display:none;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.35);cursor:pointer}
   #account.editing .pavatar .cambadge{display:flex}
-  .pedit-link{position:absolute;right:4px;bottom:14px;color:var(--accent);font-weight:700;font-size:13px;cursor:pointer}
+  .pedit-link{position:absolute;right:4px;bottom:2px;color:var(--accent);font-weight:700;font-size:13px;cursor:pointer}
   .pnamerow{display:flex;align-items:center;gap:9px;margin-top:12px;flex-wrap:wrap}
   .pname{font-size:26px;font-weight:800;color:var(--accent-d);line-height:1.05}
   .pflag{font-size:22px;line-height:1}
@@ -212,6 +212,8 @@
   .polaroid .pola-name{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:9px;font-size:15px;font-weight:700;color:#1f2937}
   .polaroid .pola-nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .polaroid .pola-name .fav{font-size:15px;cursor:pointer;flex-shrink:0}
+  .polaroid .pola-btns{display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
+  .polaroid .pola-btns .savebtn svg{width:16px;height:16px}
   .polaroid .pola-loc{display:flex;align-items:center;gap:3px;font-size:12px;color:#6b7280;margin-top:4px}
   .polaroid .pola-svc{display:flex;align-items:center;font-size:12px;color:#6b7280;margin-top:3px}
   .svcmini{width:16px;height:14px;vertical-align:-2px;margin-right:5px;flex-shrink:0}
@@ -959,8 +961,8 @@
           <textarea id="travBio" readonly rows="2" oninput="saveProfile()" data-i18n-ph="acc_bio_ph" placeholder="Bio…"></textarea>
           <span class="pen" onclick="editBio()">✏️</span>
         </div>
-        <div class="prow" onclick="show('bookings')"><span class="pic">🌍</span><span class="plabel"><span class="pnum" id="pCountries">0</span> <span data-i18n="acc_countries">paesi visitati</span></span><span class="chev">›</span></div>
-        <div class="prow" onclick="show('bookings')"><span class="pic">📸</span><span class="plabel"><span class="pnum" id="pDone">0</span> <span data-i18n="acc_services_done">servizi completati</span></span><span class="chev">›</span></div>
+        <div class="prow" style="cursor:default"><span class="pic">🌍</span><span class="plabel"><span class="pnum" id="pCountries">0</span> <span data-i18n="acc_countries">paesi visitati</span></span></div>
+        <div class="prow" style="cursor:default"><span class="pic">📸</span><span class="plabel"><span class="pnum" id="pDone">0</span> <span data-i18n="acc_services_done">servizi completati</span></span></div>
         <div class="prow" onclick="show('favorites')"><span class="pic">❤️</span><span class="plabel" data-i18n="fav_title">Preferiti</span><span class="chev">›</span></div>
         <div class="prow" onclick="show('saved')"><span class="pic">🔖</span><span class="plabel" data-i18n="acc_saved">Salvati</span><span class="chev">›</span></div>
         <div class="prow" onclick="show('settings')"><span class="pic">⚙️</span><span class="plabel" data-i18n="acc_settings">Impostazioni</span><span class="chev">›</span></div>
@@ -1097,7 +1099,7 @@
   function toggleSaved(id){
     var i=profSaved.indexOf(id);
     if(i>=0){ profSaved.splice(i,1); } else { profSaved.push(id); }
-    saveProfile(); renderResults(); renderSaved();
+    saveProfile(); renderResults(); renderSaved(); renderBookings();
   }
   function savedBtnHtml(id){
     var on=isSaved(id);
@@ -1217,7 +1219,7 @@
   function bookingCardHtml(b){
     return '<div class="polaroid" onclick="openBookingDetail(\''+b.id+'\')">'
       +'<div class="pola-photo">'+avatarSvg(b.name+b.city)+'</div>'
-      +'<div class="pola-name"><span class="pola-nm">'+escHtml(b.name)+'</span>'+bkFavHtml(b.id)+'</div>'
+      +'<div class="pola-name"><span class="pola-nm">'+escHtml(b.name)+'</span><span class="pola-btns">'+bkFavHtml(b.id)+savedBtnHtml(b.id)+'</span></div>'
       +'<div class="pola-loc">📍 '+escHtml(b.city)+'</div>'
       +'<div class="pola-svc">'+svcMiniIcon(b.svc)+escHtml(b.svc)+'</div>'
       +'</div>';
