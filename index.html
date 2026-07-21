@@ -47,6 +47,22 @@
   .sheet-inner button{width:100%;border:none;background:transparent;color:var(--text);font-size:16px;padding:15px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
   .sheet-inner button:active{background:var(--light)}
   .sheet-inner .cancel{color:var(--accent);font-weight:600;margin-top:2px;border-top:1px solid var(--line);border-radius:0}
+  .sheet-inner .sheet-title{text-align:center;font-weight:700;color:var(--grey);font-size:13px;padding:10px 8px 4px}
+  .chatcard{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  /* menu contestuale piccolo a lato della chat premuta */
+  .chatmenu{position:absolute;inset:0;z-index:60;display:none}
+  .chatmenu.open{display:block}
+  .chatmenu-box{position:absolute;background:var(--screen);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.22);padding:3px;max-width:82%}
+  .chatmenu-box button{display:block;width:100%;text-align:left;border:none;background:transparent;color:var(--text);font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;cursor:pointer;white-space:nowrap}
+  .chatmenu-box button:active{background:var(--light)}
+  /* pallino rosso notifiche sulla campanella + righe drawer */
+  .bellbadge{position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;background:#e53935;border:2px solid var(--screen);display:none}
+  .bellbadge.on{display:block}
+  .notifrow{display:flex;gap:10px;align-items:center;padding:11px 6px;border-bottom:1px solid var(--line);cursor:pointer}
+  .notifrow .ni{font-size:18px;flex-shrink:0}
+  .notifrow .nt{min-width:0;flex:1}
+  .notifrow .nt b{display:block;font-size:13px;color:var(--text)}
+  .notifrow .nt span{display:block;font-size:12px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .langopt{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text)}
   .langopt:hover{background:var(--light)}
 
@@ -418,7 +434,7 @@
       <div class="topbar">
         <span class="brand">PHOllowME</span>
         <span style="margin-left:auto;display:flex;gap:16px;align-items:center;font-size:20px">
-          <span onclick="openDrawer('notifDrawer')" style="cursor:pointer" aria-label="Notifiche">🔔</span>
+          <span onclick="openDrawer('notifDrawer')" style="cursor:pointer;position:relative" aria-label="Notifiche">🔔<span class="bellbadge" id="bellBadge"></span></span>
           <span onclick="openDrawer('menuDrawer')" style="cursor:pointer" aria-label="Menu">☰</span>
         </span>
       </div>
@@ -449,7 +465,7 @@
         <div class="dov"></div>
         <div class="dpanel">
           <div class="dhead"><span>🔔</span><span data-i18n="notif_title">Notifiche</span></div>
-          <div class="dbody"><p class="muted" style="text-align:center;margin:24px 8px" data-i18n="notif_empty">Nessuna notifica al momento.</p></div>
+          <div class="dbody" id="notifBody"><p class="muted" style="text-align:center;margin:24px 8px" data-i18n="notif_empty">Nessuna notifica al momento.</p></div>
         </div>
       </div>
       <div class="drawer" id="menuDrawer" onclick="if(event.target.classList.contains('dov'))closeDrawer('menuDrawer')">
@@ -683,6 +699,12 @@
         <div class="on"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
         <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
         <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
+      </div>
+      <div class="chatmenu" id="chatMenu" onclick="if(event.target===this)closeChatMenu()">
+        <div class="chatmenu-box" id="chatMenuBox">
+          <button onclick="markChatRead(true)" data-i18n="chat_mark_read">Segna come già letto</button>
+          <button onclick="markChatRead(false)" data-i18n="chat_mark_unread">Segna come da leggere</button>
+        </div>
       </div>
     </div>
 
@@ -952,10 +974,10 @@
         <div class="optrow langopt2" data-lang="ja" onclick="chooseLang('ja')"><span class="flag" data-flag="ja"></span><span data-i18n="lang_ja">Giapponese</span><span class="chk">✓</span></div>
 
         <div class="sect" data-i18n="set_notifs">Notifiche</div>
-        <div class="srow"><span class="si">📅</span><div class="st"><b data-i18n="notif_bookings">Prenotazioni e richieste</b></div><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
-        <div class="srow"><span class="si">💬</span><div class="st"><b data-i18n="notif_messages">Messaggi</b></div><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
-        <div class="srow"><span class="si">🏷️</span><div class="st"><b data-i18n="notif_promos">Offerte e promozioni</b></div><label class="switch"><input type="checkbox"><span class="track"></span></label></div>
-        <div class="srow"><span class="si">⏰</span><div class="st"><b data-i18n="notif_reminders">Promemoria</b></div><label class="switch"><input type="checkbox" checked><span class="track"></span></label></div>
+        <div class="srow"><span class="si">📅</span><div class="st"><b data-i18n="notif_bookings">Prenotazioni e richieste</b></div><label class="switch"><input type="checkbox" id="notifChkBookings" onchange="saveNotifPrefs()" checked><span class="track"></span></label></div>
+        <div class="srow"><span class="si">💬</span><div class="st"><b data-i18n="notif_messages">Messaggi</b></div><label class="switch"><input type="checkbox" id="notifChkMessages" onchange="onMessagesToggle()" checked><span class="track"></span></label></div>
+        <div class="srow"><span class="si">🏷️</span><div class="st"><b data-i18n="notif_promos">Offerte e promozioni</b></div><label class="switch"><input type="checkbox" id="notifChkPromos" onchange="saveNotifPrefs()"><span class="track"></span></label></div>
+        <div class="srow"><span class="si">⏰</span><div class="st"><b data-i18n="notif_reminders">Promemoria</b></div><label class="switch"><input type="checkbox" id="notifChkReminders" onchange="saveNotifPrefs()" checked><span class="track"></span></label></div>
 
         <div style="height:14px"></div>
         <button class="btn ghost" onclick="logout()" data-i18n="acc_logout">Esci</button>
@@ -1177,24 +1199,104 @@
     ]}
   ];
   function chatById(id){ for(var i=0;i<EXAMPLE_CHATS.length;i++){ if(EXAMPLE_CHATS[i].id===id) return EXAMPLE_CHATS[i]; } return null; }
+  /* stato letto/non-letto persistente per-email (override sul valore di default della chat) */
+  var chatReadOverride={};
+  function chatReadKey(){ return 'phollowme_chatread:'+String(accountEmail||'').trim().toLowerCase(); }
+  function loadChatRead(){ try{ return JSON.parse(localStorage.getItem(chatReadKey())||'{}')||{}; }catch(e){ return {}; } }
+  function saveChatRead(m){ try{ if(accountEmail) localStorage.setItem(chatReadKey(), JSON.stringify(m)); }catch(e){} }
+  function isChatUnread(c){ return chatReadOverride.hasOwnProperty(c.id)?!!chatReadOverride[c.id]:!!c.unread; }
+  function setChatUnread(id,unread){ var m=loadChatRead(); m[id]=!!unread; saveChatRead(m); chatReadOverride=m; }
   function chatRowHtml(c){
     var last=c.msgs.length?c.msgs[c.msgs.length-1].t:'';
-    var dot=c.unread?'<span class="cdot"></span>':'';
-    return '<div class="chatcard" onclick="openChat(\''+c.id+'\')">'
+    var un=isChatUnread(c);
+    var dot=un?'<span class="cdot"></span>':'';
+    return '<div class="chatcard" data-cid="'+c.id+'">'
       +'<div class="cav">'+avatarSvg(c.name)+'</div>'
       +'<div class="cmid"><div class="cname">'+escHtml(c.name)+'</div>'
-      +'<div class="cprev'+(c.unread?' unread':'')+'">'+escHtml(last)+'</div></div>'
+      +'<div class="cprev'+(un?' unread':'')+'">'+escHtml(last)+'</div></div>'
       +'<div class="cend"><span class="ctime">'+escHtml(c.time)+'</span>'+dot+'</div>'
       +'</div>';
   }
   function renderTrChats(){
     var list=document.getElementById('trChatList'), empty=document.getElementById('trChatsEmpty');
     if(!list) return;
+    chatReadOverride=loadChatRead();
     list.innerHTML=EXAMPLE_CHATS.map(chatRowHtml).join('');
+    bindChatCards();
     if(empty) empty.style.display=EXAMPLE_CHATS.length?'none':'';
+  }
+  /* tap = apri chat; pressione prolungata (touch o mouse) / tasto destro = menu letto/non-letto */
+  var lpTimer=null, lpFired=false, menuChatId=null;
+  function bindChatCards(){
+    document.querySelectorAll('#trChatList .chatcard').forEach(function(el){
+      var id=el.getAttribute('data-cid');
+      var start=function(){ lpFired=false; clearTimeout(lpTimer); lpTimer=setTimeout(function(){ lpFired=true; openChatMenu(id); },500); };
+      var stop=function(){ clearTimeout(lpTimer); };
+      el.addEventListener('click',function(){ if(lpFired){ lpFired=false; return; } openChat(id); });
+      el.addEventListener('contextmenu',function(e){ e.preventDefault(); openChatMenu(id); });
+      el.addEventListener('touchstart',start,{passive:true});
+      el.addEventListener('touchmove',stop,{passive:true});
+      el.addEventListener('touchend',stop);
+      el.addEventListener('mousedown',function(e){ if(e.button!==0) return; start(); });
+      el.addEventListener('mouseup',stop);
+      el.addEventListener('mouseleave',stop);
+    });
+  }
+  function openChatMenu(id){
+    menuChatId=id;
+    var menu=document.getElementById('chatMenu'), box=document.getElementById('chatMenuBox');
+    var card=document.querySelector('#trChatList .chatcard[data-cid="'+id+'"]');
+    if(!menu||!box||!card) return;
+    menu.classList.add('open');
+    var m=menu.getBoundingClientRect(), c=card.getBoundingClientRect();
+    var bw=box.offsetWidth, bh=box.offsetHeight;
+    var left=(c.right-m.left)-bw-8;              /* ancorato al lato destro della chat */
+    var top=(c.top-m.top)-bh-6;                   /* sopra la chat premuta */
+    left=Math.max(8,Math.min(left,m.width-bw-8));
+    top=Math.max(8,Math.min(top,m.height-bh-8));
+    box.style.left=left+'px'; box.style.top=top+'px';
+  }
+  function closeChatMenu(){ menuChatId=null; var s=document.getElementById('chatMenu'); if(s) s.classList.remove('open'); }
+  function markChatRead(read){ if(menuChatId){ setChatUnread(menuChatId, !read); } closeChatMenu(); renderTrChats(); refreshNotifUI(); }
+  /* ---- Notifiche: pallino campanella + drawer + notifica di sistema del telefono ---- */
+  function unreadChatsList(){ chatReadOverride=loadChatRead(); return EXAMPLE_CHATS.filter(function(c){ return isChatUnread(c); }); }
+  function refreshNotifUI(){
+    var list=unreadChatsList();
+    var b=document.getElementById('bellBadge'); if(b) b.classList.toggle('on', list.length>0);
+    var body=document.getElementById('notifBody'); if(!body) return;
+    var d=I18N[curLang]||I18N.it||{};
+    if(!list.length){ body.innerHTML='<p class="muted" style="text-align:center;margin:24px 8px">'+escHtml(d.notif_empty||'Nessuna notifica al momento.')+'</p>'; return; }
+    body.innerHTML=list.map(function(c){
+      var last=c.msgs.length?c.msgs[c.msgs.length-1].t:'';
+      return '<div class="notifrow" onclick="closeDrawer(\'notifDrawer\');openChat(\''+c.id+'\')">'
+        +'<span class="ni">💬</span><div class="nt"><b>'+escHtml((d.notif_new_msg||'Nuovo messaggio')+' · '+c.name)+'</b><span>'+escHtml(last)+'</span></div></div>';
+    }).join('');
+  }
+  function chkOn(id){ var e=document.getElementById(id); return e?!!e.checked:false; }
+  function setChk(id,v){ var e=document.getElementById(id); if(e) e.checked=!!v; }
+  function notifKey(){ return 'phollowme_notifs:'+String(accountEmail||'').trim().toLowerCase(); }
+  function saveNotifPrefs(){ try{ if(!accountEmail) return; localStorage.setItem(notifKey(), JSON.stringify({bookings:chkOn('notifChkBookings'),messages:chkOn('notifChkMessages'),promos:chkOn('notifChkPromos'),reminders:chkOn('notifChkReminders')})); }catch(e){} }
+  function applyNotifPrefs(){ try{ var o=JSON.parse(localStorage.getItem(notifKey())||'null'); if(!o) return; setChk('notifChkBookings',o.bookings); setChk('notifChkMessages',o.messages); setChk('notifChkPromos',o.promos); setChk('notifChkReminders',o.reminders); }catch(e){} }
+  function msgNotifOn(){ return chkOn('notifChkMessages'); }
+  function pushSystemNotif(title,body){ try{ if(typeof Notification==='undefined') return; if(Notification.permission==='granted'){ new Notification(title,{body:body,icon:'icon-192.png',tag:'phollowme-msg'}); } }catch(e){} }
+  function onMessagesToggle(){
+    saveNotifPrefs();
+    if(!msgNotifOn() || typeof Notification==='undefined') return;
+    var d=I18N[curLang]||I18N.it||{};
+    if(Notification.permission==='granted'){ pushSystemNotif('PHOllowME', d.notif_sample||'Ti avviseremo qui dei nuovi messaggi.'); }
+    else if(Notification.permission!=='denied'){ try{ Notification.requestPermission().then(function(p){ if(p==='granted') pushSystemNotif('PHOllowME', d.notif_sample||'Ti avviseremo qui dei nuovi messaggi.'); }); }catch(e){} }
+  }
+  /* un messaggio "arriva": aggiorna chat+campanella+drawer e manda la notifica del telefono se abilitata */
+  function notifyIncomingMessage(chatId,text){
+    var c=chatById(chatId); if(!c) return;
+    c.msgs.push({me:false,t:text,tm:'ora'});
+    setChatUnread(chatId,true);
+    renderTrChats(); refreshNotifUI();
+    if(msgNotifOn()) pushSystemNotif('PHOllowME', c.name+': '+text);
   }
   function openChat(id){
     var c=chatById(id); if(!c) return;
+    if(isChatUnread(c)){ setChatUnread(id,false); renderTrChats(); refreshNotifUI(); }
     var nm=document.getElementById('chatName'); if(nm) nm.textContent=c.name;
     var sb=document.getElementById('chatSub'); if(sb) sb.textContent=c.sub;
     var av=document.getElementById('chatAvatar'); if(av){ av.style.overflow='hidden'; av.innerHTML=avatarSvg(c.name); }
@@ -1633,23 +1735,30 @@
   function saveRole(){ try{ if(accountEmail) localStorage.setItem(roleKey(), currentRole); }catch(e){} }
   function loadRole(){ try{ return localStorage.getItem(roleKey())||''; }catch(e){ return ''; } }
   function clearRole(){ try{ localStorage.removeItem(roleKey()); }catch(e){} }
+  /* nome utente persistente per-email in locale (come ruolo/profilo): sopravvive al riavvio anche se Firebase displayName non si aggiorna */
+  function nameKey(){ return 'phollowme_name:'+String(accountEmail||'').trim().toLowerCase(); }
+  function saveName(){ try{ if(accountEmail) localStorage.setItem(nameKey(), accountName); }catch(e){} }
+  function loadName(){ try{ return localStorage.getItem(nameKey())||''; }catch(e){ return ''; } }
+  function clearName(){ try{ localStorage.removeItem(nameKey()); }catch(e){} }
   /* unico punto di verita': e' Firebase a dire chi e' dentro */
   function onAuthChanged(u){
     if(!u){ accountEmail=''; accountName=''; accountPhoto=''; clearPhotoUrl(); roleChosen=false; _activate('login'); return; }
     if(!u.emailVerified){ showVerify(); return; }
     accountEmail=u.email||'';
-    accountName=u.displayName||(accountEmail.split('@')[0]||'');
+    accountName=loadName()||u.displayName||(accountEmail.split('@')[0]||'');
     updateAccountUI();
     applyProfile();
+    applyNotifPrefs(); refreshNotifUI();
     if(u.photoURL && !accountPhoto){ setPhotoUrl(u.photoURL); }
     var r=loadRole();
     if(r){ roleChosen=true; setRole(r); _activate(r==='photographer'?'ph_dash':'home'); }
     else { roleChosen=false; _activate('welcome'); }
   }
-  function setName(v){ v=(v||'').trim(); if(!v) return; accountName=v; updateAccountUI(); try{ if(fbAuth&&fbAuth.currentUser) fbAuth.currentUser.updateProfile({displayName:v}); }catch(e){} }
+  function setName(v){ v=(v||'').trim(); if(!v) return; accountName=v; saveName(); updateAccountUI(); try{ if(fbAuth&&fbAuth.currentUser) fbAuth.currentUser.updateProfile({displayName:v}); }catch(e){} }
   function setFullName(){
     var f=document.getElementById('firstNameIn'), l=document.getElementById('lastNameIn');
     accountName=((f?f.value:'').trim()+' '+(l?l.value:'').trim()).trim();
+    saveName();
     refreshNameDisplays();
     try{ if(fbAuth&&fbAuth.currentUser) fbAuth.currentUser.updateProfile({displayName:accountName}); }catch(e){}
   }
@@ -1704,7 +1813,7 @@
   }
   function deleteAccount(){
     if(!confirm(I18N[curLang].acc_delete_confirm)) return;
-    clearProfile(); clearRole();
+    clearProfile(); clearRole(); clearName();
     var u=fbAuth&&fbAuth.currentUser;
     if(!u){ alert(I18N[curLang].acc_delete_done); logout(); return; }
     /* cancella davvero l'account da Firebase */
@@ -1805,7 +1914,7 @@
       login_sub:"Accedi per trovare e prenotare fotografi ovunque tu vada.", login_google:"Continua con Google", login_email:"Continua con email", login_email_ph:"nome@email.com", login_enter:"Accedi", login_pass_ph:"Password", login_register:"Crea un account", login_forgot:"Password dimenticata?", login_need_both:"Inserisci email e password.", login_need_email:"Scrivi prima la tua email.", login_reset_sent:"Ti abbiamo inviato una mail per reimpostare la password.", fb_offline:"Servizio di accesso non raggiungibile. Controlla la connessione.", vf_title:"Conferma la tua email", vf_msg:"Ti abbiamo inviato una mail con un link da cliccare. Aprila, conferma, poi torna qui.", vf_done:"Ho confermato, entra", vf_resend:"Invia di nuovo la mail", vf_sent:"Mail inviata! Controlla la posta (anche lo spam).", vf_not_yet:"Non risulta ancora confermata. Clicca il link nella mail e riprova.", acc_delete_relogin:"Per sicurezza devi rientrare e riprovare subito dopo.",
       w_tag:"Foto professionali ovunque tu vada. Trova e prenota un fotografo per il tuo viaggio.",
       w_traveler:"Sono un viaggiatore", w_photographer:"Sono un fotografo",
-      s_where:"Dove ti farai fotografare?", s_hi:"Ciao %s!", s_sub:"Cerca per città e date del tuo soggiorno", home_tagline:"Crea il tuo prossimo ricordo", home_hi:"Ciao!", see_all:"Vedi tutto", home_fav:"Le tue mete preferite", nav_favorites:"Preferiti", fav_ph_sect:"Fotografi preferiti", fav_dest_sect:"Mete preferite", fav_dest_empty:"Aggiungi le tue mete col cuoricino.", notif_title:"Notifiche", notif_empty:"Nessuna notifica al momento.", menu_title:"Menu", svc_detail_soon:"La descrizione di questo servizio arriverà presto.", cal_hint:"Seleziona arrivo e partenza", bd_title:"Dettagli prenotazione", bd_days:"Giorno/i prenotato/i", bd_cost:"Costo", bd_pay:"Metodo di pagamento", bd_notes:"Note", bd_message:"Scrivi al fotografo",
+      s_where:"Dove ti farai fotografare?", s_hi:"Ciao %s!", s_sub:"Cerca per città e date del tuo soggiorno", home_tagline:"Crea il tuo prossimo ricordo", home_hi:"Ciao!", see_all:"Vedi tutto", home_fav:"Le tue mete preferite", nav_favorites:"Preferiti", fav_ph_sect:"Fotografi preferiti", fav_dest_sect:"Mete preferite", fav_dest_empty:"Aggiungi le tue mete col cuoricino.", notif_title:"Notifiche", notif_empty:"Nessuna notifica al momento.", notif_new_msg:"Nuovo messaggio", notif_sample:"Ti avviseremo qui dei nuovi messaggi.", menu_title:"Menu", svc_detail_soon:"La descrizione di questo servizio arriverà presto.", cal_hint:"Seleziona arrivo e partenza", bd_title:"Dettagli prenotazione", bd_days:"Giorno/i prenotato/i", bd_cost:"Costo", bd_pay:"Metodo di pagamento", bd_notes:"Note", bd_message:"Scrivi al fotografo",
       s_dest:"Destinazione", s_dest_ph:"Città o luogo", s_checkin:"Arrivo", s_checkout:"Partenza",
       s_service_type:"Tipo di servizio", s_service_val:"Ritratto / Vacanza",
       sm_mode:"Modalità del servizio", sm_fixed:"📍 Luogo fisso", sm_roaming:"🚶 Itinerante", sm_both:"Entrambi", av_mode:"Modalità offerte",
@@ -1843,7 +1952,7 @@
       d_next_level:"Prossimo livello: Top ★",
       d_next_msg:"Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.",
       d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta",      d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
-      chats_title:"Chat", chats_hdr:"Messaggi", chat_bye:"Perfetto, ci vediamo a Trastevere!",
+      chats_title:"Chat", chats_hdr:"Messaggi", chat_mark_read:"Segna come già letto", chat_mark_unread:"Segna come da leggere", chat_bye:"Perfetto, ci vediamo a Trastevere!",
       time_yesterday:"ieri", chat_prev_james:"Grazie mille per le foto 🙏",
       time_mon:"lun", chat_prev_elena:"Sei disponibile anche il 20?",
       chat_hdr_sub:"Ritratto · 13 lug, 16:00", day_today:"Oggi",
@@ -1868,7 +1977,7 @@
       login_sub:"Sign in to find and book photographers wherever you go.", login_google:"Continue with Google", login_email:"Continue with email", login_email_ph:"name@email.com", login_enter:"Sign in", login_pass_ph:"Password", login_register:"Create an account", login_forgot:"Forgot your password?", login_need_both:"Enter email and password.", login_need_email:"Enter your email first.", login_reset_sent:"We've sent you an email to reset your password.", fb_offline:"Sign-in service unreachable. Check your connection.", vf_title:"Confirm your email", vf_msg:"We've sent you an email with a link. Open it, confirm, then come back here.", vf_done:"I confirmed, let me in", vf_resend:"Send the email again", vf_sent:"Email sent! Check your inbox (and spam).", vf_not_yet:"Not confirmed yet. Click the link in the email and try again.", acc_delete_relogin:"For security, sign in again and retry right after.",
       w_tag:"Professional photos wherever you go. Find and book a photographer for your trip.",
       w_traveler:"I'm a traveler", w_photographer:"I'm a photographer",
-      s_where:"Where will you get your photos taken?", s_hi:"Hi %s!", s_sub:"Search by city and dates of your stay", home_tagline:"Create your next memory", home_hi:"Hi!", see_all:"See all", home_fav:"Your favorite places", nav_favorites:"Favorites", fav_ph_sect:"Favorite photographers", fav_dest_sect:"Favorite places", fav_dest_empty:"Add places with the heart button.", notif_title:"Notifications", notif_empty:"No notifications yet.", menu_title:"Menu", svc_detail_soon:"The description of this service is coming soon.", cal_hint:"Select arrival and departure", bd_title:"Booking details", bd_days:"Booked day(s)", bd_cost:"Cost", bd_pay:"Payment method", bd_notes:"Notes", bd_message:"Message the photographer",
+      s_where:"Where will you get your photos taken?", s_hi:"Hi %s!", s_sub:"Search by city and dates of your stay", home_tagline:"Create your next memory", home_hi:"Hi!", see_all:"See all", home_fav:"Your favorite places", nav_favorites:"Favorites", fav_ph_sect:"Favorite photographers", fav_dest_sect:"Favorite places", fav_dest_empty:"Add places with the heart button.", notif_title:"Notifications", notif_empty:"No notifications yet.", notif_new_msg:"New message", notif_sample:"We'll notify you here about new messages.", menu_title:"Menu", svc_detail_soon:"The description of this service is coming soon.", cal_hint:"Select arrival and departure", bd_title:"Booking details", bd_days:"Booked day(s)", bd_cost:"Cost", bd_pay:"Payment method", bd_notes:"Notes", bd_message:"Message the photographer",
       s_dest:"Destination", s_dest_ph:"City or place", s_checkin:"Check-in", s_checkout:"Check-out",
       s_service_type:"Service type", s_service_val:"Portrait / Vacation",
       sm_mode:"Service mode", sm_fixed:"📍 Fixed location", sm_roaming:"🚶 Roaming", sm_both:"Both", av_mode:"Modes offered",
@@ -1906,7 +2015,7 @@
       d_next_level:"Next level: Top ★",
       d_next_msg:"Complete services and keep a high rating to unlock maximum visibility and reduced commissions.",
       d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline",      d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
-      chats_title:"Chat", chats_hdr:"Messages", chat_bye:"Perfect, see you in Trastevere!",
+      chats_title:"Chat", chats_hdr:"Messages", chat_mark_read:"Mark as read", chat_mark_unread:"Mark as unread", chat_bye:"Perfect, see you in Trastevere!",
       time_yesterday:"yesterday", chat_prev_james:"Thank you so much for the photos 🙏",
       time_mon:"Mon", chat_prev_elena:"Are you available on the 20th too?",
       chat_hdr_sub:"Portrait · 13 Jul, 16:00", day_today:"Today",
@@ -1931,7 +2040,7 @@
       login_sub:"Inicia sesión para encontrar y reservar fotógrafos dondequiera que vayas.", login_google:"Continuar con Google", login_email:"Continuar con email", login_email_ph:"nombre@email.com", login_enter:"Entrar", login_pass_ph:"Contraseña", login_register:"Crear una cuenta", login_forgot:"¿Olvidaste la contraseña?", login_need_both:"Introduce email y contraseña.", login_need_email:"Escribe primero tu email.", login_reset_sent:"Te hemos enviado un email para restablecer la contraseña.", fb_offline:"Servicio de acceso no disponible. Comprueba la conexión.", vf_title:"Confirma tu email", vf_msg:"Te hemos enviado un email con un enlace. Ábrelo, confirma y vuelve aquí.", vf_done:"Ya confirmé, entrar", vf_resend:"Enviar el email de nuevo", vf_sent:"¡Email enviado! Revisa tu correo (y el spam).", vf_not_yet:"Aún no está confirmado. Haz clic en el enlace del email e inténtalo de nuevo.", acc_delete_relogin:"Por seguridad, vuelve a entrar e inténtalo justo después.",
       w_tag:"Fotos profesionales dondequiera que vayas. Encuentra y reserva un fotógrafo para tu viaje.",
       w_traveler:"Soy un viajero", w_photographer:"Soy un fotógrafo",
-      s_where:"¿Dónde te harás las fotos?", s_hi:"¡Hola %s!", s_sub:"Busca por ciudad y fechas de tu estancia", home_tagline:"Crea tu próximo recuerdo", home_hi:"¡Hola!", see_all:"Ver todo", home_fav:"Tus destinos favoritos", nav_favorites:"Favoritos", fav_ph_sect:"Fotógrafos favoritos", fav_dest_sect:"Destinos favoritos", fav_dest_empty:"Añade destinos con el corazón.", notif_title:"Notificaciones", notif_empty:"No hay notificaciones por ahora.", menu_title:"Menú", svc_detail_soon:"La descripción de este servicio llegará pronto.", cal_hint:"Selecciona llegada y salida", bd_title:"Detalles de la reserva", bd_days:"Día(s) reservado(s)", bd_cost:"Coste", bd_pay:"Método de pago", bd_notes:"Notas", bd_message:"Escribir al fotógrafo",
+      s_where:"¿Dónde te harás las fotos?", s_hi:"¡Hola %s!", s_sub:"Busca por ciudad y fechas de tu estancia", home_tagline:"Crea tu próximo recuerdo", home_hi:"¡Hola!", see_all:"Ver todo", home_fav:"Tus destinos favoritos", nav_favorites:"Favoritos", fav_ph_sect:"Fotógrafos favoritos", fav_dest_sect:"Destinos favoritos", fav_dest_empty:"Añade destinos con el corazón.", notif_title:"Notificaciones", notif_empty:"No hay notificaciones por ahora.", notif_new_msg:"Nuevo mensaje", notif_sample:"Te avisaremos aquí de los nuevos mensajes.", menu_title:"Menú", svc_detail_soon:"La descripción de este servicio llegará pronto.", cal_hint:"Selecciona llegada y salida", bd_title:"Detalles de la reserva", bd_days:"Día(s) reservado(s)", bd_cost:"Coste", bd_pay:"Método de pago", bd_notes:"Notas", bd_message:"Escribir al fotógrafo",
       s_dest:"Destino", s_dest_ph:"Ciudad o lugar", s_checkin:"Llegada", s_checkout:"Salida",
       s_service_type:"Tipo de servicio", s_service_val:"Retrato / Vacaciones",
       sm_mode:"Modalidad del servicio", sm_fixed:"📍 Lugar fijo", sm_roaming:"🚶 Itinerante", sm_both:"Ambos", av_mode:"Modalidades ofrecidas",
@@ -1969,7 +2078,7 @@
       d_next_level:"Próximo nivel: Top ★",
       d_next_msg:"Completa servicios y mantén una valoración alta para desbloquear máxima visibilidad y comisiones reducidas.",
       d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar",      d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
-      chats_title:"Chat", chats_hdr:"Mensajes", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
+      chats_title:"Chat", chats_hdr:"Mensajes", chat_mark_read:"Marcar como leído", chat_mark_unread:"Marcar como no leído", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
       time_yesterday:"ayer", chat_prev_james:"¡Muchas gracias por las fotos 🙏",
       time_mon:"lun", chat_prev_elena:"¿Estás disponible también el 20?",
       chat_hdr_sub:"Retrato · 13 jul, 16:00", day_today:"Hoy",
@@ -1994,7 +2103,7 @@
       login_sub:"Connectez-vous pour trouver et réserver des photographes où que vous alliez.", login_google:"Continuer avec Google", login_email:"Continuer avec l'email", login_email_ph:"nom@email.com", login_enter:"Se connecter", login_pass_ph:"Mot de passe", login_register:"Créer un compte", login_forgot:"Mot de passe oublié ?", login_need_both:"Saisissez l'email et le mot de passe.", login_need_email:"Saisissez d'abord votre email.", login_reset_sent:"Nous vous avons envoyé un email pour réinitialiser le mot de passe.", fb_offline:"Service de connexion injoignable. Vérifiez votre connexion.", vf_title:"Confirmez votre email", vf_msg:"Nous vous avons envoyé un email avec un lien. Ouvrez-le, confirmez, puis revenez ici.", vf_done:"J'ai confirmé, entrer", vf_resend:"Renvoyer l'email", vf_sent:"Email envoyé ! Vérifiez votre boîte (et les spams).", vf_not_yet:"Pas encore confirmé. Cliquez sur le lien dans l'email et réessayez.", acc_delete_relogin:"Par sécurité, reconnectez-vous et réessayez juste après.",
       w_tag:"Des photos professionnelles où que vous alliez. Trouvez et réservez un photographe pour votre voyage.",
       w_traveler:"Je suis un voyageur", w_photographer:"Je suis un photographe",
-      s_where:"Où vas-tu te faire photographier ?", s_hi:"Salut %s !", s_sub:"Recherchez par ville et dates de votre séjour", home_tagline:"Crée ton prochain souvenir", home_hi:"Salut !", see_all:"Voir tout", home_fav:"Tes destinations favorites", nav_favorites:"Favoris", fav_ph_sect:"Photographes favoris", fav_dest_sect:"Destinations favorites", fav_dest_empty:"Ajoute des destinations avec le cœur.", notif_title:"Notifications", notif_empty:"Aucune notification pour l'instant.", menu_title:"Menu", svc_detail_soon:"La description de ce service arrivera bientôt.", cal_hint:"Sélectionne l'arrivée et le départ", bd_title:"Détails de la réservation", bd_days:"Jour(s) réservé(s)", bd_cost:"Coût", bd_pay:"Moyen de paiement", bd_notes:"Notes", bd_message:"Écrire au photographe",
+      s_where:"Où vas-tu te faire photographier ?", s_hi:"Salut %s !", s_sub:"Recherchez par ville et dates de votre séjour", home_tagline:"Crée ton prochain souvenir", home_hi:"Salut !", see_all:"Voir tout", home_fav:"Tes destinations favorites", nav_favorites:"Favoris", fav_ph_sect:"Photographes favoris", fav_dest_sect:"Destinations favorites", fav_dest_empty:"Ajoute des destinations avec le cœur.", notif_title:"Notifications", notif_empty:"Aucune notification pour l'instant.", notif_new_msg:"Nouveau message", notif_sample:"Nous vous préviendrons ici des nouveaux messages.", menu_title:"Menu", svc_detail_soon:"La description de ce service arrivera bientôt.", cal_hint:"Sélectionne l'arrivée et le départ", bd_title:"Détails de la réservation", bd_days:"Jour(s) réservé(s)", bd_cost:"Coût", bd_pay:"Moyen de paiement", bd_notes:"Notes", bd_message:"Écrire au photographe",
       s_dest:"Destination", s_dest_ph:"Ville ou lieu", s_checkin:"Arrivée", s_checkout:"Départ",
       s_service_type:"Type de service", s_service_val:"Portrait / Vacances",
       sm_mode:"Mode du service", sm_fixed:"📍 Lieu fixe", sm_roaming:"🚶 Itinérant", sm_both:"Les deux", av_mode:"Modes proposés",
@@ -2032,7 +2141,7 @@
       d_next_level:"Niveau suivant : Top ★",
       d_next_msg:"Réalisez des prestations et gardez une bonne note pour débloquer une visibilité maximale et des commissions réduites.",
       d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser",      d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
-      chats_title:"Messages", chats_hdr:"Messages", chat_bye:"Parfait, on se voit à Trastevere !",
+      chats_title:"Messages", chats_hdr:"Messages", chat_mark_read:"Marquer comme lu", chat_mark_unread:"Marquer comme non lu", chat_bye:"Parfait, on se voit à Trastevere !",
       time_yesterday:"hier", chat_prev_james:"Merci beaucoup pour les photos 🙏",
       time_mon:"lun", chat_prev_elena:"Êtes-vous aussi disponible le 20 ?",
       chat_hdr_sub:"Portrait · 13 juil., 16:00", day_today:"Aujourd'hui",
@@ -2057,7 +2166,7 @@
       login_sub:"Melde dich an, um Fotografen zu finden und zu buchen, wohin du auch gehst.", login_google:"Mit Google fortfahren", login_email:"Mit E-Mail fortfahren", login_email_ph:"name@email.com", login_enter:"Anmelden", login_pass_ph:"Passwort", login_register:"Konto erstellen", login_forgot:"Passwort vergessen?", login_need_both:"Gib E-Mail und Passwort ein.", login_need_email:"Gib zuerst deine E-Mail ein.", login_reset_sent:"Wir haben dir eine E-Mail zum Zurücksetzen des Passworts geschickt.", fb_offline:"Anmeldedienst nicht erreichbar. Prüfe deine Verbindung.", vf_title:"Bestätige deine E-Mail", vf_msg:"Wir haben dir eine E-Mail mit einem Link geschickt. Öffne sie, bestätige und komm zurück.", vf_done:"Bestätigt, rein damit", vf_resend:"E-Mail erneut senden", vf_sent:"E-Mail gesendet! Prüfe dein Postfach (auch Spam).", vf_not_yet:"Noch nicht bestätigt. Klicke den Link in der E-Mail und versuche es erneut.", acc_delete_relogin:"Aus Sicherheitsgründen melde dich erneut an und versuche es gleich danach.",
       w_tag:"Professionelle Fotos, wohin du auch gehst. Finde und buche einen Fotografen für deine Reise.",
       w_traveler:"Ich bin ein Reisender", w_photographer:"Ich bin ein Fotograf",
-      s_where:"Wo wirst du dich fotografieren lassen?", s_hi:"Hallo %s!", s_sub:"Suche nach Stadt und Daten deines Aufenthalts", home_tagline:"Schaffe deine nächste Erinnerung", home_hi:"Hallo!", see_all:"Alle ansehen", home_fav:"Deine Lieblingsziele", nav_favorites:"Favoriten", fav_ph_sect:"Lieblingsfotografen", fav_dest_sect:"Lieblingsziele", fav_dest_empty:"Füge Ziele mit dem Herz hinzu.", notif_title:"Benachrichtigungen", notif_empty:"Noch keine Benachrichtigungen.", menu_title:"Menü", svc_detail_soon:"Die Beschreibung dieses Dienstes folgt in Kürze.", cal_hint:"Ankunft und Abreise wählen", bd_title:"Buchungsdetails", bd_days:"Gebuchte Tage", bd_cost:"Kosten", bd_pay:"Zahlungsmethode", bd_notes:"Notizen", bd_message:"Fotograf anschreiben",
+      s_where:"Wo wirst du dich fotografieren lassen?", s_hi:"Hallo %s!", s_sub:"Suche nach Stadt und Daten deines Aufenthalts", home_tagline:"Schaffe deine nächste Erinnerung", home_hi:"Hallo!", see_all:"Alle ansehen", home_fav:"Deine Lieblingsziele", nav_favorites:"Favoriten", fav_ph_sect:"Lieblingsfotografen", fav_dest_sect:"Lieblingsziele", fav_dest_empty:"Füge Ziele mit dem Herz hinzu.", notif_title:"Benachrichtigungen", notif_empty:"Noch keine Benachrichtigungen.", notif_new_msg:"Neue Nachricht", notif_sample:"Wir benachrichtigen dich hier über neue Nachrichten.", menu_title:"Menü", svc_detail_soon:"Die Beschreibung dieses Dienstes folgt in Kürze.", cal_hint:"Ankunft und Abreise wählen", bd_title:"Buchungsdetails", bd_days:"Gebuchte Tage", bd_cost:"Kosten", bd_pay:"Zahlungsmethode", bd_notes:"Notizen", bd_message:"Fotograf anschreiben",
       s_dest:"Reiseziel", s_dest_ph:"Stadt oder Ort", s_checkin:"Anreise", s_checkout:"Abreise",
       s_service_type:"Art des Service", s_service_val:"Porträt / Urlaub",
       sm_mode:"Service-Modus", sm_fixed:"📍 Fester Ort", sm_roaming:"🚶 Unterwegs", sm_both:"Beides", av_mode:"Angebotene Modi",
@@ -2095,7 +2204,7 @@
       d_next_level:"Nächstes Level: Top ★",
       d_next_msg:"Erledige Aufträge und halte eine hohe Bewertung, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
       d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen",      d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
-      chats_title:"Chat", chats_hdr:"Nachrichten", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
+      chats_title:"Chat", chats_hdr:"Nachrichten", chat_mark_read:"Als gelesen markieren", chat_mark_unread:"Als ungelesen markieren", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
       time_yesterday:"gestern", chat_prev_james:"Vielen Dank für die Fotos 🙏",
       time_mon:"Mo", chat_prev_elena:"Bist du auch am 20. verfügbar?",
       chat_hdr_sub:"Porträt · 13. Jul, 16:00", day_today:"Heute",
@@ -2120,7 +2229,7 @@
       login_sub:"登录，随时随地寻找并预订摄影师。", login_google:"使用 Google 继续", login_email:"使用邮箱继续", login_email_ph:"name@email.com", login_enter:"登录", login_pass_ph:"密码", login_register:"创建账户", login_forgot:"忘记密码？", login_need_both:"请输入邮箱和密码。", login_need_email:"请先输入你的邮箱。", login_reset_sent:"我们已向你发送重置密码的邮件。", fb_offline:"登录服务不可用，请检查网络连接。", vf_title:"确认你的邮箱", vf_msg:"我们给你发了一封带链接的邮件。打开并确认后，再回到这里。", vf_done:"我已确认，进入", vf_resend:"重新发送邮件", vf_sent:"邮件已发送！请查收邮箱（也看看垃圾邮件）。", vf_not_yet:"尚未确认。请点击邮件中的链接后再试。", acc_delete_relogin:"出于安全考虑，请重新登录后立即重试。",
       w_tag:"无论走到哪里都有专业照片。为你的旅行寻找并预订摄影师。",
       w_traveler:"我是旅行者", w_photographer:"我是摄影师",
-      s_where:"你想在哪里拍照？", s_hi:"你好，%s！", s_sub:"按城市和入住日期搜索", home_tagline:"创造你的下一段回忆", home_hi:"你好！", see_all:"查看全部", home_fav:"你的收藏目的地", nav_favorites:"收藏", fav_ph_sect:"收藏的摄影师", fav_dest_sect:"收藏的目的地", fav_dest_empty:"用爱心添加目的地。", notif_title:"通知", notif_empty:"暂无通知。", menu_title:"菜单", svc_detail_soon:"该服务的说明即将推出。", cal_hint:"选择到达和离开日期", bd_title:"预订详情", bd_days:"预订日期", bd_cost:"费用", bd_pay:"支付方式", bd_notes:"备注", bd_message:"给摄影师发消息",
+      s_where:"你想在哪里拍照？", s_hi:"你好，%s！", s_sub:"按城市和入住日期搜索", home_tagline:"创造你的下一段回忆", home_hi:"你好！", see_all:"查看全部", home_fav:"你的收藏目的地", nav_favorites:"收藏", fav_ph_sect:"收藏的摄影师", fav_dest_sect:"收藏的目的地", fav_dest_empty:"用爱心添加目的地。", notif_title:"通知", notif_empty:"暂无通知。", notif_new_msg:"新消息", notif_sample:"我们会在这里通知你新消息。", menu_title:"菜单", svc_detail_soon:"该服务的说明即将推出。", cal_hint:"选择到达和离开日期", bd_title:"预订详情", bd_days:"预订日期", bd_cost:"费用", bd_pay:"支付方式", bd_notes:"备注", bd_message:"给摄影师发消息",
       s_dest:"目的地", s_dest_ph:"城市或地点", s_checkin:"到达", s_checkout:"离开",
       s_service_type:"服务类型", s_service_val:"人像 / 度假",
       sm_mode:"服务方式", sm_fixed:"📍 固定地点", sm_roaming:"🚶 移动拍摄", sm_both:"两者皆可", av_mode:"提供方式",
@@ -2158,7 +2267,7 @@
       d_next_level:"下一等级：顶级 ★",
       d_next_msg:"完成更多服务并保持高评分，以解锁最大曝光和更低佣金。",
       d_pending:"待处理请求", d_no_requests:"暂无请求。", chats_empty:"暂无聊天。", d_accept:"接受", d_reject:"拒绝", d_manage:"管理资料和可预约时间", d_home_back:"↩ 返回主界面",
-      chats_title:"聊天", chats_hdr:"消息", chat_bye:"好的，特拉斯特维雷见！",
+      chats_title:"聊天", chats_hdr:"消息", chat_mark_read:"标记为已读", chat_mark_unread:"标记为未读", chat_bye:"好的，特拉斯特维雷见！",
       time_yesterday:"昨天", chat_prev_james:"非常感谢照片 🙏",
       time_mon:"周一", chat_prev_elena:"20号也有空吗？",
       chat_hdr_sub:"人像 · 7月13日 16:00", day_today:"今天",
@@ -2183,7 +2292,7 @@
       login_sub:"ログインして、どこでも写真家を探して予約しましょう。", login_google:"Google で続ける", login_email:"メールで続ける", login_email_ph:"name@email.com", login_enter:"ログイン", login_pass_ph:"パスワード", login_register:"アカウントを作成", login_forgot:"パスワードをお忘れですか？", login_need_both:"メールとパスワードを入力してください。", login_need_email:"先にメールを入力してください。", login_reset_sent:"パスワード再設定のメールを送信しました。", fb_offline:"ログインサービスに接続できません。接続を確認してください。", vf_title:"メールを確認してください", vf_msg:"リンク付きのメールを送りました。開いて確認したら、ここに戻ってください。", vf_done:"確認しました、入る", vf_resend:"メールを再送する", vf_sent:"メールを送信しました！受信箱（迷惑メールも）を確認してください。", vf_not_yet:"まだ確認されていません。メール内のリンクをクリックして再度お試しください。", acc_delete_relogin:"安全のため、ログインし直してすぐに再試行してください。",
       w_tag:"どこへ行ってもプロの写真を。旅のための写真家を探して予約。",
       w_traveler:"旅行者です", w_photographer:"写真家です",
-      s_where:"どこで撮影しますか？", s_hi:"%sさん、こんにちは！", s_sub:"都市と滞在日で検索", home_tagline:"次の思い出をつくろう", home_hi:"こんにちは！", see_all:"すべて見る", home_fav:"お気に入りの旅先", nav_favorites:"お気に入り", fav_ph_sect:"お気に入りの写真家", fav_dest_sect:"お気に入りの旅先", fav_dest_empty:"ハートで旅先を追加できます。", notif_title:"通知", notif_empty:"通知はまだありません。", menu_title:"メニュー", svc_detail_soon:"このサービスの説明は近日公開予定です。", cal_hint:"到着日と出発日を選択", bd_title:"予約の詳細", bd_days:"予約日", bd_cost:"料金", bd_pay:"支払い方法", bd_notes:"メモ", bd_message:"写真家にメッセージ",
+      s_where:"どこで撮影しますか？", s_hi:"%sさん、こんにちは！", s_sub:"都市と滞在日で検索", home_tagline:"次の思い出をつくろう", home_hi:"こんにちは！", see_all:"すべて見る", home_fav:"お気に入りの旅先", nav_favorites:"お気に入り", fav_ph_sect:"お気に入りの写真家", fav_dest_sect:"お気に入りの旅先", fav_dest_empty:"ハートで旅先を追加できます。", notif_title:"通知", notif_empty:"通知はまだありません。", notif_new_msg:"新しいメッセージ", notif_sample:"新しいメッセージをここでお知らせします。", menu_title:"メニュー", svc_detail_soon:"このサービスの説明は近日公開予定です。", cal_hint:"到着日と出発日を選択", bd_title:"予約の詳細", bd_days:"予約日", bd_cost:"料金", bd_pay:"支払い方法", bd_notes:"メモ", bd_message:"写真家にメッセージ",
       s_dest:"目的地", s_dest_ph:"都市または場所", s_checkin:"到着", s_checkout:"出発",
       s_service_type:"サービスの種類", s_service_val:"ポートレート / バケーション",
       sm_mode:"サービスの形式", sm_fixed:"📍 固定の場所", sm_roaming:"🚶 移動撮影", sm_both:"両方", av_mode:"提供形式",
@@ -2221,7 +2330,7 @@
       d_next_level:"次のレベル：トップ ★",
       d_next_msg:"サービスを重ね、高い評価を保つと、最大の露出と手数料の割引が解除されます。",
       d_pending:"保留中のリクエスト", d_no_requests:"現在リクエストはありません。", chats_empty:"現在チャットはありません。", d_accept:"承認", d_reject:"却下", d_manage:"プロフィールと空き状況を管理", d_home_back:"↩ ホーム画面に戻る",
-      chats_title:"チャット", chats_hdr:"メッセージ", chat_bye:"了解、トラステヴェレで会いましょう！",
+      chats_title:"チャット", chats_hdr:"メッセージ", chat_mark_read:"既読にする", chat_mark_unread:"未読にする", chat_bye:"了解、トラステヴェレで会いましょう！",
       time_yesterday:"昨日", chat_prev_james:"写真ありがとうございました 🙏",
       time_mon:"月", chat_prev_elena:"20日も空いていますか？",
       chat_hdr_sub:"ポートレート · 7月13日 16:00", day_today:"今日",
@@ -2247,7 +2356,7 @@
     try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); renderPopularDests(); renderServices(); renderBookings(); renderTrChats(); updateBookingUI(); initFirebase();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); renderPopularDests(); renderServices(); renderBookings(); renderTrChats(); refreshNotifUI(); updateBookingUI(); initFirebase();
     attachAC('natInput','natMenu',function(){ return NATIONALITIES; }, saveProfile);
     attachAC('destInput','destMenu',function(){ return DESTINATIONS; }, null);
     var _st=document.getElementById('svcType'); if(_st) _st.innerHTML=svcOptionsHtml();
