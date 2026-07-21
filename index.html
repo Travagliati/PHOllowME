@@ -146,8 +146,10 @@
   .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
   .dcard{position:relative;flex:0 0 220px;height:140px;border-radius:18px;overflow:hidden;color:#fff;cursor:pointer}
   .dgrid .dcard{flex:none;width:auto;height:122px}
-  .dcard .sc{position:absolute;inset:0;width:100%;height:100%}
-  .dcard .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),rgba(0,0,0,0) 58%)}
+  .dcard .sc{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  .dcard .tphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity .35s}
+  .dcard .tphoto.on{opacity:1}
+  .dcard .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),rgba(0,0,0,0) 58%);z-index:2}
   .dcard .dname{position:absolute;left:12px;bottom:10px;font-size:15px;font-weight:600;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.45)}
   .dcard .dfav{position:absolute;top:8px;right:8px;z-index:2;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}
   .dplace{flex:0 0 220px;height:140px;border:2px dashed var(--line);border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--grey);font-size:13px;padding:12px}
@@ -230,6 +232,17 @@
   .crow .txt .n{font-size:14px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
   .crow .txt .n span{font-weight:400;color:var(--grey);font-size:11px}
   .crow .txt .p{font-size:12px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Card lista messaggi (viaggiatore) */
+  .chatcard{display:flex;align-items:center;gap:13px;background:var(--screen);border:1px solid var(--line);border-radius:20px;padding:13px 15px;margin-bottom:12px;box-shadow:0 3px 10px rgba(0,0,0,.05);cursor:pointer;transition:transform .08s}
+  .chatcard:active{transform:scale(.99)}
+  .chatcard .cav{width:54px;height:54px;border-radius:50%;overflow:hidden;flex-shrink:0}
+  .chatcard .cmid{flex:1;min-width:0}
+  .chatcard .cname{font-size:17px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chatcard .cprev{font-size:13px;color:var(--grey);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chatcard .cprev.unread{opacity:1;font-weight:600;color:var(--text)}
+  .chatcard .cend{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0;align-self:flex-start;padding-top:2px}
+  .chatcard .ctime{font-size:12px;color:var(--grey);white-space:nowrap}
+  .chatcard .cdot{width:11px;height:11px;border-radius:50%;background:var(--accent);display:block}
   .badge{background:var(--accent);color:#fff;border-radius:50%;min-width:19px;height:19px;font-size:11px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
   .chatbg{flex:1;overflow-y:auto;background:var(--chatbg);padding:14px}
   .bub{max-width:76%;padding:9px 12px;border-radius:16px;font-size:13px;line-height:1.4;margin-bottom:9px;box-shadow:0 1px 1px rgba(0,0,0,.05)}
@@ -640,7 +653,7 @@
     <!-- ============ BOOKINGS ============ -->
     <div class="view" id="bookings">
       <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
-      <div class="scroll pad">
+      <div class="scroll pad" style="background:var(--light)">
         <h2 class="pagetitle" data-i18n="bk_title">Le mie prenotazioni</h2>
         <div id="bkList"></div>
         <p class="muted" id="bkEmpty" style="margin:24px 0;text-align:center" data-i18n="bk_empty">Non hai ancora prenotazioni.</p>
@@ -657,8 +670,9 @@
 
     <!-- ============ TRAVELER CHAT LIST ============ -->
     <div class="view" id="tr_chats">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand" data-i18n="chats_title">Chat</span></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
       <div class="scroll pad">
+        <h2 class="pagetitle" data-i18n="chats_hdr">Messaggi</h2>
         <div class="clist" id="trChatList"></div>
         <p class="muted" id="trChatsEmpty" style="margin:24px 0;text-align:center" data-i18n="chats_empty">Nessuna chat al momento.</p>
       </div>
@@ -740,7 +754,7 @@
             <div class="dc-row"><span class="dc-k"><span class="dc-ic">💳</span><span data-i18n="bd_pay">Metodo di pagamento</span></span><span class="dc-v" id="bdPay">—</span></div>
             <div class="dc-row dc-notes"><span class="dc-k"><span class="dc-ic">📝</span><span data-i18n="bd_notes">Note</span></span><span class="dc-v" id="bdNotes">—</span></div>
           </div>
-          <button class="btn" style="border-radius:26px" onclick="show('tr_chats')">💬 <span data-i18n="bd_message">Scrivi al fotografo</span></button>
+          <button class="btn" style="border-radius:26px" onclick="msgBookedPhotographer()">💬 <span data-i18n="bd_message">Scrivi al fotografo</span></button>
         </div>
       </div>
     </div>
@@ -869,9 +883,10 @@
 
     <!-- ============ ACCOUNT (profilo utente) ============ -->
     <div class="view" id="account">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><h2 data-i18n="acc_title">Il mio profilo</h2></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
       <div class="scroll pad">
-        <div style="display:flex;gap:14px;align-items:center;margin-bottom:12px">
+        <h2 class="pagetitle" data-i18n="acc_title">Il mio profilo</h2>
+        <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
           <div class="avatar myAvatar" style="position:relative;cursor:pointer" onclick="openPhotoSheet()"><span class="ini">MR</span><span class="cambadge">📷</span></div>
           <input id="camInput" type="file" accept="image/*" capture="environment" onchange="uploadPhoto(this)" style="display:none">
           <input id="galInput" type="file" accept="image/*" onchange="uploadPhoto(this)" style="display:none">
@@ -1032,10 +1047,14 @@
   };
   function hashHue(s){ var h=0,i; for(i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h%360; }
   function cityGrad(city){ var h=hashHue(city); return 'linear-gradient(135deg,hsl('+h+',56%,52%),hsl('+((h+30)%360)+',60%,38%))'; }
+  /* foto reali via loremflickr (keyless, per parola chiave); ripiego automatico sull'illustrazione se offline/errore */
+  var SERVICE_PHOTO_KW={'Follow me':'travel,photographer','Ritratto':'portrait','Vacanza':'vacation,beach','Matrimonio':'wedding','Evento':'event,party','Street':'street','Reportage':'reportage,camera','Coppie':'couple','Fashion':'fashion,model'};
+  function photoUrl(kw,w,h,seed){ return 'https://loremflickr.com/'+w+'/'+h+'/'+encodeURIComponent(kw)+'?lock='+(((seed||1)%997)+1); }
+  function tphotoHtml(kw,w,h,seed){ return '<img class="tphoto" loading="lazy" src="'+photoUrl(kw,w,h,seed)+'" onload="this.classList.add(\'on\')" onerror="this.remove()">'; }
   function destFavBtnHtml(city){ return '<span class="dfav" onclick="event.stopPropagation();toggleDestFav(\''+city+'\')">'+(isDestFav(city)?'❤️':'🤍')+'</span>'; }
   function destCardHtml(city){
     var sc=SCENES[DEST_SCENE[city]||'city']||SCENES.city;
-    return '<div class="dcard" style="background:'+cityGrad(city)+'" onclick="openDest(\''+city+'\')">'+sc+'<div class="ov"></div>'+destFavBtnHtml(city)+'<span class="dname">'+escHtml(city)+'</span></div>';
+    return '<div class="dcard" style="background:'+cityGrad(city)+'" onclick="openDest(\''+city+'\')">'+sc+tphotoHtml(city+',travel',440,280,hashHue(city))+'<div class="ov"></div>'+destFavBtnHtml(city)+'<span class="dname">'+escHtml(city)+'</span></div>';
   }
   function openDest(city){
     var i=document.getElementById('destInput'); if(i) i.value=city;
@@ -1084,8 +1103,8 @@
   (function(){ for(var k in SERVICE_INNER){ if(SERVICE_INNER.hasOwnProperty(k)) SERVICE_SCENES[k]=svcSvg(SERVICE_INNER[k]); } })();
   function svcMiniIcon(svc){ var inner=SERVICE_INNER[svc]||SERVICE_INNER._def; return "<svg class='svcmini' viewBox='36 12 88 74'><g fill='none' stroke='currentColor' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'>"+inner+"</g></svg>"; }
   function serviceCardHtml(svc){
-    var sc=SERVICE_SCENES[svc]||SERVICE_SCENES._def;
-    return '<div class="dcard" style="background:'+cityGrad(svc)+'" onclick="openService(\''+svc+'\')">'+sc+'<div class="ov"></div><span class="dname">'+escHtml(svc)+'</span></div>';
+    var sc=SERVICE_SCENES[svc]||SERVICE_SCENES._def, kw=SERVICE_PHOTO_KW[svc]||'photography';
+    return '<div class="dcard" style="background:'+cityGrad(svc)+'" onclick="openService(\''+svc+'\')">'+sc+tphotoHtml(kw,440,280,hashHue(svc))+'<div class="ov"></div><span class="dname">'+escHtml(svc)+'</span></div>';
   }
   function renderServices(){
     var a=document.getElementById('homeServices'); if(a) a.innerHTML=SERVICE_TYPES.slice(0,6).map(serviceCardHtml).join('')+seeTileHtml('all_services');
@@ -1094,7 +1113,7 @@
   function openService(svc){
     var t=document.getElementById('svcDetailTitle'); if(t) t.textContent=svc;
     var b=document.getElementById('svcDetailBanner');
-    if(b){ b.style.background=cityGrad(svc); b.innerHTML=(SERVICE_SCENES[svc]||SERVICE_SCENES._def)+'<div class="ov"></div><span class="dname" style="font-size:16px">'+escHtml(svc)+'</span>'; }
+    if(b){ b.style.background=cityGrad(svc); b.innerHTML=(SERVICE_SCENES[svc]||SERVICE_SCENES._def)+tphotoHtml(SERVICE_PHOTO_KW[svc]||'photography',600,360,hashHue(svc))+'<div class="ov"></div><span class="dname" style="font-size:16px">'+escHtml(svc)+'</span>'; }
     show('service_detail');
   }
   /* ---- Prenotazioni: card "polaroid" (profili di esempio) ---- */
@@ -1130,7 +1149,59 @@
     h('bdLoc', '📍 '+escHtml(b.city));
     t('bdDays', b.days); h('bdSvcIcon', svcMiniIcon(b.svc)); t('bdSvc', b.svc);
     t('bdCost', b.cost); t('bdPay', b.pay); t('bdNotes', b.notes);
+    currentBookingId=id;
     show('booking_detail');
+  }
+  var currentBookingId=null;
+  function msgBookedPhotographer(){ if(currentBookingId) openChat(currentBookingId); else show('tr_chats'); }
+  /* ---- Chat viaggiatore: lista conversazioni + conversazione (dati d'esempio) ---- */
+  var EXAMPLE_CHATS=[
+    {id:'demo-marco', name:'Marco', sub:'Matrimonio · San Francisco', time:'10:24', unread:true, msgs:[
+      {me:false,t:'Ciao! Grazie per aver prenotato 😊',tm:'10:20'},
+      {me:true,t:'Ciao Marco! A che ora ci troviamo?',tm:'10:22'},
+      {me:false,t:'Direi alle 15 davanti alla chiesa.',tm:'10:23'},
+      {me:true,t:'Perfetto, ci vediamo lì!',tm:'10:24'}
+    ]},
+    {id:'demo-sofia', name:'Sofia', sub:'Ritratto · Barcellona', time:'ieri', unread:true, msgs:[
+      {me:false,t:'Buongiorno! Pronta per il servizio?',tm:'ieri'},
+      {me:true,t:'Sì! Che vestiti mi consigli?',tm:'ieri'},
+      {me:false,t:'Colori chiari e tinta unita vengono benissimo.',tm:'ieri'}
+    ]},
+    {id:'demo-luca', name:'Luca', sub:'Reportage · Tokyo', time:'lun', msgs:[
+      {me:false,t:'Ci vediamo a Shibuya alle 9?',tm:'lun'},
+      {me:true,t:'Perfetto, a lunedì!',tm:'lun'}
+    ]},
+    {id:'demo-elena', name:'Elena', sub:'Vacanza · Santorini', time:'12 giu', msgs:[
+      {me:true,t:'Ciao Elena! Foto al tramonto a Oia?',tm:'12 giu'},
+      {me:false,t:'Assolutamente sì, la luce è magica lì 🌅',tm:'12 giu'}
+    ]}
+  ];
+  function chatById(id){ for(var i=0;i<EXAMPLE_CHATS.length;i++){ if(EXAMPLE_CHATS[i].id===id) return EXAMPLE_CHATS[i]; } return null; }
+  function chatRowHtml(c){
+    var last=c.msgs.length?c.msgs[c.msgs.length-1].t:'';
+    var dot=c.unread?'<span class="cdot"></span>':'';
+    return '<div class="chatcard" onclick="openChat(\''+c.id+'\')">'
+      +'<div class="cav">'+avatarSvg(c.name)+'</div>'
+      +'<div class="cmid"><div class="cname">'+escHtml(c.name)+'</div>'
+      +'<div class="cprev'+(c.unread?' unread':'')+'">'+escHtml(last)+'</div></div>'
+      +'<div class="cend"><span class="ctime">'+escHtml(c.time)+'</span>'+dot+'</div>'
+      +'</div>';
+  }
+  function renderTrChats(){
+    var list=document.getElementById('trChatList'), empty=document.getElementById('trChatsEmpty');
+    if(!list) return;
+    list.innerHTML=EXAMPLE_CHATS.map(chatRowHtml).join('');
+    if(empty) empty.style.display=EXAMPLE_CHATS.length?'none':'';
+  }
+  function openChat(id){
+    var c=chatById(id); if(!c) return;
+    var nm=document.getElementById('chatName'); if(nm) nm.textContent=c.name;
+    var sb=document.getElementById('chatSub'); if(sb) sb.textContent=c.sub;
+    var av=document.getElementById('chatAvatar'); if(av){ av.style.overflow='hidden'; av.innerHTML=avatarSvg(c.name); }
+    var body=document.getElementById('chatBody');
+    if(body){ body.innerHTML=c.msgs.map(function(m){ return '<div class="bub '+(m.me?'me':'them')+'">'+escHtml(m.t)+'<span class="t">'+escHtml(m.tm)+'</span></div>'; }).join(''); }
+    show('ph_chat');
+    if(body) body.scrollTop=body.scrollHeight;
   }
   function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function segVal(id){ var s=document.getElementById(id); if(!s) return ''; var b=s.querySelector('button.on'); return b?(b.getAttribute('data-val')||''):''; }
@@ -1772,7 +1843,7 @@
       d_next_level:"Prossimo livello: Top ★",
       d_next_msg:"Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.",
       d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta",      d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
-      chats_title:"Chat", chat_bye:"Perfetto, ci vediamo a Trastevere!",
+      chats_title:"Chat", chats_hdr:"Messaggi", chat_bye:"Perfetto, ci vediamo a Trastevere!",
       time_yesterday:"ieri", chat_prev_james:"Grazie mille per le foto 🙏",
       time_mon:"lun", chat_prev_elena:"Sei disponibile anche il 20?",
       chat_hdr_sub:"Ritratto · 13 lug, 16:00", day_today:"Oggi",
@@ -1835,7 +1906,7 @@
       d_next_level:"Next level: Top ★",
       d_next_msg:"Complete services and keep a high rating to unlock maximum visibility and reduced commissions.",
       d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline",      d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
-      chats_title:"Chat", chat_bye:"Perfect, see you in Trastevere!",
+      chats_title:"Chat", chats_hdr:"Messages", chat_bye:"Perfect, see you in Trastevere!",
       time_yesterday:"yesterday", chat_prev_james:"Thank you so much for the photos 🙏",
       time_mon:"Mon", chat_prev_elena:"Are you available on the 20th too?",
       chat_hdr_sub:"Portrait · 13 Jul, 16:00", day_today:"Today",
@@ -1898,7 +1969,7 @@
       d_next_level:"Próximo nivel: Top ★",
       d_next_msg:"Completa servicios y mantén una valoración alta para desbloquear máxima visibilidad y comisiones reducidas.",
       d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar",      d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
-      chats_title:"Chat", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
+      chats_title:"Chat", chats_hdr:"Mensajes", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
       time_yesterday:"ayer", chat_prev_james:"¡Muchas gracias por las fotos 🙏",
       time_mon:"lun", chat_prev_elena:"¿Estás disponible también el 20?",
       chat_hdr_sub:"Retrato · 13 jul, 16:00", day_today:"Hoy",
@@ -1961,7 +2032,7 @@
       d_next_level:"Niveau suivant : Top ★",
       d_next_msg:"Réalisez des prestations et gardez une bonne note pour débloquer une visibilité maximale et des commissions réduites.",
       d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser",      d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
-      chats_title:"Messages", chat_bye:"Parfait, on se voit à Trastevere !",
+      chats_title:"Messages", chats_hdr:"Messages", chat_bye:"Parfait, on se voit à Trastevere !",
       time_yesterday:"hier", chat_prev_james:"Merci beaucoup pour les photos 🙏",
       time_mon:"lun", chat_prev_elena:"Êtes-vous aussi disponible le 20 ?",
       chat_hdr_sub:"Portrait · 13 juil., 16:00", day_today:"Aujourd'hui",
@@ -2024,7 +2095,7 @@
       d_next_level:"Nächstes Level: Top ★",
       d_next_msg:"Erledige Aufträge und halte eine hohe Bewertung, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
       d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen",      d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
-      chats_title:"Chat", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
+      chats_title:"Chat", chats_hdr:"Nachrichten", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
       time_yesterday:"gestern", chat_prev_james:"Vielen Dank für die Fotos 🙏",
       time_mon:"Mo", chat_prev_elena:"Bist du auch am 20. verfügbar?",
       chat_hdr_sub:"Porträt · 13. Jul, 16:00", day_today:"Heute",
@@ -2087,7 +2158,7 @@
       d_next_level:"下一等级：顶级 ★",
       d_next_msg:"完成更多服务并保持高评分，以解锁最大曝光和更低佣金。",
       d_pending:"待处理请求", d_no_requests:"暂无请求。", chats_empty:"暂无聊天。", d_accept:"接受", d_reject:"拒绝", d_manage:"管理资料和可预约时间", d_home_back:"↩ 返回主界面",
-      chats_title:"聊天", chat_bye:"好的，特拉斯特维雷见！",
+      chats_title:"聊天", chats_hdr:"消息", chat_bye:"好的，特拉斯特维雷见！",
       time_yesterday:"昨天", chat_prev_james:"非常感谢照片 🙏",
       time_mon:"周一", chat_prev_elena:"20号也有空吗？",
       chat_hdr_sub:"人像 · 7月13日 16:00", day_today:"今天",
@@ -2150,7 +2221,7 @@
       d_next_level:"次のレベル：トップ ★",
       d_next_msg:"サービスを重ね、高い評価を保つと、最大の露出と手数料の割引が解除されます。",
       d_pending:"保留中のリクエスト", d_no_requests:"現在リクエストはありません。", chats_empty:"現在チャットはありません。", d_accept:"承認", d_reject:"却下", d_manage:"プロフィールと空き状況を管理", d_home_back:"↩ ホーム画面に戻る",
-      chats_title:"チャット", chat_bye:"了解、トラステヴェレで会いましょう！",
+      chats_title:"チャット", chats_hdr:"メッセージ", chat_bye:"了解、トラステヴェレで会いましょう！",
       time_yesterday:"昨日", chat_prev_james:"写真ありがとうございました 🙏",
       time_mon:"月", chat_prev_elena:"20日も空いていますか？",
       chat_hdr_sub:"ポートレート · 7月13日 16:00", day_today:"今日",
@@ -2176,7 +2247,7 @@
     try{ history.pushState({init:1},''); }catch(e){}
     Array.prototype.forEach.call(document.querySelectorAll('[data-flag]'),function(el){ el.innerHTML=FLAGS[el.getAttribute('data-flag')]; });
     updateLangUI(curLang);
-    applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); renderPopularDests(); renderServices(); renderBookings(); updateBookingUI(); initFirebase();
+    applyTheme(); markTheme(); markRole(); updateAccountUI(); renderResults(); renderPopularDests(); renderServices(); renderBookings(); renderTrChats(); updateBookingUI(); initFirebase();
     attachAC('natInput','natMenu',function(){ return NATIONALITIES; }, saveProfile);
     attachAC('destInput','destMenu',function(){ return DESTINATIONS; }, null);
     var _st=document.getElementById('svcType'); if(_st) _st.innerHTML=svcOptionsHtml();
