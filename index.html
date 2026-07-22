@@ -105,6 +105,34 @@
   .ph-apptbox .pa-title{font-size:15px;font-weight:800;color:var(--accent);letter-spacing:.3px;margin-bottom:9px}
   .ph-apptbox .pa-date{font-size:16px;font-weight:700;color:var(--text)}
   .ph-apptbox .pa-loc{display:flex;align-items:center;gap:5px;font-size:14px;color:var(--text2);margin-top:6px}
+  /* Home fotografo: riquadri statistiche */
+  .ph-tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .ph-tile{border:1.5px solid var(--line);border-radius:18px;background:var(--screen);box-shadow:0 3px 12px rgba(0,0,0,.06);padding:14px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:112px;transition:transform .08s}
+  .ph-tile.tap{cursor:pointer}
+  .ph-tile.tap:active{transform:scale(.98)}
+  .ph-tile .pt-big{font-size:26px;font-weight:800;color:var(--text);line-height:1.1}
+  .ph-tile .pt-lbl{font-size:12px;color:var(--grey);margin-top:5px;line-height:1.25}
+  .ph-tile .pt-star{font-size:38px;color:var(--gold);line-height:1}
+  .ph-tile .pt-star+.pt-big{margin-top:2px}
+  .ph-tile .pt-eur{font-size:26px;font-weight:800;color:var(--accent)}
+  .ph-tile .pt-num{font-size:30px;font-weight:800;color:var(--accent);line-height:1.05}
+  /* Prossimo livello */
+  .ph-level{margin:0 0 18px}
+  .ph-level .pl-title{font-size:15px;font-weight:800;color:var(--accent-d);margin-bottom:8px}
+  .ph-level .pl-title b{color:var(--gold)}
+  .ph-bar{background:var(--track);border-radius:20px;height:12px;overflow:hidden}
+  .ph-bar>i{display:block;height:100%;background:var(--accent);border-radius:20px;transition:width .4s}
+  .ph-level .pl-pct{font-size:12px;color:var(--grey);margin-top:6px;text-align:right}
+  /* Recensioni ricevute */
+  .revcard{border:1.5px solid var(--line);border-radius:18px;background:var(--screen);box-shadow:0 3px 12px rgba(0,0,0,.06);padding:14px 15px;margin-bottom:12px}
+  .revcard .rv-head{display:flex;align-items:center;gap:10px}
+  .revcard .rv-photo{width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg)}
+  .revcard .rv-name{font-size:15px;font-weight:800;color:var(--text)}
+  .revcard .rv-end{margin-left:auto;text-align:right}
+  .revcard .rv-stars{color:var(--gold);font-size:14px;letter-spacing:1px}
+  .revcard .rv-date{font-size:11px;color:var(--grey);margin-top:3px}
+  .revcard .rv-text{font-size:13px;line-height:1.5;color:var(--text2);margin-top:10px}
+  .revcard .rv-svc{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--grey);margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
   .langopt{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text)}
   .langopt:hover{background:var(--light)}
 
@@ -838,6 +866,35 @@
         </div>
         <p class="muted" id="phNoAppt" style="display:none;margin:0 0 16px;text-align:center" data-i18n="appt_none">Nessun appuntamento in programma.</p>
 
+        <div class="ph-tiles">
+          <div class="ph-tile tap" onclick="openMyReviews()">
+            <div class="pt-star">★</div>
+            <div class="pt-big" id="phRating">—</div>
+            <div class="pt-lbl" data-i18n="d_rating">valutazione</div>
+          </div>
+          <div class="ph-tile">
+            <div class="pt-eur" id="phEarn">—</div>
+            <div class="pt-lbl" data-i18n="ph_this_month">questo mese</div>
+          </div>
+        </div>
+
+        <div class="ph-level">
+          <div class="pl-title"><span data-i18n="ph_next_level">Prossimo livello:</span> <b data-i18n="lvl_top">★ Top</b></div>
+          <div class="ph-bar"><i id="phLevelBar" style="width:0%"></i></div>
+          <div class="pl-pct" id="phLevelPct">—</div>
+        </div>
+
+        <div class="ph-tiles">
+          <div class="ph-tile tap" onclick="show('ph_avail')">
+            <div class="pt-num" id="phWeekSvc">0</div>
+            <div class="pt-lbl" data-i18n="ph_week_services">servizi questa settimana</div>
+          </div>
+          <div class="ph-tile tap" onclick="goToRequests()">
+            <div class="pt-num" id="phNewReq">0</div>
+            <div class="pt-lbl" data-i18n="ph_new_requests">nuove richieste</div>
+          </div>
+        </div>
+
         <div class="field" style="margin-bottom:14px;position:relative">
           <div class="k" data-i18n="d_nationality">Nazionalità</div>
           <input id="natInput" class="fieldin" autocomplete="off" oninput="saveProfile()" data-i18n-ph="d_nat_ph" placeholder="Inizia a scrivere…">
@@ -862,16 +919,7 @@
           <button data-val="no" onclick="pickSeg(this);saveProfile()" data-i18n="opt_no">No</button>
         </div>
 
-        <div class="row2" style="margin-bottom:14px">
-          <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">0</div><div class="muted" data-i18n="d_services">servizi</div></div>
-          <div style="background:var(--light);border-radius:14px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">—</div><div class="muted" data-i18n="d_rating">valutazione</div></div>
-        </div>
-
-        <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="d_next_level">Prossimo livello: Top ★</h3>
-        <div style="background:var(--bg);border-radius:20px;height:12px;overflow:hidden;margin-bottom:4px"><div style="width:0%;height:100%;background:var(--accent)"></div></div>
-        <p class="muted" style="margin-bottom:16px" data-i18n="d_next_msg">Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.</p>
-
-        <h3 style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="d_pending">Richieste in attesa</h3>
+        <h3 id="reqHead" style="color:var(--accent-d);font-size:14px;margin-bottom:8px" data-i18n="d_pending">Richieste in attesa</h3>
         <div id="reqList"></div>
         <p class="muted" id="reqEmpty" style="margin:8px 0 16px;text-align:center" data-i18n="d_no_requests">Nessuna richiesta al momento.</p>
 
@@ -905,6 +953,20 @@
             <div class="dc-row dc-notes"><span class="dc-k"><span class="dc-ic">📝</span><span data-i18n="bd_notes">Note</span></span><span class="dc-v" id="apptNotes">—</span></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ============ LE MIE RECENSIONI (fotografo) ============ -->
+    <div class="view" id="ph_reviews">
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
+      <div class="scroll pad">
+        <h2 class="pagetitle" data-i18n="rv_title">Le mie recensioni</h2>
+        <div class="ph-tile" style="min-height:0;padding:12px;margin-bottom:16px">
+          <div><span class="pt-star" style="font-size:26px">★</span> <span class="pt-big" id="rvAvg">—</span></div>
+          <div class="pt-lbl" id="rvCount">—</div>
+        </div>
+        <div id="rvList"></div>
+        <p class="muted" id="rvEmpty" style="display:none;margin:24px 0;text-align:center" data-i18n="rv_empty">Non hai ancora recensioni.</p>
       </div>
     </div>
 
@@ -2016,6 +2078,53 @@
     {id:'appt-1', client:'Marco', city:'Milano', svc:'Matrimonio', date:'30 luglio 2026', time:'10:00 – 22:00', notes:'Cerimonia in centro e ricevimento in villa. Servizio completo con secondo fotografo.'}
   ];
   function apptById(id){ for(var i=0;i<PH_APPOINTMENTS.length;i++){ if(PH_APPOINTMENTS[i].id===id) return PH_APPOINTMENTS[i]; } return null; }
+  /* --- statistiche Home fotografo (dati di prova) --- */
+  var PH_STATS={ earnMonth:1240, weekServices:3, newRequests:2, levelPct:65 }; /* la valutazione è la media di PH_REVIEWS */
+  /* --- recensioni ricevute (di prova) --- */
+  var PH_REVIEWS=[
+    {client:'Marco',  stars:5, date:'12 luglio 2026', city:'Milano',   svc:'Matrimonio', text:'Giornata perfetta. Ci ha messo a nostro agio da subito e le foto sono venute naturali, senza pose forzate. Consegna puntuale.'},
+    {client:'Sofia',  stars:5, date:'28 giugno 2026', city:'Barcellona', svc:'Coppie',   text:'Bravissimo e simpatico, conosceva posti bellissimi che non avremmo mai trovato da soli. Rifaremo sicuramente.'},
+    {client:'Elena',  stars:4, date:'3 giugno 2026',  city:'Santorini', svc:'Vacanza',   text:'Foto molto belle e curate. Unica nota: abbiamo aspettato qualche giorno in più per riceverle, ma ne è valsa la pena.'}
+  ];
+  function phRatingAvg(){ if(!PH_REVIEWS.length) return null; var t=0; for(var i=0;i<PH_REVIEWS.length;i++) t+=PH_REVIEWS[i].stars; return t/PH_REVIEWS.length; }
+  function fmtNum(n,dec,group){
+    var o={minimumFractionDigits:dec||0,maximumFractionDigits:dec||0};
+    if(group) o.useGrouping='always'; // in italiano il separatore migliaia parte da 5 cifre: qui lo vogliamo sempre
+    try{ return Number(n).toLocaleString(curLang,o); }catch(e){ return String(n); }
+  }
+  function renderPhStats(){
+    var d=I18N[curLang]||I18N.it||{}, s=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+    var avg=phRatingAvg();
+    s('phRating', avg?fmtNum(avg,1):'—');
+    s('phEarn', '€ '+fmtNum(PH_STATS.earnMonth,0,true));
+    s('phWeekSvc', PH_STATS.weekServices);
+    s('phNewReq', PH_STATS.newRequests);
+    var b=document.getElementById('phLevelBar'); if(b) b.style.width=PH_STATS.levelPct+'%';
+    s('phLevelPct', PH_STATS.levelPct+'%');
+    // riepilogo in cima alla pagina recensioni
+    s('rvAvg', avg?fmtNum(avg,1):'—');
+    s('rvCount', PH_REVIEWS.length+' '+(d.rv_count||'recensioni'));
+  }
+  function revCardHtml(r){
+    return '<div class="revcard">'+
+      '<div class="rv-head">'+
+        '<div class="rv-photo">'+avatarSvg(r.client)+'</div>'+
+        '<div><div class="rv-name">'+escHtml(r.client)+'</div></div>'+
+        '<div class="rv-end"><div class="rv-stars">'+ratingStars(r.stars)+'</div><div class="rv-date">'+escHtml(r.date)+'</div></div>'+
+      '</div>'+
+      '<div class="rv-text">'+escHtml(r.text)+'</div>'+
+      '<div class="rv-svc"><span>📍 '+escHtml(r.city)+'</span><span>·</span>'+svcMiniIcon(r.svc)+'<span>'+escHtml(r.svc)+'</span></div>'+
+    '</div>';
+  }
+  function renderMyReviews(){
+    var list=document.getElementById('rvList'), empty=document.getElementById('rvEmpty');
+    if(!list) return;
+    var h=''; for(var i=0;i<PH_REVIEWS.length;i++) h+=revCardHtml(PH_REVIEWS[i]);
+    list.innerHTML=h;
+    if(empty) empty.style.display=PH_REVIEWS.length?'none':'';
+  }
+  function openMyReviews(){ renderPhStats(); renderMyReviews(); show('ph_reviews'); }
+  function goToRequests(){ var h=document.getElementById('reqHead'); if(h) h.scrollIntoView({behavior:'smooth',block:'center'}); }
   var nextApptId=null;
   function renderNextAppt(){
     var box=document.getElementById('phNextAppt'), empty=document.getElementById('phNoAppt');
@@ -2036,6 +2145,8 @@
     var loc=(document.getElementById('avLoc')||{}).value||'', le=document.getElementById('phLoc');
     if(le){ if(loc){ le.innerHTML='📍 '+escHtml(loc); le.style.display=''; } else { le.style.display='none'; } }
     renderNextAppt();
+    renderPhStats();
+    renderMyReviews();
   }
   function openApptDetailFromBox(){ if(nextApptId) openApptDetail(nextApptId); }
   function openApptDetail(id){
@@ -2205,7 +2316,7 @@
       bk_title:"Le mie prenotazioni", bk_confirmed:"Confermata", bk_meeting:"📍 Punto d'incontro", bk_empty:"Non hai ancora prenotazioni.",
       bk_after:"Dopo il servizio potrai scaricare la galleria e lasciare una recensione ⭐", bk_sim:"📸 Simula: foto inviate", bk_wait:"In attesa delle foto…", bk_done:"Conclusa", rev_title:"Lascia una recensione", rev_ph:"Com'è andata? Scrivi la tua esperienza…", rev_send:"Invia recensione", rev_thanks:"Grazie per la recensione!", rev_need_stars:"Seleziona almeno una stella.",
       label_traveler:"Lato viaggiatore", label_photographer:"Lato fotografo",
-      d_hello:"Ciao", g_morning:"Buongiorno", g_afternoon:"Buon pomeriggio", g_evening:"Buonasera", ph_next_appt:"Prossimo appuntamento", appt_title:"Dettagli appuntamento", appt_date:"Data", appt_time:"Orario", appt_none:"Nessun appuntamento in programma.", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ph:"Inizia a scrivere…", d_describe:"Descriviti", d_describe_ph:"Racconta chi sei e come lavori…", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
+      d_hello:"Ciao", g_morning:"Buongiorno", g_afternoon:"Buon pomeriggio", g_evening:"Buonasera", ph_next_appt:"Prossimo appuntamento", appt_title:"Dettagli appuntamento", appt_date:"Data", appt_time:"Orario", appt_none:"Nessun appuntamento in programma.", ph_this_month:"questo mese", ph_next_level:"Prossimo livello:", ph_week_services:"servizi questa settimana", ph_new_requests:"nuove richieste", rv_title:"Le mie recensioni", rv_count:"recensioni", rv_empty:"Non hai ancora recensioni.", d_role:"Fotografo · Roma", d_nationality:"Nazionalità", d_nat_ph:"Inizia a scrivere…", d_describe:"Descriviti", d_describe_ph:"Racconta chi sei e come lavori…", d_languages:"Lingue parlate", lang_ita:"Italiano", lang_eng:"Inglese", lang_fra:"Francese", d_car:"Automunito", opt_yes:"Sì", opt_no:"No", d_services:"servizi", d_rating:"valutazione",
       d_next_level:"Prossimo livello: Top ★",
       d_next_msg:"Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.",
       d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta",      d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
@@ -2268,7 +2379,7 @@
       bk_title:"My bookings", bk_confirmed:"Confirmed", bk_meeting:"📍 Meeting point", bk_empty:"You have no bookings yet.",
       bk_after:"After the session you'll be able to download the gallery and leave a review ⭐", bk_sim:"📸 Test: photos sent", bk_wait:"Waiting for the photos…", bk_done:"Completed", rev_title:"Leave a review", rev_ph:"How did it go? Share your experience…", rev_send:"Send review", rev_thanks:"Thanks for your review!", rev_need_stars:"Please select at least one star.",
       label_traveler:"Traveler side", label_photographer:"Photographer side",
-      d_hello:"Hi", g_morning:"Good morning", g_afternoon:"Good afternoon", g_evening:"Good evening", ph_next_appt:"Next appointment", appt_title:"Appointment details", appt_date:"Date", appt_time:"Time", appt_none:"No appointments scheduled.", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ph:"Start typing…", d_describe:"Describe yourself", d_describe_ph:"Tell us who you are and how you work…", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
+      d_hello:"Hi", g_morning:"Good morning", g_afternoon:"Good afternoon", g_evening:"Good evening", ph_next_appt:"Next appointment", appt_title:"Appointment details", appt_date:"Date", appt_time:"Time", appt_none:"No appointments scheduled.", ph_this_month:"this month", ph_next_level:"Next level:", ph_week_services:"services this week", ph_new_requests:"new requests", rv_title:"My reviews", rv_count:"reviews", rv_empty:"You have no reviews yet.", d_role:"Photographer · Rome", d_nationality:"Nationality", d_nat_ph:"Start typing…", d_describe:"Describe yourself", d_describe_ph:"Tell us who you are and how you work…", d_languages:"Languages spoken", lang_ita:"Italian", lang_eng:"English", lang_fra:"French", d_car:"Own vehicle", opt_yes:"Yes", opt_no:"No", d_services:"services", d_rating:"rating",
       d_next_level:"Next level: Top ★",
       d_next_msg:"Complete services and keep a high rating to unlock maximum visibility and reduced commissions.",
       d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline",      d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
@@ -2331,7 +2442,7 @@
       bk_title:"Mis reservas", bk_confirmed:"Confirmada", bk_meeting:"📍 Punto de encuentro", bk_empty:"Aún no tienes reservas.",
       bk_after:"Tras el servicio podrás descargar la galería y dejar una reseña ⭐", bk_sim:"📸 Prueba: fotos enviadas", bk_wait:"Esperando las fotos…", bk_done:"Finalizada", rev_title:"Deja una reseña", rev_ph:"¿Qué tal fue? Cuenta tu experiencia…", rev_send:"Enviar reseña", rev_thanks:"¡Gracias por tu reseña!", rev_need_stars:"Selecciona al menos una estrella.",
       label_traveler:"Lado viajero", label_photographer:"Lado fotógrafo",
-      d_hello:"Hola", g_morning:"Buenos días", g_afternoon:"Buenas tardes", g_evening:"Buenas noches", ph_next_appt:"Próxima cita", appt_title:"Detalles de la cita", appt_date:"Fecha", appt_time:"Horario", appt_none:"No hay citas programadas.", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ph:"Empieza a escribir…", d_describe:"Descríbete", d_describe_ph:"Cuenta quién eres y cómo trabajas…", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
+      d_hello:"Hola", g_morning:"Buenos días", g_afternoon:"Buenas tardes", g_evening:"Buenas noches", ph_next_appt:"Próxima cita", appt_title:"Detalles de la cita", appt_date:"Fecha", appt_time:"Horario", appt_none:"No hay citas programadas.", ph_this_month:"este mes", ph_next_level:"Próximo nivel:", ph_week_services:"servicios esta semana", ph_new_requests:"nuevas solicitudes", rv_title:"Mis reseñas", rv_count:"reseñas", rv_empty:"Todavía no tienes reseñas.", d_role:"Fotógrafo · Roma", d_nationality:"Nacionalidad", d_nat_ph:"Empieza a escribir…", d_describe:"Descríbete", d_describe_ph:"Cuenta quién eres y cómo trabajas…", d_languages:"Idiomas hablados", lang_ita:"Italiano", lang_eng:"Inglés", lang_fra:"Francés", d_car:"Con vehículo propio", opt_yes:"Sí", opt_no:"No", d_services:"servicios", d_rating:"valoración",
       d_next_level:"Próximo nivel: Top ★",
       d_next_msg:"Completa servicios y mantén una valoración alta para desbloquear máxima visibilidad y comisiones reducidas.",
       d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar",      d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
@@ -2394,7 +2505,7 @@
       bk_title:"Mes réservations", bk_confirmed:"Confirmée", bk_meeting:"📍 Point de rendez-vous", bk_empty:"Vous n'avez pas encore de réservations.",
       bk_after:"Après la séance, vous pourrez télécharger la galerie et laisser un avis ⭐", bk_sim:"📸 Test : photos envoyées", bk_wait:"En attente des photos…", bk_done:"Terminée", rev_title:"Laisser un avis", rev_ph:"Comment ça s'est passé ? Partagez votre expérience…", rev_send:"Envoyer l'avis", rev_thanks:"Merci pour votre avis !", rev_need_stars:"Sélectionnez au moins une étoile.",
       label_traveler:"Côté voyageur", label_photographer:"Côté photographe",
-      d_hello:"Bonjour", g_morning:"Bonjour", g_afternoon:"Bon après-midi", g_evening:"Bonsoir", ph_next_appt:"Prochain rendez-vous", appt_title:"Détails du rendez-vous", appt_date:"Date", appt_time:"Horaire", appt_none:"Aucun rendez-vous prévu.", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ph:"Commencez à écrire…", d_describe:"Décrivez-vous", d_describe_ph:"Racontez qui vous êtes et comment vous travaillez…", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
+      d_hello:"Bonjour", g_morning:"Bonjour", g_afternoon:"Bon après-midi", g_evening:"Bonsoir", ph_next_appt:"Prochain rendez-vous", appt_title:"Détails du rendez-vous", appt_date:"Date", appt_time:"Horaire", appt_none:"Aucun rendez-vous prévu.", ph_this_month:"ce mois-ci", ph_next_level:"Niveau suivant :", ph_week_services:"services cette semaine", ph_new_requests:"nouvelles demandes", rv_title:"Mes avis", rv_count:"avis", rv_empty:"Vous n'avez pas encore d'avis.", d_role:"Photographe · Rome", d_nationality:"Nationalité", d_nat_ph:"Commencez à écrire…", d_describe:"Décrivez-vous", d_describe_ph:"Racontez qui vous êtes et comment vous travaillez…", d_languages:"Langues parlées", lang_ita:"Italien", lang_eng:"Anglais", lang_fra:"Français", d_car:"Véhicule personnel", opt_yes:"Oui", opt_no:"Non", d_services:"services", d_rating:"note",
       d_next_level:"Niveau suivant : Top ★",
       d_next_msg:"Réalisez des prestations et gardez une bonne note pour débloquer une visibilité maximale et des commissions réduites.",
       d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser",      d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
@@ -2457,7 +2568,7 @@
       bk_title:"Meine Buchungen", bk_confirmed:"Bestätigt", bk_meeting:"📍 Treffpunkt", bk_empty:"Du hast noch keine Buchungen.",
       bk_after:"Nach dem Termin kannst du die Galerie herunterladen und eine Bewertung abgeben ⭐", bk_sim:"📸 Test: Fotos gesendet", bk_wait:"Warten auf die Fotos…", bk_done:"Abgeschlossen", rev_title:"Bewertung abgeben", rev_ph:"Wie war es? Teile deine Erfahrung…", rev_send:"Bewertung senden", rev_thanks:"Danke für deine Bewertung!", rev_need_stars:"Bitte wähle mindestens einen Stern.",
       label_traveler:"Reisenden-Seite", label_photographer:"Fotografen-Seite",
-      d_hello:"Hallo", g_morning:"Guten Morgen", g_afternoon:"Guten Tag", g_evening:"Guten Abend", ph_next_appt:"Nächster Termin", appt_title:"Termindetails", appt_date:"Datum", appt_time:"Uhrzeit", appt_none:"Keine Termine geplant.", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ph:"Beginne zu tippen…", d_describe:"Beschreibe dich", d_describe_ph:"Erzähle, wer du bist und wie du arbeitest…", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
+      d_hello:"Hallo", g_morning:"Guten Morgen", g_afternoon:"Guten Tag", g_evening:"Guten Abend", ph_next_appt:"Nächster Termin", appt_title:"Termindetails", appt_date:"Datum", appt_time:"Uhrzeit", appt_none:"Keine Termine geplant.", ph_this_month:"diesen Monat", ph_next_level:"Nächstes Level:", ph_week_services:"Aufträge diese Woche", ph_new_requests:"neue Anfragen", rv_title:"Meine Bewertungen", rv_count:"Bewertungen", rv_empty:"Du hast noch keine Bewertungen.", d_role:"Fotograf · Rom", d_nationality:"Nationalität", d_nat_ph:"Beginne zu tippen…", d_describe:"Beschreibe dich", d_describe_ph:"Erzähle, wer du bist und wie du arbeitest…", d_languages:"Gesprochene Sprachen", lang_ita:"Italienisch", lang_eng:"Englisch", lang_fra:"Französisch", d_car:"Eigenes Fahrzeug", opt_yes:"Ja", opt_no:"Nein", d_services:"Aufträge", d_rating:"Bewertung",
       d_next_level:"Nächstes Level: Top ★",
       d_next_msg:"Erledige Aufträge und halte eine hohe Bewertung, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
       d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen",      d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
@@ -2520,7 +2631,7 @@
       bk_title:"我的预订", bk_confirmed:"已确认", bk_meeting:"📍 会面地点", bk_empty:"你还没有预订。",
       bk_after:"服务结束后你可以下载相册并留下评价 ⭐", bk_sim:"📸 模拟：照片已发送", bk_wait:"等待照片…", bk_done:"已完成", rev_title:"写评价", rev_ph:"体验如何？写下你的感受…", rev_send:"提交评价", rev_thanks:"感谢你的评价！", rev_need_stars:"请至少选择一颗星。",
       label_traveler:"旅行者端", label_photographer:"摄影师端",
-      d_hello:"你好", g_morning:"早上好", g_afternoon:"下午好", g_evening:"晚上好", ph_next_appt:"下一个预约", appt_title:"预约详情", appt_date:"日期", appt_time:"时间", appt_none:"暂无预约。", d_role:"摄影师 · 罗马", d_nationality:"国籍", d_nat_ph:"开始输入…", d_describe:"自我介绍", d_describe_ph:"介绍一下你是谁、如何工作…", d_languages:"掌握的语言", lang_ita:"意大利语", lang_eng:"英语", lang_fra:"法语", d_car:"有车", opt_yes:"是", opt_no:"否", d_services:"次服务", d_rating:"评分",
+      d_hello:"你好", g_morning:"早上好", g_afternoon:"下午好", g_evening:"晚上好", ph_next_appt:"下一个预约", appt_title:"预约详情", appt_date:"日期", appt_time:"时间", appt_none:"暂无预约。", ph_this_month:"本月", ph_next_level:"下一等级：", ph_week_services:"本周服务", ph_new_requests:"新请求", rv_title:"我的评价", rv_count:"条评价", rv_empty:"你还没有收到评价。", d_role:"摄影师 · 罗马", d_nationality:"国籍", d_nat_ph:"开始输入…", d_describe:"自我介绍", d_describe_ph:"介绍一下你是谁、如何工作…", d_languages:"掌握的语言", lang_ita:"意大利语", lang_eng:"英语", lang_fra:"法语", d_car:"有车", opt_yes:"是", opt_no:"否", d_services:"次服务", d_rating:"评分",
       d_next_level:"下一等级：顶级 ★",
       d_next_msg:"完成更多服务并保持高评分，以解锁最大曝光和更低佣金。",
       d_pending:"待处理请求", d_no_requests:"暂无请求。", chats_empty:"暂无聊天。", d_accept:"接受", d_reject:"拒绝", d_manage:"管理资料和可预约时间", d_home_back:"↩ 返回主界面",
@@ -2583,7 +2694,7 @@
       bk_title:"予約", bk_confirmed:"確定済み", bk_meeting:"📍 待ち合わせ場所", bk_empty:"まだ予約はありません。",
       bk_after:"サービス後にギャラリーをダウンロードしてレビューを残せます ⭐", bk_sim:"📸 シミュレーション：写真送信済み", bk_wait:"写真を待っています…", bk_done:"完了", rev_title:"レビューを書く", rev_ph:"いかがでしたか？体験を書いてください…", rev_send:"レビューを送信", rev_thanks:"レビューありがとうございます！", rev_need_stars:"星を1つ以上選んでください。",
       label_traveler:"旅行者側", label_photographer:"写真家側",
-      d_hello:"こんにちは", g_morning:"おはようございます", g_afternoon:"こんにちは", g_evening:"こんばんは", ph_next_appt:"次の予約", appt_title:"予約の詳細", appt_date:"日付", appt_time:"時間", appt_none:"予定されている予約はありません。", d_role:"写真家 · ローマ", d_nationality:"国籍", d_nat_ph:"入力を始めてください…", d_describe:"自己紹介", d_describe_ph:"あなたが誰で、どう働くかを書いてください…", d_languages:"話せる言語", lang_ita:"イタリア語", lang_eng:"英語", lang_fra:"フランス語", d_car:"車あり", opt_yes:"はい", opt_no:"いいえ", d_services:"件のサービス", d_rating:"評価",
+      d_hello:"こんにちは", g_morning:"おはようございます", g_afternoon:"こんにちは", g_evening:"こんばんは", ph_next_appt:"次の予約", appt_title:"予約の詳細", appt_date:"日付", appt_time:"時間", appt_none:"予定されている予約はありません。", ph_this_month:"今月", ph_next_level:"次のレベル：", ph_week_services:"今週のサービス", ph_new_requests:"新しいリクエスト", rv_title:"マイレビュー", rv_count:"件のレビュー", rv_empty:"まだレビューがありません。", d_role:"写真家 · ローマ", d_nationality:"国籍", d_nat_ph:"入力を始めてください…", d_describe:"自己紹介", d_describe_ph:"あなたが誰で、どう働くかを書いてください…", d_languages:"話せる言語", lang_ita:"イタリア語", lang_eng:"英語", lang_fra:"フランス語", d_car:"車あり", opt_yes:"はい", opt_no:"いいえ", d_services:"件のサービス", d_rating:"評価",
       d_next_level:"次のレベル：トップ ★",
       d_next_msg:"サービスを重ね、高い評価を保つと、最大の露出と手数料の割引が解除されます。",
       d_pending:"保留中のリクエスト", d_no_requests:"現在リクエストはありません。", chats_empty:"現在チャットはありません。", d_accept:"承認", d_reject:"却下", d_manage:"プロフィールと空き状況を管理", d_home_back:"↩ ホーム画面に戻る",
