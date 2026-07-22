@@ -1456,8 +1456,11 @@
     if(restoringProfile) return;
     if(!String(accountEmail||'').trim()) return;
     var p=collectProfile();
-    try{ localStorage.setItem(profKey(), JSON.stringify(p)); }
-    catch(e){ try{ p.works=[]; p.photo=''; p.banner=''; localStorage.setItem(profKey(), JSON.stringify(p)); }catch(e2){} }
+    /* fallback anti-quota graduale: si toglie prima il portfolio, poi il banner, e solo per ultima la foto profilo */
+    try{ localStorage.setItem(profKey(), JSON.stringify(p)); return; }catch(e){}
+    try{ p.works=[]; localStorage.setItem(profKey(), JSON.stringify(p)); return; }catch(e){}
+    try{ p.banner=''; localStorage.setItem(profKey(), JSON.stringify(p)); return; }catch(e){}
+    try{ p.photo=''; localStorage.setItem(profKey(), JSON.stringify(p)); }catch(e){}
   }
   function loadProfile(){ try{ var r=localStorage.getItem(profKey()); return r?JSON.parse(r):null; }catch(e){ return null; } }
   /* cancella il profilo di QUESTA email (usato solo da "Cancella account") */
@@ -1911,7 +1914,25 @@
   }
   function setNatInline(v){ var n=document.getElementById('natInput'); if(n) n.value=v; refreshProfileUI(); saveProfile(); }
   function pickBanner(){ var i=document.getElementById('bannerInput'); if(i) i.click(); }
-  function uploadBanner(input){ var fl=input.files&&input.files[0]; if(!fl) return; var r=new FileReader(); r.onload=function(ev){ profBanner=ev.target.result; refreshProfileUI(); saveProfile(); }; r.readAsDataURL(fl); input.value=''; }
+  /* il banner viene RIDIMENSIONATO (max 1000×700, JPEG) prima di salvarlo: una foto da telefono a piena risoluzione supererebbe la quota di localStorage e farebbe perdere foto+banner */
+  function uploadBanner(input){
+    var fl=input.files&&input.files[0]; if(!fl) return;
+    var r=new FileReader();
+    r.onload=function(ev){
+      var img=new Image();
+      img.onload=function(){
+        var sc=Math.min(1, 1000/img.width, 700/img.height);
+        var cw=Math.max(1,Math.round(img.width*sc)), ch=Math.max(1,Math.round(img.height*sc));
+        var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+        cv.getContext('2d').drawImage(img,0,0,cw,ch);
+        profBanner=cv.toDataURL('image/jpeg',0.82);
+        refreshProfileUI(); saveProfile();
+      };
+      img.onerror=function(){ /* immagine non valida: non salvo l'originale a piena risoluzione */ };
+      img.src=ev.target.result;
+    };
+    r.readAsDataURL(fl); input.value='';
+  }
   function refreshNameDisplays(){
     document.querySelectorAll('.acctName').forEach(function(el){ el.textContent=accountName; });
     var gi=document.getElementById('gInit'); if(gi) gi.textContent=(accountName||'?').charAt(0).toUpperCase();
