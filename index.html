@@ -168,6 +168,8 @@
   /* giorni con appuntamento: colore SEMITRASPARENTE, si intravede il verde sotto */
   .agcal .ag-d.busy{background:rgba(246,197,68,.55);color:#22303a;font-weight:800;cursor:pointer}
   .agcal .ag-d.busy:active{background:rgba(246,197,68,.8)}
+  /* giorno selezionato per filtrare l'elenco */
+  .agcal .ag-d.sel{background:rgba(246,197,68,.92);color:#22303a;box-shadow:0 0 0 2px #fff}
   .aglegend{display:flex;align-items:center;gap:7px;font-size:11px;color:rgba(255,255,255,.8);margin:-10px 0 18px;padding-left:4px}
   .aglegend i{width:13px;height:13px;border-radius:4px;background:rgba(246,197,68,.55);display:inline-block}
   .agrow{display:flex;align-items:center;gap:13px;background:var(--glass);border:1.5px solid var(--glassline);border-radius:20px;padding:13px 15px;margin-bottom:12px;cursor:pointer;
@@ -2357,10 +2359,11 @@
   function allAppts(){
     return PH_APPOINTMENTS.concat(PH_WEEK).slice().sort(function(a,b){ return String(a.iso).localeCompare(String(b.iso)); });
   }
-  var agY, agM;
+  var agY, agM, agFilter=null;
   function agInit(){ var d=new Date(); agY=d.getFullYear(); agM=d.getMonth(); }
   function agShift(n){
     if(agY===undefined) agInit();
+    agFilter=null; /* cambiando mese il giorno filtrato non c'è più: torno a tutti */
     agM+=n; if(agM<0){ agM=11; agY--; } if(agM>11){ agM=0; agY++; }
     var g=document.getElementById('agGrid');
     if(g){ g.classList.add(n>0?'slide-l':'slide-r'); setTimeout(function(){ renderAgenda(); g.classList.remove('slide-l','slide-r'); },160); }
@@ -2382,10 +2385,13 @@
       var iso=agY+'-'+pad2(agM+1)+'-'+pad2(day), cls='ag-d';
       if(iso===tISO) cls+=' today';
       if(busy[iso]) cls+=' busy';
-      html+='<div class="'+cls+'"'+(busy[iso]?(' onclick="agGoTo(\''+iso+'\')"'):'')+'>'+day+'</div>';
+      if(iso===agFilter) cls+=' sel';
+      html+='<div class="'+cls+'"'+(busy[iso]?(' onclick="agPick(\''+iso+'\')"'):'')+'>'+day+'</div>';
     }
     grid.innerHTML=html;
   }
+  /* tap su un giorno pieno: filtra l'elenco a quel giorno; ri-tap sullo stesso = mostra tutti */
+  function agPick(iso){ agFilter=(agFilter===iso)?null:iso; renderAgenda(); }
   function agRowHtml(a){
     return '<div class="agrow" id="agrow-'+a.id+'" onclick="openApptDetail(\''+a.id+'\')">'+
       '<div class="ag-photo">'+avatarSvg(a.client+a.city)+'</div>'+
@@ -2400,6 +2406,7 @@
     var list=document.getElementById('agList'), empty=document.getElementById('agEmpty');
     if(!list) return;
     var all=allAppts();
+    if(agFilter) all=all.filter(function(a){ return a.iso===agFilter; }); /* solo il giorno selezionato */
     list.innerHTML=all.map(agRowHtml).join('');
     if(empty) empty.style.display=all.length?'none':'';
   }
@@ -2410,7 +2417,7 @@
     if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
   }
   /* riapro sempre sul mese corrente, non su quello dove ero rimasto */
-  function openAgenda(){ agInit(); renderAgenda(); show('ph_avail'); }
+  function openAgenda(){ agInit(); agFilter=null; renderAgenda(); show('ph_avail'); }
   /* scorrimento del calendario col dito, come nelle app */
   function initAgSwipe(){
     var box=document.getElementById('agCal'); if(!box) return;
