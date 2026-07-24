@@ -49,12 +49,20 @@
   .sheet-inner .cancel{color:var(--accent);font-weight:600;margin-top:2px;border-top:1px solid var(--line);border-radius:0}
   .sheet-inner .sheet-title{text-align:center;font-weight:700;color:var(--grey);font-size:13px;padding:10px 8px 4px}
   .chatcard{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-  /* menu contestuale piccolo a lato della chat premuta */
+  /* chat selezionata con la pressione prolungata (in attesa del menu ☰) */
+  .chatcard.sel{box-shadow:0 0 0 2px var(--accent);border-color:var(--accent)}
+  /* pulsante ☰ nella barra in alto della lista chat */
+  .hdrbtn{margin-left:auto;background:none;border:none;color:#fff;font-size:22px;line-height:1;padding:4px 6px;cursor:pointer;font-family:inherit;position:relative}
+  .hdrbtn .hdrdot{position:absolute;top:0;right:0;width:9px;height:9px;border-radius:50%;background:var(--accent);border:2px solid var(--glassbar);display:none}
+  .hdrbtn.armed .hdrdot{display:block}
+  /* menu a tendina dalle tre lineette, in alto a destra */
   .chatmenu{position:absolute;inset:0;z-index:60;display:none}
   .chatmenu.open{display:block}
-  .chatmenu-box{position:absolute;background:var(--screen);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.22);padding:3px;max-width:82%}
-  .chatmenu-box button{display:block;width:100%;text-align:left;border:none;background:transparent;color:var(--text);font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;cursor:pointer;white-space:nowrap}
+  .chatmenu-box{position:absolute;top:54px;right:12px;min-width:210px;max-width:86%;background:var(--glass);border:1px solid var(--glassline);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.35);padding:6px;-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2)}
+  .chatmenu-box .cm-title{font-size:11px;color:var(--grey);padding:7px 11px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chatmenu-box button{display:block;width:100%;text-align:left;border:none;background:transparent;color:var(--text);font-size:14px;font-weight:600;padding:11px 11px;border-radius:9px;cursor:pointer;white-space:nowrap;font-family:inherit}
   .chatmenu-box button:active{background:var(--light)}
+  .chatmenu-box button:disabled{opacity:.45;cursor:default}
   /* pallino rosso notifiche sulla campanella + righe drawer */
   .bellbadge{position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;background:#e53935;border:2px solid var(--screen);display:none}
   .bellbadge.on{display:block}
@@ -908,7 +916,7 @@
 
     <!-- ============ TRAVELER CHAT LIST ============ -->
     <div class="view" id="tr_chats">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span><button class="hdrbtn" id="trChatsMenuBtn" onclick="openChatMenu()" aria-label="Opzioni">☰<span class="hdrdot"></span></button></div>
       <div class="scroll pad">
         <h2 class="pagetitle" data-i18n="chats_hdr">Messaggi</h2>
         <div class="clist" id="trChatList"></div>
@@ -921,12 +929,6 @@
         <div class="on"><span class="ic">💬</span><span data-i18n="nav_chat">Chat</span></div>
         <div onclick="show('favorites')"><span class="ic">❤️</span><span data-i18n="nav_favorites">Preferiti</span></div>
         <div onclick="show('account')"><span class="ic">👤</span><span data-i18n="nav_profile">Profilo</span></div>
-      </div>
-      <div class="chatmenu" id="chatMenu" onclick="if(event.target===this)closeChatMenu()">
-        <div class="chatmenu-box" id="chatMenuBox">
-          <button onclick="markChatRead(true)" data-i18n="chat_mark_read">Segna come già letto</button>
-          <button onclick="markChatRead(false)" data-i18n="chat_mark_unread">Segna come da leggere</button>
-        </div>
       </div>
     </div>
 
@@ -1156,8 +1158,9 @@
 
     <!-- ============ CHAT LIST ============ -->
     <div class="view" id="ph_chats">
-      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand" data-i18n="chats_title">Chat</span></div>
+      <div class="topbar"><span class="back" onclick="goBack()">‹</span><span class="brand">PHOllowME</span><button class="hdrbtn" id="phChatsMenuBtn" onclick="openChatMenu()" aria-label="Opzioni">☰<span class="hdrdot"></span></button></div>
       <div class="scroll pad">
+        <h2 class="pagetitle" data-i18n="chats_hdr">Messaggi</h2>
         <div class="clist" id="chatList"></div>
         <p class="muted" id="chatsEmpty" style="margin:24px 0;text-align:center" data-i18n="chats_empty">Nessuna chat al momento.</p>
       </div>
@@ -1356,6 +1359,15 @@
         <button class="btn ghost" onclick="logout()" data-i18n="acc_logout">Esci</button>
         <div class="divider"></div>
         <div class="srow" style="cursor:pointer" onclick="deleteAccount()"><span class="si">🗑️</span><div class="st"><b style="color:#dc2626" data-i18n="acc_delete">Cancella account</b></div><span class="chev" style="color:#dc2626">›</span></div>
+      </div>
+    </div>
+
+    <!-- menu opzioni chat (condiviso viaggiatore+fotografo): si apre dalle ☰ in alto a destra -->
+    <div class="chatmenu" id="chatMenu" onclick="if(event.target===this)closeChatMenu()">
+      <div class="chatmenu-box" id="chatMenuBox">
+        <div class="cm-title" id="chatMenuTitle"></div>
+        <button id="chatMenuRead" onclick="markChatRead(true)" data-i18n="chat_mark_read">Segna come già letto</button>
+        <button id="chatMenuUnread" onclick="markChatRead(false)" data-i18n="chat_mark_unread">Segna come da leggere</button>
       </div>
     </div>
 
@@ -1628,30 +1640,37 @@
     var last=c.msgs.length?c.msgs[c.msgs.length-1].t:'';
     var un=isChatUnread(c);
     var dot=un?'<span class="cdot"></span>':'';
-    return '<div class="chatcard" data-cid="'+c.id+'">'
+    var sel=(c.id===selChatId)?' sel':'';
+    return '<div class="chatcard'+sel+'" data-cid="'+c.id+'">'
       +'<div class="cav">'+avatarSvg(c.name)+'</div>'
       +'<div class="cmid"><div class="cname">'+escHtml(c.name)+'</div>'
       +'<div class="cprev'+(un?' unread':'')+'">'+escHtml(last)+'</div></div>'
       +'<div class="cend"><span class="ctime">'+escHtml(c.time)+'</span>'+dot+'</div>'
       +'</div>';
   }
-  function renderTrChats(){
-    var list=document.getElementById('trChatList'), empty=document.getElementById('trChatsEmpty');
-    if(!list) return;
+  /* lista chat condivisa viaggiatore/fotografo. chatListCtx = quale lista è a schermo, per ridisegnarla. */
+  var chatListCtx=null;
+  function renderChatList(listId,emptyId,btnId){
+    var list=document.getElementById(listId); if(!list) return;
+    chatListCtx={list:listId, empty:emptyId, btn:btnId};
     chatReadOverride=loadChatRead();
     list.innerHTML=EXAMPLE_CHATS.map(chatRowHtml).join('');
-    bindChatCards();
-    if(empty) empty.style.display=EXAMPLE_CHATS.length?'none':'';
+    bindChatCards(listId);
+    var empty=document.getElementById(emptyId); if(empty) empty.style.display=EXAMPLE_CHATS.length?'none':'';
+    armChatMenuBtn();
   }
-  /* tap = apri chat; pressione prolungata (touch o mouse) / tasto destro = menu letto/non-letto */
-  var lpTimer=null, lpFired=false, menuChatId=null;
-  function bindChatCards(){
-    document.querySelectorAll('#trChatList .chatcard').forEach(function(el){
+  function renderTrChats(){ renderChatList('trChatList','trChatsEmpty','trChatsMenuBtn'); }
+  function renderPhChats(){ renderChatList('chatList','chatsEmpty','phChatsMenuBtn'); }
+  function renderCurChatList(){ if(chatListCtx) renderChatList(chatListCtx.list,chatListCtx.empty,chatListCtx.btn); }
+  /* tap = apri chat; pressione prolungata (touch/mouse) o tasto destro = SELEZIONA la chat (poi il menu ☰) */
+  var lpTimer=null, lpFired=false, selChatId=null;
+  function bindChatCards(listId){
+    document.querySelectorAll('#'+listId+' .chatcard').forEach(function(el){
       var id=el.getAttribute('data-cid');
-      var start=function(){ lpFired=false; clearTimeout(lpTimer); lpTimer=setTimeout(function(){ lpFired=true; openChatMenu(id); },500); };
+      var start=function(){ lpFired=false; clearTimeout(lpTimer); lpTimer=setTimeout(function(){ lpFired=true; selectChat(id); },500); };
       var stop=function(){ clearTimeout(lpTimer); };
       el.addEventListener('click',function(){ if(lpFired){ lpFired=false; return; } openChat(id); });
-      el.addEventListener('contextmenu',function(e){ e.preventDefault(); openChatMenu(id); });
+      el.addEventListener('contextmenu',function(e){ e.preventDefault(); selectChat(id); });
       el.addEventListener('touchstart',start,{passive:true});
       el.addEventListener('touchmove',stop,{passive:true});
       el.addEventListener('touchend',stop);
@@ -1660,22 +1679,43 @@
       el.addEventListener('mouseleave',stop);
     });
   }
-  function openChatMenu(id){
-    menuChatId=id;
-    var menu=document.getElementById('chatMenu'), box=document.getElementById('chatMenuBox');
-    var card=document.querySelector('#trChatList .chatcard[data-cid="'+id+'"]');
-    if(!menu||!box||!card) return;
-    menu.classList.add('open');
-    var m=menu.getBoundingClientRect(), c=card.getBoundingClientRect();
-    var bw=box.offsetWidth, bh=box.offsetHeight;
-    var left=(c.right-m.left)-bw-8;              /* ancorato al lato destro della chat */
-    var top=(c.top-m.top)-bh-6;                   /* sopra la chat premuta */
-    left=Math.max(8,Math.min(left,m.width-bw-8));
-    top=Math.max(8,Math.min(top,m.height-bh-8));
-    box.style.left=left+'px'; box.style.top=top+'px';
+  /* pressione prolungata: evidenzia la chat e "arma" il pulsante ☰ (pallino) */
+  function selectChat(id){
+    selChatId=id;
+    if(chatListCtx){
+      document.querySelectorAll('#'+chatListCtx.list+' .chatcard').forEach(function(el){
+        el.classList.toggle('sel', el.getAttribute('data-cid')===id);
+      });
+    }
+    armChatMenuBtn();
   }
-  function closeChatMenu(){ menuChatId=null; var s=document.getElementById('chatMenu'); if(s) s.classList.remove('open'); }
-  function markChatRead(read){ if(menuChatId){ setChatUnread(menuChatId, !read); } closeChatMenu(); renderTrChats(); refreshNotifUI(); }
+  function clearChatSel(){
+    selChatId=null;
+    document.querySelectorAll('.chatcard.sel').forEach(function(el){ el.classList.remove('sel'); });
+    armChatMenuBtn();
+  }
+  function armChatMenuBtn(){
+    var b=chatListCtx&&document.getElementById(chatListCtx.btn);
+    if(b) b.classList.toggle('armed', !!selChatId);
+  }
+  /* menu dalle tre lineette: mostra il nome della chat selezionata, o un invito se non ce n'è */
+  function openChatMenu(){
+    var menu=document.getElementById('chatMenu'), title=document.getElementById('chatMenuTitle');
+    var rB=document.getElementById('chatMenuRead'), uB=document.getElementById('chatMenuUnread');
+    if(!menu) return;
+    var d=I18N[curLang]||I18N.it||{};
+    var c=selChatId?chatById(selChatId):null;
+    if(title) title.textContent=c?c.name:(d.chat_pick_hint||'Tieni premuto una chat per selezionarla');
+    if(rB) rB.disabled=!c; if(uB) uB.disabled=!c;
+    menu.classList.add('open');
+  }
+  function closeChatMenu(){ var s=document.getElementById('chatMenu'); if(s) s.classList.remove('open'); }
+  function markChatRead(read){
+    if(!selChatId){ closeChatMenu(); return; }
+    setChatUnread(selChatId, !read);
+    selChatId=null;
+    closeChatMenu(); renderCurChatList(); refreshNotifUI();
+  }
   /* ---- Notifiche: pallino campanella + drawer + notifica di sistema del telefono ---- */
   function unreadChatsList(){ chatReadOverride=loadChatRead(); return EXAMPLE_CHATS.filter(function(c){ return isChatUnread(c); }); }
   function refreshNotifUI(){
@@ -1833,6 +1873,10 @@
     screen.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
     target.classList.add('active');
     var sc=target.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+    /* liste chat: ridisegno e azzero la selezione uscendo */
+    if(id==='tr_chats'){ clearChatSel(); renderTrChats(); }
+    else if(id==='ph_chats'){ clearChatSel(); renderPhChats(); }
+    else { closeChatMenu(); clearChatSel(); }
   }
   function show(id){
     var cur=document.querySelector('.view.active');
@@ -2774,7 +2818,7 @@
       d_next_level:"Prossimo livello: Top ★",
       d_next_msg:"Completa i servizi e mantieni una valutazione alta per sbloccare visibilità massima e commissioni ridotte.",
       d_pending:"Richieste in attesa", d_no_requests:"Nessuna richiesta al momento.", chats_empty:"Nessuna chat al momento.", d_accept:"Accetta", d_reject:"Rifiuta",      d_manage:"Gestisci profilo e disponibilità", d_home_back:"↩ Torna alla schermata iniziale",
-      chats_title:"Chat", chats_hdr:"Messaggi", chat_mark_read:"Segna come già letto", chat_mark_unread:"Segna come da leggere", chat_bye:"Perfetto, ci vediamo a Trastevere!",
+      chats_title:"Chat", chats_hdr:"Messaggi", chat_mark_read:"Segna come già letto", chat_mark_unread:"Segna come da leggere", chat_pick_hint:"Tieni premuta una chat per selezionarla", chat_bye:"Perfetto, ci vediamo a Trastevere!",
       time_yesterday:"ieri", chat_prev_james:"Grazie mille per le foto 🙏",
       time_mon:"lun", chat_prev_elena:"Sei disponibile anche il 20?",
       chat_hdr_sub:"Ritratto · 13 lug, 16:00", day_today:"Oggi",
@@ -2837,7 +2881,7 @@
       d_next_level:"Next level: Top ★",
       d_next_msg:"Complete services and keep a high rating to unlock maximum visibility and reduced commissions.",
       d_pending:"Pending requests", d_no_requests:"No requests right now.", chats_empty:"No chats right now.", d_accept:"Accept", d_reject:"Decline",      d_manage:"Manage profile and availability", d_home_back:"↩ Back to the home screen",
-      chats_title:"Chat", chats_hdr:"Messages", chat_mark_read:"Mark as read", chat_mark_unread:"Mark as unread", chat_bye:"Perfect, see you in Trastevere!",
+      chats_title:"Chat", chats_hdr:"Messages", chat_mark_read:"Mark as read", chat_mark_unread:"Mark as unread", chat_pick_hint:"Long-press a chat to select it", chat_bye:"Perfect, see you in Trastevere!",
       time_yesterday:"yesterday", chat_prev_james:"Thank you so much for the photos 🙏",
       time_mon:"Mon", chat_prev_elena:"Are you available on the 20th too?",
       chat_hdr_sub:"Portrait · 13 Jul, 16:00", day_today:"Today",
@@ -2900,7 +2944,7 @@
       d_next_level:"Próximo nivel: Top ★",
       d_next_msg:"Completa servicios y mantén una valoración alta para desbloquear máxima visibilidad y comisiones reducidas.",
       d_pending:"Solicitudes pendientes", d_no_requests:"Ninguna solicitud por ahora.", chats_empty:"Ningún chat por ahora.", d_accept:"Aceptar", d_reject:"Rechazar",      d_manage:"Gestionar perfil y disponibilidad", d_home_back:"↩ Volver a la pantalla inicial",
-      chats_title:"Chat", chats_hdr:"Mensajes", chat_mark_read:"Marcar como leído", chat_mark_unread:"Marcar como no leído", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
+      chats_title:"Chat", chats_hdr:"Mensajes", chat_mark_read:"Marcar como leído", chat_mark_unread:"Marcar como no leído", chat_pick_hint:"Mantén pulsada una chat para seleccionarla", chat_bye:"¡Perfecto, nos vemos en Trastevere!",
       time_yesterday:"ayer", chat_prev_james:"¡Muchas gracias por las fotos 🙏",
       time_mon:"lun", chat_prev_elena:"¿Estás disponible también el 20?",
       chat_hdr_sub:"Retrato · 13 jul, 16:00", day_today:"Hoy",
@@ -2963,7 +3007,7 @@
       d_next_level:"Niveau suivant : Top ★",
       d_next_msg:"Réalisez des prestations et gardez une bonne note pour débloquer une visibilité maximale et des commissions réduites.",
       d_pending:"Demandes en attente", d_no_requests:"Aucune demande pour le moment.", chats_empty:"Aucune conversation pour le moment.", d_accept:"Accepter", d_reject:"Refuser",      d_manage:"Gérer le profil et les disponibilités", d_home_back:"↩ Retour à l'écran d'accueil",
-      chats_title:"Messages", chats_hdr:"Messages", chat_mark_read:"Marquer comme lu", chat_mark_unread:"Marquer comme non lu", chat_bye:"Parfait, on se voit à Trastevere !",
+      chats_title:"Messages", chats_hdr:"Messages", chat_mark_read:"Marquer comme lu", chat_mark_unread:"Marquer comme non lu", chat_pick_hint:"Appuyez longuement sur une conversation pour la sélectionner", chat_bye:"Parfait, on se voit à Trastevere !",
       time_yesterday:"hier", chat_prev_james:"Merci beaucoup pour les photos 🙏",
       time_mon:"lun", chat_prev_elena:"Êtes-vous aussi disponible le 20 ?",
       chat_hdr_sub:"Portrait · 13 juil., 16:00", day_today:"Aujourd'hui",
@@ -3026,7 +3070,7 @@
       d_next_level:"Nächstes Level: Top ★",
       d_next_msg:"Erledige Aufträge und halte eine hohe Bewertung, um maximale Sichtbarkeit und reduzierte Provisionen freizuschalten.",
       d_pending:"Ausstehende Anfragen", d_no_requests:"Derzeit keine Anfragen.", chats_empty:"Derzeit keine Chats.", d_accept:"Annehmen", d_reject:"Ablehnen",      d_manage:"Profil und Verfügbarkeit verwalten", d_home_back:"↩ Zurück zum Startbildschirm",
-      chats_title:"Chat", chats_hdr:"Nachrichten", chat_mark_read:"Als gelesen markieren", chat_mark_unread:"Als ungelesen markieren", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
+      chats_title:"Chat", chats_hdr:"Nachrichten", chat_mark_read:"Als gelesen markieren", chat_mark_unread:"Als ungelesen markieren", chat_pick_hint:"Halte einen Chat gedrückt, um ihn auszuwählen", chat_bye:"Perfekt, wir sehen uns in Trastevere!",
       time_yesterday:"gestern", chat_prev_james:"Vielen Dank für die Fotos 🙏",
       time_mon:"Mo", chat_prev_elena:"Bist du auch am 20. verfügbar?",
       chat_hdr_sub:"Porträt · 13. Jul, 16:00", day_today:"Heute",
@@ -3089,7 +3133,7 @@
       d_next_level:"下一等级：顶级 ★",
       d_next_msg:"完成更多服务并保持高评分，以解锁最大曝光和更低佣金。",
       d_pending:"待处理请求", d_no_requests:"暂无请求。", chats_empty:"暂无聊天。", d_accept:"接受", d_reject:"拒绝", d_manage:"管理资料和可预约时间", d_home_back:"↩ 返回主界面",
-      chats_title:"聊天", chats_hdr:"消息", chat_mark_read:"标记为已读", chat_mark_unread:"标记为未读", chat_bye:"好的，特拉斯特维雷见！",
+      chats_title:"聊天", chats_hdr:"消息", chat_mark_read:"标记为已读", chat_mark_unread:"标记为未读", chat_pick_hint:"长按聊天以选择", chat_bye:"好的，特拉斯特维雷见！",
       time_yesterday:"昨天", chat_prev_james:"非常感谢照片 🙏",
       time_mon:"周一", chat_prev_elena:"20号也有空吗？",
       chat_hdr_sub:"人像 · 7月13日 16:00", day_today:"今天",
@@ -3152,7 +3196,7 @@
       d_next_level:"次のレベル：トップ ★",
       d_next_msg:"サービスを重ね、高い評価を保つと、最大の露出と手数料の割引が解除されます。",
       d_pending:"保留中のリクエスト", d_no_requests:"現在リクエストはありません。", chats_empty:"現在チャットはありません。", d_accept:"承認", d_reject:"却下", d_manage:"プロフィールと空き状況を管理", d_home_back:"↩ ホーム画面に戻る",
-      chats_title:"チャット", chats_hdr:"メッセージ", chat_mark_read:"既読にする", chat_mark_unread:"未読にする", chat_bye:"了解、トラステヴェレで会いましょう！",
+      chats_title:"チャット", chats_hdr:"メッセージ", chat_mark_read:"既読にする", chat_mark_unread:"未読にする", chat_pick_hint:"チャットを長押しして選択", chat_bye:"了解、トラステヴェレで会いましょう！",
       time_yesterday:"昨日", chat_prev_james:"写真ありがとうございました 🙏",
       time_mon:"月", chat_prev_elena:"20日も空いていますか？",
       chat_hdr_sub:"ポートレート · 7月13日 16:00", day_today:"今日",
